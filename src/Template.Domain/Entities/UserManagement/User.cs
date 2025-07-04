@@ -13,5 +13,6 @@ namespace Template.Domain.Entities.UserManagement
 
         // Relationships
         public SecurityState? SecurityState { get; set; }
+        public UserProfile? UserProfile { get; set; }
     }
 }
