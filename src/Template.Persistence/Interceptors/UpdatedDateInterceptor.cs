@@ -33,6 +33,10 @@ namespace Template.Persistence.Interceptors
                 {
                     entry.CurrentValues[nameof(IUpdateAudit.UpdatedDate)] = DateTime.UtcNow;
                 }
+                else
+                {
+                    entry.State = EntityState.Unchanged;
+                }
             }
         }
     }
