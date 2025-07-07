@@ -8,7 +8,7 @@ namespace Template.Domain.Entities.UserManagement
         public string? FullName { get; set; }
         public Address Address { get; set; } = null!;
 
-        public DateTime UpdatedDate { get; private set; }
+        public DateTime? UpdatedDate { get; private set; }
 
         // Relationships
         public Guid UserId { get; set; }

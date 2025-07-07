@@ -6,10 +6,10 @@ namespace Template.Domain.Entities.UserManagement
     {
         public string? Email { get; set; }
 
-        public DateTime UpdatedDate { get; private set; }
+        public DateTime? UpdatedDate { get; private set; }
 
         public bool IsDeleted { get; private set; }
-        public DateTime DeletedDate { get; private set; }
+        public DateTime? DeletedDate { get; private set; }
 
         // Relationships
         public SecurityState? SecurityState { get; set; }

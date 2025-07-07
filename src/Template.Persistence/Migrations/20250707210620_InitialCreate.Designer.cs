@@ -13,7 +13,7 @@ using Template.Persistence.DbContexts;
 namespace Template.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250707202302_InitialCreate")]
+    [Migration("20250707210620_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -50,7 +50,7 @@ namespace Template.Persistence.Migrations
                     b.Property<DateTime>("UnlockDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")
@@ -73,7 +73,7 @@ namespace Template.Persistence.Migrations
                     b.Property<DateTime>("CreatedDate")
                         .HasColumnType("timestamp with time zone");
 
-                    b.Property<DateTime>("DeletedDate")
+                    b.Property<DateTime?>("DeletedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
@@ -83,7 +83,7 @@ namespace Template.Persistence.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
@@ -105,7 +105,7 @@ namespace Template.Persistence.Migrations
                     b.Property<string>("FullName")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("UpdatedDate")
+                    b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<Guid>("UserId")

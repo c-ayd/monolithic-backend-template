@@ -10,7 +10,7 @@ namespace Template.Domain.Entities.UserManagement
         public bool IsLocked { get; set; }
         public DateTime UnlockDate { get; set; }
 
-        public DateTime UpdatedDate { get; private set; }
+        public DateTime? UpdatedDate { get; private set; }
 
         // Relationships
         public Guid UserId { get; set; }

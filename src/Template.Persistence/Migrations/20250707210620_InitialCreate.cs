@@ -17,9 +17,9 @@ namespace Template.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     Email = table.Column<string>(type: "character varying(320)", maxLength: 320, nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     IsDeleted = table.Column<bool>(type: "boolean", nullable: false),
-                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    DeletedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
@@ -37,7 +37,7 @@ namespace Template.Persistence.Migrations
                     FailedAttempts = table.Column<int>(type: "integer", nullable: false),
                     IsLocked = table.Column<bool>(type: "boolean", nullable: false),
                     UnlockDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     CreatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false)
                 },
@@ -58,7 +58,7 @@ namespace Template.Persistence.Migrations
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
                     FullName = table.Column<string>(type: "text", nullable: true),
-                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: true),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
                     Address_City = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
                     Address_Country = table.Column<string>(type: "character varying(100)", maxLength: 100, nullable: true),
