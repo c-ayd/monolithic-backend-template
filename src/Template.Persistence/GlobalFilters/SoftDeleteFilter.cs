@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using System.Linq.Expressions;
 using Template.Domain.SeedWork;
 
-namespace Template.Persistence.GlobalFilters.App
+namespace Template.Persistence.GlobalFilters
 {
     public static partial class AppDbContextFilters
     {
