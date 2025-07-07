@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Template.Application.Validations.Constants.Entities.ValueObjects;
 using Template.Domain.Entities.UserManagement;
 
-namespace Template.Persistence.EntityConfigurations
+namespace Template.Persistence.EntityConfigurations.UserManagement
 {
     public class UserProfileEntityConfiguration : IEntityTypeConfiguration<UserProfile>
     {
