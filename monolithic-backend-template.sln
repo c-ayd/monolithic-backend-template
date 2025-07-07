@@ -14,15 +14,21 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		README.md = README.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Domain", "src\Template.Domain\Template.Domain.csproj", "{624D4A9B-2164-46D9-AC84-670850BF9A80}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Domain", "src\Template.Domain\Template.Domain.csproj", "{624D4A9B-2164-46D9-AC84-670850BF9A80}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Application", "src\Template.Application\Template.Application.csproj", "{F5620199-16AB-4E0B-8913-5BFD9B4D5F31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Application", "src\Template.Application\Template.Application.csproj", "{F5620199-16AB-4E0B-8913-5BFD9B4D5F31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Persistence", "src\Template.Persistence\Template.Persistence.csproj", "{BFA6BBB7-0FA7-44DA-A395-F604D0DF7897}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Persistence", "src\Template.Persistence\Template.Persistence.csproj", "{BFA6BBB7-0FA7-44DA-A395-F604D0DF7897}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Infrastructure", "src\Template.Infrastructure\Template.Infrastructure.csproj", "{16EF5AF1-3466-4730-8894-91E5BECA4A46}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Infrastructure", "src\Template.Infrastructure\Template.Infrastructure.csproj", "{16EF5AF1-3466-4730-8894-91E5BECA4A46}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Api", "src\Template.Api\Template.Api.csproj", "{D3F8E341-C128-4378-B625-F5BEA9C9FBE6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Api", "src\Template.Api\Template.Api.csproj", "{D3F8E341-C128-4378-B625-F5BEA9C9FBE6}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Test.Utility", "test\Template.Test.Utility\Template.Test.Utility.csproj", "{7B54793B-B3CD-4522-B5FC-675F2C41A9B4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "IntegrationTests", "IntegrationTests", "{086D166A-7EED-4CD1-ACE2-683D6E7313F9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Test.Integration.Persistence", "test\IntegrationTests\Template.Test.Integration.Persistence\Template.Test.Integration.Persistence.csproj", "{73105FDE-6E05-4E4B-87EB-7BF7A155F0B9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -50,6 +56,14 @@ Global
 		{D3F8E341-C128-4378-B625-F5BEA9C9FBE6}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D3F8E341-C128-4378-B625-F5BEA9C9FBE6}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D3F8E341-C128-4378-B625-F5BEA9C9FBE6}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7B54793B-B3CD-4522-B5FC-675F2C41A9B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7B54793B-B3CD-4522-B5FC-675F2C41A9B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7B54793B-B3CD-4522-B5FC-675F2C41A9B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7B54793B-B3CD-4522-B5FC-675F2C41A9B4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{73105FDE-6E05-4E4B-87EB-7BF7A155F0B9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{73105FDE-6E05-4E4B-87EB-7BF7A155F0B9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{73105FDE-6E05-4E4B-87EB-7BF7A155F0B9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{73105FDE-6E05-4E4B-87EB-7BF7A155F0B9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -60,6 +74,9 @@ Global
 		{BFA6BBB7-0FA7-44DA-A395-F604D0DF7897} = {CC453ADD-A06B-4502-AF71-CB0D593B5A32}
 		{16EF5AF1-3466-4730-8894-91E5BECA4A46} = {CC453ADD-A06B-4502-AF71-CB0D593B5A32}
 		{D3F8E341-C128-4378-B625-F5BEA9C9FBE6} = {CC453ADD-A06B-4502-AF71-CB0D593B5A32}
+		{7B54793B-B3CD-4522-B5FC-675F2C41A9B4} = {A1A35AFB-E701-4FCA-893D-06486A09037A}
+		{086D166A-7EED-4CD1-ACE2-683D6E7313F9} = {A1A35AFB-E701-4FCA-893D-06486A09037A}
+		{73105FDE-6E05-4E4B-87EB-7BF7A155F0B9} = {086D166A-7EED-4CD1-ACE2-683D6E7313F9}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {949626B3-B19D-4EC2-B720-22255ABD68F7}

@@ -1,6 +1,8 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Reflection;
 using Template.Domain.Entities.UserManagement;
+using Template.Persistence.GlobalFilters;
+using Template.Persistence.Interceptors;
 
 namespace Template.Persistence.DbContexts
 {
@@ -19,7 +21,18 @@ namespace Template.Persistence.DbContexts
         {
             modelBuilder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
 
+            modelBuilder.ApplySoftDeleteFilter();
+
             base.OnModelCreating(modelBuilder);
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+        {
+            optionsBuilder.AddInterceptors(new CreatedDateInterceptor());
+            optionsBuilder.AddInterceptors(new UpdatedDateInterceptor());
+            optionsBuilder.AddInterceptors(new SoftDeleteInterceptor());
+
+            base.OnConfiguring(optionsBuilder);
         }
     }
 }
