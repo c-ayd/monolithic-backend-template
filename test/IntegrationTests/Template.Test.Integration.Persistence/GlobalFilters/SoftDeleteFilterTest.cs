@@ -10,11 +10,11 @@ namespace Template.Test.Integration.Persistence.GlobalFilters
     [Collection(nameof(AppDbContextCollection))]
     public class SoftDeleteFilterTest
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _appDbContext;
 
         public SoftDeleteFilterTest(AppDbContextFixture appDbContextFixture)
         {
-            _dbContext = appDbContextFixture.DbContext;
+            _appDbContext = appDbContextFixture.DbContext;
         }
 
         [Fact]
@@ -24,18 +24,18 @@ namespace Template.Test.Integration.Persistence.GlobalFilters
             var startTime = DateTime.UtcNow;
             var user = new User();
 
-            await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
 
             var userId = user.Id;
 
             // Act
-            _dbContext.Users.Remove(user);
-            await _dbContext.SaveChangesAsync();
+            _appDbContext.Users.Remove(user);
+            await _appDbContext.SaveChangesAsync();
 
             // Assert
-            _dbContext.UntrackEntity(user);
-            var result = await _dbContext.Users
+            _appDbContext.UntrackEntity(user);
+            var result = await _appDbContext.Users
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefaultAsync();
 

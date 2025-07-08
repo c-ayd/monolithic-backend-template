@@ -10,11 +10,11 @@ namespace Template.Test.Integration.Persistence.Interceptors
     [Collection(nameof(AppDbContextCollection))]
     public class CreatedDateInterceptorTest
     {
-        private readonly AppDbContext _dbContext;
+        private readonly AppDbContext _appDbContext;
 
         public CreatedDateInterceptorTest(AppDbContextFixture appDbContextFixture)
         {
-            _dbContext = appDbContextFixture.DbContext;
+            _appDbContext = appDbContextFixture.DbContext;
         }
 
         [Fact]
@@ -25,14 +25,14 @@ namespace Template.Test.Integration.Persistence.Interceptors
             var user = new User();
 
             // Act
-            await _dbContext.Users.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
 
             var userId = user.Id;
 
             // Assert
-            _dbContext.UntrackEntity(user);
-            var result = await _dbContext.Users
+            _appDbContext.UntrackEntity(user);
+            var result = await _appDbContext.Users
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefaultAsync();
 
