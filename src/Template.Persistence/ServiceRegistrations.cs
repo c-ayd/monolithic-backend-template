@@ -1,8 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Template.Application.Abstractions.UOW;
 using Template.Persistence.DbContexts;
 using Template.Persistence.Settings;
+using Template.Persistence.UOW;
 
 namespace Template.Persistence
 {
@@ -12,6 +14,8 @@ namespace Template.Persistence
         {
             var connStrings = configuration.GetSection(ConnectionStringsSettings.SettingsKey).Get<ConnectionStringsSettings>()!;
             services.AddDbContext<AppDbContext>(options => options.UseNpgsql(connStrings.App));
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
         }
     }
 }
