@@ -2,6 +2,7 @@
 using Template.Domain.Entities.UserManagement;
 using Template.Persistence.DbContexts;
 using Template.Test.Integration.Persistence.Collections;
+using Template.Test.Utility.Extensions.EFCore;
 using Template.Test.Utility.Fixtures.DbContexts;
 
 namespace Template.Test.Integration.Persistence.GlobalFilters
@@ -31,9 +32,9 @@ namespace Template.Test.Integration.Persistence.GlobalFilters
             // Act
             _dbContext.Users.Remove(user);
             await _dbContext.SaveChangesAsync();
-            
+
             // Assert
-            _dbContext.Entry(user).State = EntityState.Unchanged;
+            _dbContext.UntrackEntity(user);
             var result = await _dbContext.Users
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefaultAsync();

@@ -2,6 +2,7 @@
 using Template.Domain.Entities.UserManagement;
 using Template.Persistence.DbContexts;
 using Template.Test.Integration.Persistence.Collections;
+using Template.Test.Utility.Extensions.EFCore;
 using Template.Test.Utility.Fixtures.DbContexts;
 
 namespace Template.Test.Integration.Persistence.Interceptors
@@ -33,7 +34,7 @@ namespace Template.Test.Integration.Persistence.Interceptors
             await _dbContext.SaveChangesAsync();
 
             // Assert
-            _dbContext.Entry(user).State = EntityState.Unchanged;
+            _dbContext.UntrackEntity(user);
             var result = await _dbContext.Users
                 .IgnoreQueryFilters()
                 .Where(u => u.Id.Equals(userId))
