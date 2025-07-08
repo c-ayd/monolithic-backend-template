@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
-using System.Runtime.CompilerServices;
 using Template.Persistence.DbContexts;
 using Template.Persistence.Settings;
 
@@ -13,10 +12,7 @@ namespace Template.Test.Utility.Fixtures.DbContexts
 
         public async Task InitializeAsync()
         {
-            Configuration = new ConfigurationBuilder()
-                .SetBasePath(GetBaseDirectory()!)
-                .AddUserSecrets<AppDbContextFixture>()
-                .Build();
+            Configuration = ConfigurationHelper.CreateConfiguration();
 
             var connectionStrings = Configuration.GetSection(ConnectionStringsSettings.SettingsKey).Get<ConnectionStringsSettings>()!;
             var dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
@@ -37,11 +33,6 @@ namespace Template.Test.Utility.Fixtures.DbContexts
         {
             await DbContext.Database.EnsureDeletedAsync();
             await DbContext.DisposeAsync();
-        }
-
-        private static string? GetBaseDirectory([CallerFilePath] string? path = null)
-        {
-            return Path.GetDirectoryName(path);
         }
     }
 }
