@@ -7,6 +7,5 @@ namespace Template.Persistence.Settings
         public static string SettingsKey => "ConnectionStrings";
 
         public required string App { get; set; }
-        public string? Test { get; set; }
     }
 }

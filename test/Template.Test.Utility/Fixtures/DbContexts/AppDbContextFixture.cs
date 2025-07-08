@@ -16,7 +16,7 @@ namespace Template.Test.Utility.Fixtures.DbContexts
 
             var connectionStrings = Configuration.GetSection(ConnectionStringsSettings.SettingsKey).Get<ConnectionStringsSettings>()!;
             var dbContextOptions = new DbContextOptionsBuilder<AppDbContext>()
-                .UseNpgsql(connectionStrings.Test)
+                .UseNpgsql(connectionStrings.App)
                 .Options;
 
             DbContext = new AppDbContext(dbContextOptions);
