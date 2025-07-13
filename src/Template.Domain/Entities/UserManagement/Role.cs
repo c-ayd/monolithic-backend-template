@@ -2,9 +2,9 @@
 
 namespace Template.Domain.Entities.UserManagement
 {
-    public class User : EntityBase<Guid>, IUpdateAudit, ISoftDelete
+    public class Role : EntityBase<int>, IUpdateAudit, ISoftDelete
     {
-        public string? Email { get; set; }
+        public string Name { get; set; } = null!;
 
         public DateTime? UpdatedDate { get; private set; }
 
@@ -12,8 +12,6 @@ namespace Template.Domain.Entities.UserManagement
         public DateTime? DeletedDate { get; private set; }
 
         // Relationships
-        public SecurityState? SecurityState { get; set; }
-        public UserProfile? UserProfile { get; set; }
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
+        public ICollection<User> Users { get; set; } = new List<User>();
     }
 }
