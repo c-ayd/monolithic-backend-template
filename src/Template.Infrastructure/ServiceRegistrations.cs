@@ -9,6 +9,7 @@ namespace Template.Infrastructure
         public static void AddInfrastructureServices(this IServiceCollection services)
         {
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
+            services.AddSingleton<IHashing, Hashing>();
         }
     }
 }
