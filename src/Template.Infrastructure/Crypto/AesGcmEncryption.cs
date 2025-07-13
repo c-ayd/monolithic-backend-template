@@ -7,7 +7,7 @@ using Template.Infrastructure.Utilities.Crypto;
 
 namespace Template.Infrastructure.Crypto
 {
-    public class Encryption : IEncryption
+    public class AesGcmEncryption : IEncryption
     {
         public byte TypeId { get; private set; } = 1;
 
@@ -16,11 +16,11 @@ namespace Template.Infrastructure.Crypto
         private static readonly int _nonceSize = AesGcm.NonceByteSizes.MaxSize;
         private static readonly int _tagSize = AesCcm.TagByteSizes.MaxSize;
 
-        private readonly AesSettings _aesSettings;
+        private readonly AesGcmSettings _aesGcmSettings;
 
-        public Encryption(IOptions<AesSettings> aesSettings)
+        public AesGcmEncryption(IOptions<AesGcmSettings> aesGcmSettings)
         {
-            _aesSettings = aesSettings.Value;
+            _aesGcmSettings = aesGcmSettings.Value;
         }
 
         public string Encrypt(string value)
@@ -44,7 +44,7 @@ namespace Template.Infrastructure.Crypto
             var cipherSpan = encryptedValueBytes.Slice(_typeSize + _nonceSize + _tagSize, valueBytes.Length);
 
             RandomNumberGenerator.Fill(nonceSpan);
-            var keyBytes = Encoding.UTF8.GetBytes(_aesSettings.Key);
+            var keyBytes = Encoding.UTF8.GetBytes(_aesGcmSettings.Key);
             using (var aesGcm = new AesGcm(keyBytes, _tagSize))
             {
                 aesGcm.Encrypt(nonceSpan, valueBytes, cipherSpan, tagSpan);
@@ -75,7 +75,7 @@ namespace Template.Infrastructure.Crypto
             var cipherSpan = encryptedValueBytes.Slice(_typeSize + _nonceSize + _tagSize, cipherSize);
             var valueSpan = encryptedValueBytes.Slice(_typeSize + _nonceSize + _tagSize + cipherSize, cipherSize);
 
-            var keyBytes = Encoding.UTF8.GetBytes(_aesSettings.Key);
+            var keyBytes = Encoding.UTF8.GetBytes(_aesGcmSettings.Key);
             using (var aesGcm = new AesGcm(keyBytes, _tagSize))
             {
                 aesGcm.Decrypt(nonceSpan, cipherSpan, tagSpan, valueSpan);

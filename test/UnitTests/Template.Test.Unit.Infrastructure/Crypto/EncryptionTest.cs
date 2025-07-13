@@ -10,14 +10,14 @@ namespace Template.Test.Unit.Infrastructure.Crypto
 {
     public class EncryptionTest
     {
-        private readonly Encryption _encryption;
+        private readonly AesGcmEncryption _encryption;
 
         public EncryptionTest()
         {
             var config = ConfigurationHelper.CreateConfiguration();
-            var aesSettings = config.GetSection(AesSettings.SettingsKey).Get<AesSettings>()!;
+            var aesSettings = config.GetSection(AesGcmSettings.SettingsKey).Get<AesGcmSettings>()!;
 
-            _encryption = new Encryption(Options.Create(aesSettings));
+            _encryption = new AesGcmEncryption(Options.Create(aesSettings));
         }
 
         [Fact]

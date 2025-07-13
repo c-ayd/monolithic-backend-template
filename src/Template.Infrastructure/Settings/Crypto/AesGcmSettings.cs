@@ -2,9 +2,9 @@
 
 namespace Template.Infrastructure.Settings.Crypto
 {
-    public class AesSettings : ISettings
+    public class AesGcmSettings : ISettings
     {
-        public static string SettingsKey => "Crypto:Aes";
+        public static string SettingsKey => "Crypto:AesGcm";
 
         public required string Key { get; set; }
     }
