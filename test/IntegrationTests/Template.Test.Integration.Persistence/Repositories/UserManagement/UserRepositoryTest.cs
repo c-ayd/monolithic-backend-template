@@ -352,8 +352,8 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             // Arrange
             var roles = new List<Role>()
             {
-                new Role() { Name = "test1" },
-                new Role() { Name = "test2" }
+                new Role() { Name = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Role() { Name = StringGenerator.GenerateUsingAsciiChars(10) }
             };
             
             var user = new User();
@@ -411,8 +411,8 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             // Arrange
             var roles = new List<Role>()
             {
-                new Role() { Name = "test1" },
-                new Role() { Name = "test2" }
+                new Role() { Name = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Role() { Name = StringGenerator.GenerateUsingAsciiChars(10) }
             };
 
             var email = EmailGenerator.Generate();

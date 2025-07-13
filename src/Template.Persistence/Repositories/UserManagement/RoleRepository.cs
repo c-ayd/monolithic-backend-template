@@ -22,6 +22,11 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(r => r.Id == id)
                 .FirstOrDefaultAsync(cancellationToken);
 
+        public async Task<Role?> GetByNameAsync(string name, CancellationToken cancellationToken = default)
+            => await _appDbContext.Roles
+                .Where(r => r.Name.Equals(name, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefaultAsync(cancellationToken);
+
         public async Task<ICollection<Role>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken = default)
             => await _appDbContext.Roles
                 .OrderByDescending(r => r.CreatedDate)

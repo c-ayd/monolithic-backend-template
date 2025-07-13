@@ -13,7 +13,7 @@ using Template.Persistence.DbContexts;
 namespace Template.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250713141450_AddRoles")]
+    [Migration("20250713143240_AddRoles")]
     partial class AddRoles
     {
         /// <inheritdoc />
@@ -67,6 +67,9 @@ namespace Template.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Roles");
                 });
