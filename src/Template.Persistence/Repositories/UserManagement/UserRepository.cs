@@ -15,7 +15,7 @@ namespace Template.Persistence.Repositories.UserManagement
         }
 
         public async Task AddAsync(User newUser)
-            => await _appDbContext.AddAsync(newUser);
+            => await _appDbContext.Users.AddAsync(newUser);
 
         public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
