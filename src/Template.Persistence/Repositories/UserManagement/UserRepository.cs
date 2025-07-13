@@ -85,5 +85,17 @@ namespace Template.Persistence.Repositories.UserManagement
 
         public void Delete(User user)
             => _appDbContext.Remove(user);
+
+        public async Task<ICollection<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
+                .Where(u => u.Id.Equals(id))
+                .Select(u => u.Roles)
+                .FirstOrDefaultAsync();
+
+        public async Task<ICollection<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
+                .Where(u => u.Email == email)
+                .Select(u => u.Roles)
+                .FirstOrDefaultAsync();
     }
 }

@@ -15,6 +15,8 @@ namespace Template.Domain.Repositories.UserManagement
         Task<(Guid, SecurityState)?> GetSecurityStateByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<UserProfile?> GetUserProfileByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<(Guid, UserProfile)?> GetUserProfileByEmailAsync(string email, CancellationToken cancellationToken = default);
+        Task<ICollection<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<ICollection<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default);
 
         void Delete(User user);
     }
