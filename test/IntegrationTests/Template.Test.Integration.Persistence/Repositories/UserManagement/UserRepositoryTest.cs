@@ -345,5 +345,130 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             Assert.True(result.IsDeleted, "The user is not marked as deleted.");
             Assert.True(result.DeletedDate >= startTime, "The deleted date is wrong.");
         }
+
+        [Fact]
+        public async Task GetRolesByIdAsync_WhenUserHasRoles_ShouldReturnAllRoles()
+        {
+            // Arrange
+            var roles = new List<Role>()
+            {
+                new Role() { Name = "test1" },
+                new Role() { Name = "test2" }
+            };
+            
+            var user = new User();
+            user.Roles = roles;
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetRolesByIdAsync(userId);
+
+            // Assert
+            Assert.NotNull(result);
+
+            var compareRoles = roles.OrderBy(r => r.Name);
+            var compareResult = result.OrderBy(r => r.Name);
+            Assert.Equal(compareRoles, compareResult);
+        }
+
+        [Fact]
+        public async Task GetRolesByIdAsync_WhenUserHasNoRole_ShouldReturnEmptyList()
+        {
+            // Arrange
+            var user = new User();
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetRolesByIdAsync(userId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetRolesByIdAsync_WhenUserDoesNotExist_ShouldReturnNull()
+        {
+            // Act
+            var result = await _userRepository.GetRolesByIdAsync(Guid.NewGuid());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetRolesByEmailAsync_WhenUserHasRoles_ShouldReturnAllRoles()
+        {
+            // Arrange
+            var roles = new List<Role>()
+            {
+                new Role() { Name = "test1" },
+                new Role() { Name = "test2" }
+            };
+
+            var email = EmailGenerator.Generate();
+            var user = new User()
+            {
+                Email = email
+            };
+            user.Roles = roles;
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetRolesByEmailAsync(email);
+
+            // Assert
+            Assert.NotNull(result);
+
+            var compareRoles = roles.OrderBy(r => r.Name);
+            var compareResult = result.OrderBy(r => r.Name);
+            Assert.Equal(compareRoles, compareResult);
+        }
+
+        [Fact]
+        public async Task GetRolesByEmailAsync_WhenUserHasNoRole_ShouldReturnEmptyList()
+        {
+            // Arrange
+            var email = EmailGenerator.Generate();
+            var user = new User()
+            {
+                Email = email
+            };
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetRolesByEmailAsync(email);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetRolesByEmailAsync_WhenUserDoesNotExist_ShouldReturnNull()
+        {
+            // Act
+            var result = await _userRepository.GetRolesByEmailAsync(EmailGenerator.Generate());
+
+            // Assert
+            Assert.Null(result);
+        }
     }
 }
