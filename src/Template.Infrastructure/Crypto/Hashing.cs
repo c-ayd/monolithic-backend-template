@@ -3,6 +3,7 @@ using System.Text;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Dtos.Crypto.Enums;
 using Template.Infrastructure.Crypto.Structs;
+using Template.Infrastructure.Utilities.Crypto;
 
 namespace Template.Infrastructure.Crypto
 {
@@ -42,7 +43,7 @@ namespace Template.Infrastructure.Crypto
             if (string.IsNullOrEmpty(password))
                 throw new ArgumentException("The password cannot be null or empty.", nameof(password));
 
-            var hashedPasswordByteCount = GetDecodedBase64ByteCount(hashedPassword);
+            var hashedPasswordByteCount = CryptoUtilities.GetDecodedBase64ByteCount(hashedPassword);
             Span<byte> hashedPasswordBytes = new byte[hashedPasswordByteCount];
             if (!Convert.TryFromBase64String(hashedPassword, hashedPasswordBytes, out _))
                 return EPasswordVerificationResult.Fail;
@@ -67,27 +68,6 @@ namespace Template.Infrastructure.Crypto
             return version == _currentVersion ? 
                 EPasswordVerificationResult.Success :
                 EPasswordVerificationResult.SuccessRehashNeeded;
-        }
-
-        private int GetDecodedBase64ByteCount(string base64str)
-        {
-            var characterCount = base64str.Length;
-            var paddingCount = 0;
-
-            if (characterCount > 0)
-            {
-                if (base64str[characterCount - 1] == '=')
-                {
-                    ++paddingCount;
-
-                    if (characterCount > 1 && base64str[characterCount - 2] == '=')
-                    {
-                        ++paddingCount;
-                    }
-                }
-            }
-
-            return ((characterCount * 3) / 4) - paddingCount;
         }
 
         public string HashSha256(string value)
