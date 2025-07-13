@@ -16,8 +16,7 @@ namespace Template.Infrastructure.Crypto
                 return string.Empty;
 
             byte[] data = new byte[dataLength];
-            using var rnd = RandomNumberGenerator.Create();
-            rnd.GetBytes(data);
+            RandomNumberGenerator.Fill(data);
 
             return Convert.ToBase64String(data);
         }
@@ -31,8 +30,7 @@ namespace Template.Infrastructure.Crypto
                 return string.Empty;
 
             byte[] data = new byte[dataLength];
-            using var rnd = RandomNumberGenerator.Create();
-            rnd.GetBytes(data);
+            RandomNumberGenerator.Fill(data);
 
             return WebEncoders.Base64UrlEncode(data);
         }
