@@ -20,19 +20,19 @@ namespace Template.Persistence.Repositories.UserManagement
         public async Task<User?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .Where(u => u.Id.Equals(id))
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<User?> GetByEmailAsync(string email, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .Where(u => u.Email == email)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<Guid?> GetIdByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             var id = await _appDbContext.Users
                 .Where(u => u.Email == email)
                 .Select(u => u.Id)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             return id == Guid.Empty ? null : id;
         }
@@ -41,13 +41,13 @@ namespace Template.Persistence.Repositories.UserManagement
             => await _appDbContext.Users
                 .Where(u => u.Id.Equals(id))
                 .Select(u => u.Email)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<SecurityState?> GetSecurityStateByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .Where(u => u.Id.Equals(id))
                 .Select(u => u.SecurityState)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<(Guid, SecurityState)?> GetSecurityStateByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
@@ -58,7 +58,7 @@ namespace Template.Persistence.Repositories.UserManagement
                     u.Id,
                     u.SecurityState
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             return result == null ? null : (result.Id, result.SecurityState!);
         }
@@ -67,7 +67,7 @@ namespace Template.Persistence.Repositories.UserManagement
             => await _appDbContext.Users
                 .Where(u => u.Id.Equals(id))
                 .Select(u => u.UserProfile)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<(Guid, UserProfile)?> GetUserProfileByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
@@ -78,7 +78,7 @@ namespace Template.Persistence.Repositories.UserManagement
                     u.Id,
                     u.UserProfile
                 })
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
             return result == null ? null : (result.Id, result.UserProfile!);
         }
@@ -90,12 +90,12 @@ namespace Template.Persistence.Repositories.UserManagement
             => await _appDbContext.Users
                 .Where(u => u.Id.Equals(id))
                 .Select(u => u.Roles)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<ICollection<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .Where(u => u.Email == email)
                 .Select(u => u.Roles)
-                .FirstOrDefaultAsync();
+                .FirstOrDefaultAsync(cancellationToken);
     }
 }
