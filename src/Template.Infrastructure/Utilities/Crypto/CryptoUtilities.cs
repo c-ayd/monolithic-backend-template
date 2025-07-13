@@ -1,6 +1,6 @@
 ﻿namespace Template.Infrastructure.Utilities.Crypto
 {
-    public static partial class CryptoUtilities
+    public static class CryptoUtilities
     {
         public static int GetDecodedBase64ByteCount(string base64str)
         {
