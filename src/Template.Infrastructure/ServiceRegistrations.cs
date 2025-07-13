@@ -10,6 +10,7 @@ namespace Template.Infrastructure
         {
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             services.AddSingleton<IHashing, Hashing>();
+            services.AddSingleton<IEncryption, AesGcmEncryption>();
         }
     }
 }
