@@ -22,6 +22,9 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
             builder.HasOne(u => u.UserProfile)
                 .WithOne()
                 .HasForeignKey<UserProfile>(up => up.UserId);
+
+            builder.HasMany(u => u.Roles)
+                .WithMany(r => r.Users);
         }
     }
 }
