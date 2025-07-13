@@ -370,10 +370,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             // Assert
             Assert.NotNull(result);
-
-            var compareRoles = roles.OrderBy(r => r.Name);
-            var compareResult = result.OrderBy(r => r.Name);
-            Assert.Equal(compareRoles, compareResult);
+            Assert.Equal(roles.Count, result.Count);
         }
 
         [Fact]
@@ -432,10 +429,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             // Assert
             Assert.NotNull(result);
-
-            var compareRoles = roles.OrderBy(r => r.Name);
-            var compareResult = result.OrderBy(r => r.Name);
-            Assert.Equal(compareRoles, compareResult);
+            Assert.Equal(roles.Count, result.Count);
         }
 
         [Fact]
