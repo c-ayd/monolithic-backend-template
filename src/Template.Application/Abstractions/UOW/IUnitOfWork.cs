@@ -12,5 +12,6 @@ namespace Template.Application.Abstractions.UOW
         Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 
         IUserRepository Users { get; }
+        IRoleRepository Roles { get; }
     }
 }

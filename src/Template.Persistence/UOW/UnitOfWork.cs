@@ -46,5 +46,8 @@ namespace Template.Persistence.UOW
 
         private IUserRepository? users = null;
         public IUserRepository Users => GetRepository<IUserRepository, UserRepository>(users);
+
+        private IRoleRepository? roles = null;
+        public IRoleRepository Roles => GetRepository<IRoleRepository, RoleRepository>(roles);
     }
 }
