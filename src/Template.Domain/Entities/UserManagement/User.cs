@@ -15,5 +15,6 @@ namespace Template.Domain.Entities.UserManagement
         public SecurityState? SecurityState { get; set; }
         public UserProfile? UserProfile { get; set; }
         public ICollection<Role> Roles { get; set; } = new List<Role>();
+        public ICollection<Login> Logins { get; set; } = new List<Login>();
     }
 }
