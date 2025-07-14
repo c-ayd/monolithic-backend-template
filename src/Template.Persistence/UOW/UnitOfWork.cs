@@ -52,5 +52,8 @@ namespace Template.Persistence.UOW
 
         private ILoginRepository? logins = null;
         public ILoginRepository Logins => GetRepository<ILoginRepository, LoginRepository>(logins);
+
+        private ITokenRepository? tokens = null;
+        public ITokenRepository Tokens => GetRepository<ITokenRepository, TokenRepository>(tokens);
     }
 }
