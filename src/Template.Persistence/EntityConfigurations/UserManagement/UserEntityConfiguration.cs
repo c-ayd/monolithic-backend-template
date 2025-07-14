@@ -25,6 +25,10 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
 
             builder.HasMany(u => u.Roles)
                 .WithMany(r => r.Users);
+
+            builder.HasMany(u => u.Logins)
+                .WithOne(l => l.User)
+                .HasForeignKey(l => l.UserId);
         }
     }
 }
