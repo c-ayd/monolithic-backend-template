@@ -13,5 +13,6 @@ namespace Template.Application.Abstractions.UOW
 
         IUserRepository Users { get; }
         IRoleRepository Roles { get; }
+        ILoginRepository Logins { get; }
     }
 }
