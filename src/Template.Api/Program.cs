@@ -1,3 +1,4 @@
+using Template.Application;
 using Template.Infrastructure;
 using Template.Persistence;
 
@@ -8,6 +9,7 @@ builder.Services.AddControllers();
 
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureServices();
+builder.Services.AddApplicationServices();
 //~ End
 
 var app = builder.Build();
