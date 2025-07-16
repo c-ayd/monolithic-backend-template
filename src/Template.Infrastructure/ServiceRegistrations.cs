@@ -1,8 +1,10 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Abstractions.Authentication;
 using Template.Application.Abstractions.Crypto;
+using Template.Application.Abstractions.Messaging;
 using Template.Infrastructure.Authentication;
 using Template.Infrastructure.Crypto;
+using Template.Infrastructure.Messaging;
 
 namespace Template.Infrastructure
 {
@@ -15,6 +17,8 @@ namespace Template.Infrastructure
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             services.AddSingleton<IHashing, Hashing>();
             services.AddSingleton<IEncryption, AesGcmEncryption>();
+
+            services.AddSingleton<IEmailSender, Smtp>();
         }
     }
 }
