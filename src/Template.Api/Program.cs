@@ -1,3 +1,5 @@
+using Cayd.AspNetCore.Settings.DependencyInjection;
+using System.Reflection;
 using Template.Application;
 using Template.Infrastructure;
 using Template.Persistence;
@@ -10,6 +12,11 @@ builder.Services.AddControllers();
 builder.Services.AddPersistenceServices(builder.Configuration);
 builder.Services.AddInfrastructureServices();
 builder.Services.AddApplicationServices();
+
+builder.AddSettingsFromAssemblies(Assembly.GetAssembly(typeof(Program))!,
+    Assembly.GetAssembly(typeof(Template.Persistence.ServiceRegistrations))!,
+    Assembly.GetAssembly(typeof(Template.Infrastructure.ServiceRegistrations))!,
+    Assembly.GetAssembly(typeof(Template.Application.ServiceRegistrations))!);
 //~ End
 
 var app = builder.Build();
