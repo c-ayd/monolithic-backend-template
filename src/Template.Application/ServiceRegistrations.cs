@@ -2,7 +2,7 @@
 
 namespace Template.Application
 {
-    public static class ServiceRegistration
+    public static class ServiceRegistrations
     {
         public static void AddApplicationServices(this IServiceCollection services)
         {
