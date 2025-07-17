@@ -27,7 +27,7 @@ namespace Template.Test.Unit.Infrastructure.Messaging.Templates
         }
 
         [Fact]
-        public void Get_WhenGivenLanguageExists_ShouldReturnLocalizedText()
+        public void GetAnyTemplate_WhenGivenLanguageExists_ShouldReturnLocalizedText()
         {
             // Arrange
             Thread.CurrentThread.CurrentCulture = new CultureInfo("de-DE");
@@ -51,7 +51,7 @@ namespace Template.Test.Unit.Infrastructure.Messaging.Templates
         }
 
         [Fact]
-        public void Get_WhenGivenLanguageDoesNotExist_ShouldFallbackToEnglish()
+        public void GetAnyTemplate_WhenGivenLanguageDoesNotExist_ShouldFallbackToEnglish()
         {
             // Arrange
             Thread.CurrentThread.CurrentCulture = new CultureInfo("es-ES");
