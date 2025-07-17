@@ -2,9 +2,11 @@
 using Template.Application.Abstractions.Authentication;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Messaging;
+using Template.Application.Abstractions.Messaging.Templates;
 using Template.Infrastructure.Authentication;
 using Template.Infrastructure.Crypto;
 using Template.Infrastructure.Messaging;
+using Template.Infrastructure.Messaging.Templates;
 
 namespace Template.Infrastructure
 {
@@ -19,6 +21,7 @@ namespace Template.Infrastructure
             services.AddSingleton<IEncryption, AesGcmEncryption>();
 
             services.AddSingleton<IEmailSender, Smtp>();
+            services.AddSingleton<IEmailTemplates, EmailTemplates>();
         }
     }
 }
