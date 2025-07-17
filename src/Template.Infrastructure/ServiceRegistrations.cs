@@ -21,7 +21,7 @@ namespace Template.Infrastructure
             services.AddSingleton<IEncryption, AesGcmEncryption>();
 
             services.AddSingleton<IEmailSender, Smtp>();
-            services.AddSingleton<IEmailTemplates, EmailTemplates>();
+            services.AddTransient<IEmailTemplates, EmailTemplates>();
         }
     }
 }
