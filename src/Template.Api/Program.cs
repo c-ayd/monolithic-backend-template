@@ -17,6 +17,8 @@ builder.AddSettingsFromAssemblies(Assembly.GetAssembly(typeof(Program))!,
     Assembly.GetAssembly(typeof(Template.Persistence.ServiceRegistrations))!,
     Assembly.GetAssembly(typeof(Template.Infrastructure.ServiceRegistrations))!,
     Assembly.GetAssembly(typeof(Template.Application.ServiceRegistrations))!);
+
+builder.Services.AddLocalization(config => config.ResourcesPath = "Resources");
 //~ End
 
 var app = builder.Build();
@@ -26,6 +28,13 @@ var app = builder.Build();
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseRequestLocalization(new RequestLocalizationOptions()
+    .SetDefaultCulture("en")
+    .AddSupportedUICultures(
+        "en",
+        "de"
+    ));
 
 app.MapControllers();
 
