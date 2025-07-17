@@ -18,7 +18,7 @@ namespace Template.Test.Utility.Hosting
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IEmailTemplates, EmailTemplates>();
+            services.AddTransient<IEmailTemplates, EmailTemplates>();
 
             services.AddLocalization(config => config.ResourcesPath = "Resources");
         }
