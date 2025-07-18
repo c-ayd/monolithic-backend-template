@@ -6,12 +6,15 @@ using Template.Api.Middlewares;
 using Template.Application;
 using Template.Infrastructure;
 using Template.Persistence;
+using Template.Persistence.SeedData;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
+
+//await app.SeedDataAppDbContext();
 
 app.AddMiddlewares();
 
