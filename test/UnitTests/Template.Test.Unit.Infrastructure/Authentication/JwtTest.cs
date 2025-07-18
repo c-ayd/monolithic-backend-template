@@ -21,21 +21,58 @@ namespace Template.Test.Unit.Infrastructure.Authentication
             _jwt = new Jwt(Options.Create(jwtSettings), new TokenGenerator());
         }
 
-        [Theory]
-        [InlineData(false)]
-        [InlineData(true)]
-        public void GenerateJwtToken_WhenNoClaimsIsGiven_ShouldGenerateToken(bool addClaims)
+        [Fact]
+        public void GenerateJwtToken_WhenClaimsAndNotBeforeDateTimeAreNotGiven_ShouldGenerateToken()
+        {
+            // Act
+            var result = _jwt.GenerateJwtToken();
+
+            // Assert
+            Assert.NotNull(result.AccessToken);
+            Assert.NotNull(result.RefreshToken);
+            Assert.NotNull(result.RefreshTokenExpirationDate);
+        }
+
+        [Fact]
+        public void GenerateJwtToken_WhenClaimsAreNotGivenButNotBeforeDateTimeIsGiven_ShouldGenerateToken()
+        {
+            // Act
+            var result = _jwt.GenerateJwtToken(DateTime.UtcNow);
+
+            // Assert
+            Assert.NotNull(result.AccessToken);
+            Assert.NotNull(result.RefreshToken);
+            Assert.NotNull(result.RefreshTokenExpirationDate);
+        }
+
+        [Fact]
+        public void GenerateJwtToken_WhenClaimsAndNotBeforeDateTimeAreGiven_ShouldGenerateToken()
         {
             // Arrange
-            List<Claim>? claims = null;
-            if (addClaims)
+            List<Claim>? claims = claims = new List<Claim>()
             {
-                claims = new List<Claim>()
-                {
-                    new Claim(ClaimTypes.NameIdentifier, StringGenerator.GenerateUsingAsciiChars(10)),
-                    new Claim(ClaimTypes.Email, EmailGenerator.Generate())
-                };
-            }
+                new Claim(ClaimTypes.NameIdentifier, StringGenerator.GenerateUsingAsciiChars(10)),
+                new Claim(ClaimTypes.Email, EmailGenerator.Generate())
+            };
+
+            // Act
+            var result = _jwt.GenerateJwtToken(claims, DateTime.UtcNow);
+
+            // Assert
+            Assert.NotNull(result.AccessToken);
+            Assert.NotNull(result.RefreshToken);
+            Assert.NotNull(result.RefreshTokenExpirationDate);
+        }
+
+        [Fact]
+        public void GenerateJwtToken_WhenClaimsAreGivenButNotBeforeDateTimeIsNotGiven_ShouldGenerateToken()
+        {
+            // Arrange
+            List<Claim>? claims = claims = new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, StringGenerator.GenerateUsingAsciiChars(10)),
+                new Claim(ClaimTypes.Email, EmailGenerator.Generate())
+            };
 
             // Act
             var result = _jwt.GenerateJwtToken(claims);
