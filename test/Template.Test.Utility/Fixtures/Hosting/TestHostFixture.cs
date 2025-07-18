@@ -1,40 +1,61 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
-using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Template.Test.Utility.Hosting;
+using System.Reflection;
+using Template.Test.Utility.Hosting.Endpoints;
+using Template.Test.Utility.Hosting.Policies;
 
 namespace Template.Test.Utility.Fixtures.Hosting
 {
-    public class TestHostFixture : IAsyncLifetime
+    public partial class TestHostFixture : IAsyncLifetime
     {
-        public IHost TestHost { get; private set; } = null!;
-        public HttpClient TestClient { get; private set; } = null!;
+        public IHost Host { get; private set; } = null!;
+        public HttpClient Client { get; private set; } = null!;
 
         public async Task InitializeAsync()
         {
-            var config = ConfigurationHelper.CreateConfiguration();
-            TestHost = Host.CreateDefaultBuilder()
-                .ConfigureAppConfiguration((context, configBuilder) =>
+            Host = new HostBuilder()
+                .ConfigureWebHost(hostBuilder =>
                 {
-                    configBuilder.AddConfiguration(config);
-                })
-                .ConfigureWebHostDefaults(builder =>
-                {
-                    builder.UseTestServer()
-                        .UseStartup<TestHostStartup>();
+                    hostBuilder.UseTestServer()
+                        .UseConfiguration(ConfigurationHelper.CreateConfiguration())
+                        .ConfigureServices((context, services) =>
+                        {
+                            services.RegisterServices(context.Configuration);
+                        })
+                        .Configure(appBuilder =>
+                        {
+                            appBuilder.UseRouting();
+                            appBuilder.AddMiddlewares();
+                            appBuilder.UseEndpoints(endpoints =>
+                            {
+                                AddAllTestEndpoints(endpoints);
+                            });
+                        });
                 })
                 .Build();
 
-            await TestHost.StartAsync();
-            TestClient = TestHost.GetTestClient();
+            await Host.StartAsync();
+            Client = Host.GetTestClient();
         }
 
         public async Task DisposeAsync()
         {
-            await TestHost.StopAsync();
-            TestHost.Dispose();
-            TestClient.Dispose();
+            await Host.StopAsync();
+            Host.Dispose();
+            Client.Dispose();
+        }
+
+        private void AddAllTestEndpoints(IEndpointRouteBuilder endpoints)
+        {
+            var methods = typeof(TestEndpoints).GetMethods(BindingFlags.Public | BindingFlags.Static);
+            foreach (var method in methods)
+            {
+                method.Invoke(null, new object[] { endpoints });
+            }
         }
     }
 }
