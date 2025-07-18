@@ -2,6 +2,7 @@ using Cayd.AspNetCore.Settings.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.Reflection;
 using Template.Api.Configurations;
+using Template.Api.Middlewares;
 using Template.Application;
 using Template.Infrastructure;
 using Template.Persistence;
@@ -43,10 +44,15 @@ public static partial class Program
             Assembly.GetAssembly(typeof(Template.Application.ServiceRegistrations))!);
 
         services.AddLocalization(config => config.ResourcesPath = "Resources");
+
+        services.AddProblemDetails();
+        services.AddExceptionHandler<GlobalExceptionHandler>();
     }
 
     public static void AddMiddlewares(this IApplicationBuilder app)
     {
+        app.UseExceptionHandler();
+
         app.UseHttpsRedirection();
 
         app.UseAuthentication();
