@@ -1,7 +1,6 @@
 ﻿using Cayd.Test.Generators;
 using Microsoft.EntityFrameworkCore;
 using Template.Domain.Entities.UserManagement;
-using Template.Domain.Shared.ValueObjects;
 using Template.Persistence.DbContexts;
 using Template.Persistence.Repositories.UserManagement;
 using Template.Test.Integration.Persistence.Collections;
@@ -237,82 +236,6 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         {
             // Act
             var result = await _userRepository.GetSecurityStateByEmailAsync(EmailGenerator.Generate());
-
-            // Arrange
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task GetUserProfileByIdAsync_WhenUserExists_ShouldReturnUserProfile()
-        {
-            // Arrange
-            var user = new User()
-            {
-                UserProfile = new UserProfile()
-                {
-                    Address = new Address()
-                }
-            };
-
-            await _userRepository.AddAsync(user);
-            await _appDbContext.SaveChangesAsync();
-
-            var userId = user.Id;
-            _appDbContext.UntrackEntity(user);
-
-            // Act
-            var result = await _userRepository.GetUserProfileByIdAsync(userId);
-
-            // Arrange
-            Assert.NotNull(result);
-        }
-
-        [Fact]
-        public async Task GetUserProfileByIdAsync_WhenUserDoesNotExist_ShouldReturnNull()
-        {
-            // Act
-            var result = await _userRepository.GetUserProfileByIdAsync(Guid.NewGuid());
-
-            // Arrange
-            Assert.Null(result);
-        }
-
-        [Fact]
-        public async Task GetUserProfileByEmailAsync_WhenUserExists_ShouldReturnUserIdAndUserProfile()
-        {
-            // Arrange
-            var email = EmailGenerator.Generate();
-            var user = new User()
-            {
-                Email = email,
-                UserProfile = new UserProfile()
-                {
-                    Address = new Address()
-                }
-            };
-
-            await _userRepository.AddAsync(user);
-            await _appDbContext.SaveChangesAsync();
-
-            var userId = user.Id;
-            _appDbContext.UntrackEntity(user);
-
-            // Act
-            var result = await _userRepository.GetUserProfileByEmailAsync(email);
-
-            // Arrange
-            Assert.NotNull(result);
-
-            var (id, userProfile) = result.Value;
-            Assert.Equal(userId, id);
-            Assert.NotNull(userProfile);
-        }
-
-        [Fact]
-        public async Task GetUserProfileByEmailAsync_WhenUserDoesNotExist_ShouldReturnNull()
-        {
-            // Act
-            var result = await _userRepository.GetUserProfileByEmailAsync(EmailGenerator.Generate());
 
             // Arrange
             Assert.Null(result);

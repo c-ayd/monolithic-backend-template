@@ -63,26 +63,6 @@ namespace Template.Persistence.Repositories.UserManagement
             return result == null ? null : (result.Id, result.SecurityState!);
         }
 
-        public async Task<UserProfile?> GetUserProfileByIdAsync(Guid id, CancellationToken cancellationToken = default)
-            => await _appDbContext.Users
-                .Where(u => u.Id.Equals(id))
-                .Select(u => u.UserProfile)
-                .FirstOrDefaultAsync(cancellationToken);
-
-        public async Task<(Guid, UserProfile)?> GetUserProfileByEmailAsync(string email, CancellationToken cancellationToken = default)
-        {
-            var result = await _appDbContext.Users
-                .Where(u => u.Email == email)
-                .Select(u => new
-                {
-                    u.Id,
-                    u.UserProfile
-                })
-                .FirstOrDefaultAsync(cancellationToken);
-
-            return result == null ? null : (result.Id, result.UserProfile!);
-        }
-
         public void Delete(User user)
             => _appDbContext.Remove(user);
 
