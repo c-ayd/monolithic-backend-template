@@ -24,7 +24,7 @@ namespace Template.Test.Utility.Fixtures.Hosting
                         .UseConfiguration(ConfigurationHelper.CreateConfiguration())
                         .ConfigureServices((context, services) =>
                         {
-                            services.RegisterServices(context.Configuration);
+                            services.AddServices(context.Configuration);
                             services.AddAuthorization(config =>
                             {
                                 config.AddPolicy(TestPolicy.PolicyName, p =>

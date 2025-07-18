@@ -8,7 +8,7 @@ using Template.Persistence;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.RegisterServices(builder.Configuration);
+builder.Services.AddServices(builder.Configuration);
 
 var app = builder.Build();
 
@@ -20,7 +20,7 @@ app.Run();
 
 public static partial class Program 
 {
-    public static void RegisterServices(this IServiceCollection services, IConfiguration configuration)
+    public static void AddServices(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(options =>
