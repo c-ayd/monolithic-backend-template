@@ -25,6 +25,13 @@ namespace Template.Test.Utility.Fixtures.Hosting
                         .ConfigureServices((context, services) =>
                         {
                             services.RegisterServices(context.Configuration);
+                            services.AddAuthorization(config =>
+                            {
+                                config.AddPolicy(TestPolicy.PolicyName, p =>
+                                {
+                                    p.RequireClaim(TestPolicy.ClaimName, "test-value");
+                                });
+                            });
                         })
                         .Configure(appBuilder =>
                         {
