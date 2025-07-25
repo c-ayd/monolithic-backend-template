@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Template.Domain.Entities.UserManagement;
+using Template.Persistence.Generators;
 
 namespace Template.Persistence.EntityConfigurations.UserManagement
 {
@@ -8,6 +9,9 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
     {
         public void Configure(EntityTypeBuilder<Token> builder)
         {
+            builder.Property(t => t.Id)
+                .HasValueGenerator<GuidIdGenerator>();
+
             builder.HasIndex(t => t.Value)
                 .IsUnique();
         }

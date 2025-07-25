@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Template.Application.Validations.Constants.Entities.UserManagement;
 using Template.Domain.Entities.UserManagement;
+using Template.Persistence.Generators;
 
 namespace Template.Persistence.EntityConfigurations.UserManagement
 {
@@ -9,6 +10,9 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
     {
         public void Configure(EntityTypeBuilder<User> builder)
         {
+            builder.Property(u => u.Id)
+                .HasValueGenerator<GuidIdGenerator>();
+
             builder.HasIndex(u => u.Email);
 
             builder.Property(u => u.Email)
