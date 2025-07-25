@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Template.Api.Configurations;
+using Template.Api.Filters;
 using Template.Api.Middlewares;
 using Template.Application;
 using Template.Infrastructure;
@@ -35,7 +36,11 @@ public static partial class Program
 
         services.AddAuthorization();
 
-        services.AddControllers();
+        services.AddControllers(config =>
+        {
+            config.Filters.Add(new ProblemDetailsPopulaterFilter());
+        }).AddApplicationPart(typeof(Program).Assembly);
+
         services.Configure<ApiBehaviorOptions>(options =>
         {
             options.ConfigureInvalidModelStateResponse();
