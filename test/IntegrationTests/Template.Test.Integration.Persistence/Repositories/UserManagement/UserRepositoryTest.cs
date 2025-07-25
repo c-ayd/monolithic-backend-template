@@ -225,10 +225,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             // Arrange
             Assert.NotNull(result);
-
-            var (id, securityState) = result.Value;
-            Assert.Equal(userId, id);
-            Assert.NotNull(securityState);
+            Assert.Equal(userId, result.UserId);
         }
 
         [Fact]

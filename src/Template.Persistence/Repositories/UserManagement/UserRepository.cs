@@ -49,19 +49,11 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Select(u => u.SecurityState)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<(Guid, SecurityState)?> GetSecurityStateByEmailAsync(string email, CancellationToken cancellationToken = default)
-        {
-            var result = await _appDbContext.Users
+        public async Task<SecurityState?> GetSecurityStateByEmailAsync(string email, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
                 .Where(u => u.Email == email)
-                .Select(u => new
-                {
-                    u.Id,
-                    u.SecurityState
-                })
+                .Select(u => u.SecurityState)
                 .FirstOrDefaultAsync(cancellationToken);
-
-            return result == null ? null : (result.Id, result.SecurityState!);
-        }
 
         public void Delete(User user)
             => _appDbContext.Remove(user);
