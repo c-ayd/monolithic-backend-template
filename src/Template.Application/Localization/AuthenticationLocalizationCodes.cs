@@ -18,5 +18,8 @@
         public const string PasswordRequired = "password_required";
         public const string PasswordInvalid = "password_invalid";
         public const string PasswordLengthError = "password_length_error";
+
+        public const string RegisterEmailExists = "register_email_exists";
+        public const string RegisterSucceededButSendingEmailFailed = "register_success_email_fail";
     }
 }
