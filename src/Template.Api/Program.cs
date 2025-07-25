@@ -1,18 +1,29 @@
+using Cayd.AspNetCore.FlexLog.DependencyInjection;
 using Cayd.AspNetCore.Settings.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Template.Api.Configurations;
 using Template.Api.Filters;
+using Template.Api.Logging.Sinks;
 using Template.Api.Middlewares;
 using Template.Application;
 using Template.Infrastructure;
 using Template.Persistence;
 using Template.Persistence.SeedData;
+using Template.Persistence.Settings;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddServices(builder.Configuration);
+
+builder.Services.AddFlexLog(builder.Configuration, config =>
+{
+    var connStrings = builder.Configuration.GetSection(ConnectionStringsSettings.SettingsKey).Get<ConnectionStringsSettings>()!;
+
+    config.AddSink(new DatabaseSink(connStrings.Log))
+        .AddFallbackSink(new FileSink());
+});
 
 var app = builder.Build();
 
@@ -65,6 +76,8 @@ public static partial class Program
     public static void AddMiddlewares(this IApplicationBuilder app)
     {
         app.UseExceptionHandler();
+
+        app.UseFlexLog();
 
         app.UseHttpsRedirection();
 
