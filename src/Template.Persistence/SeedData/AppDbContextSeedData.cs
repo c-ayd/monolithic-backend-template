@@ -11,8 +11,8 @@ namespace Template.Persistence.SeedData
             //using var scope = app.Services.CreateAsyncScope();
             //var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
-            // TODO: Use the code above to access the database. Then check if there is any data
-            // in the tables you want to seed. Depending on that, continue and the seed data or return.
+            // NOTE: Use the code above to access the database. Then check if there is any data
+            // in the tables you want to seed data into. Depending on that, continue and seed data or return.
         }
     }
 }
