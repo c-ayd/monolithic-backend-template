@@ -36,10 +36,9 @@ namespace Template.Test.Integration.Api.Middlewares
 
             Assert.NotNull(result);
             Assert.Equal(StatusCodes.Status500InternalServerError, result.Status);
-            Assert.Equal("Internal Server Error", result.Title);
-            Assert.Equal("Something went wrong", result.Detail);
+            Assert.Equal("Internal server error", result.Title);
             Assert.Equal("GET /test/exception",result.Instance);
-            Assert.Equal("Exception", result.Type);
+            Assert.Equal("https://datatracker.ietf.org/doc/html/rfc9110#section-15.6.1", result.Type);
             Assert.NotNull(result.TraceId);
         }
 

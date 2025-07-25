@@ -20,10 +20,9 @@ namespace Template.Api.Middlewares
                 ProblemDetails = new ProblemDetails()
                 {
                     Status = StatusCodes.Status500InternalServerError,
-                    Title = "Internal Server Error",
-                    Detail = "Something went wrong",
+                    Title = "Internal server error",
                     Instance = $"{httpContext.Request.Method} {httpContext.Request.Path}",
-                    Type = "Exception",
+                    Type = "https://datatracker.ietf.org/doc/html/rfc9110#section-15.6.1",
                     Extensions = new Dictionary<string, object?>()
                     {
                         { "traceId", httpContext.TraceIdentifier }
