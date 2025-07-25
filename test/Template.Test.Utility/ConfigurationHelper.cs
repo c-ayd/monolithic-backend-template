@@ -18,15 +18,6 @@ namespace Template.Test.Utility
                 .Build();
         }
 
-        public static ConfigurationManager CreateConfigurationManager()
-        {
-            var configManager = new ConfigurationManager();
-            configManager.AddUserSecrets<AppDbContextFixture>();
-            configManager.AddJsonFile(_apiProjectPath + "/appsettings.json");
-
-            return configManager;
-        }
-
         private static string GetApiProjectPath([CallerFilePath] string callerPath = "")
             => Path.GetFullPath(Path.Combine(Path.GetDirectoryName(callerPath)!, @"..\..\src\Template.Api"));
     }
