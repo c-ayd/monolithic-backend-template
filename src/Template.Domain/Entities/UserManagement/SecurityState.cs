@@ -8,7 +8,7 @@ namespace Template.Domain.Entities.UserManagement
         public bool IsEmailVerified { get; set; }
         public int FailedAttempts { get; set; }
         public bool IsLocked { get; set; }
-        public DateTime UnlockDate { get; set; }
+        public DateTime? UnlockDate { get; set; }
 
         public DateTime? UpdatedDate { get; private set; }
 
