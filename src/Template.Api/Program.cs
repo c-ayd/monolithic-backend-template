@@ -1,5 +1,6 @@
 using Cayd.AspNetCore.Settings.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
 using Template.Api.Configurations;
 using Template.Api.Middlewares;
@@ -35,6 +36,10 @@ public static partial class Program
         services.AddAuthorization();
 
         services.AddControllers();
+        services.Configure<ApiBehaviorOptions>(options =>
+        {
+            options.ConfigureInvalidModelStateResponse();
+        });
 
         services.AddPersistenceServices(configuration);
         services.AddInfrastructureServices();
