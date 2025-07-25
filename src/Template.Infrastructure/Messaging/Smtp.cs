@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.Options;
+using System.Net;
 using System.Net.Mail;
 using Template.Application.Abstractions.Messaging;
 using Template.Infrastructure.Settings.Messaging;
