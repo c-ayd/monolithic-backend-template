@@ -131,7 +131,7 @@ namespace Template.Persistence.Migrations
                     b.Property<string>("PasswordHashed")
                         .HasColumnType("text");
 
-                    b.Property<DateTime>("UnlockDate")
+                    b.Property<DateTime?>("UnlockDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<DateTime?>("UpdatedDate")
@@ -193,8 +193,8 @@ namespace Template.Persistence.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Email")
-                        .HasMaxLength(320)
-                        .HasColumnType("character varying(320)");
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
