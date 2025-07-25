@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
@@ -19,13 +20,19 @@ namespace Template.Test.Utility.Fixtures.Hosting
         public IHost Host { get; private set; } = null!;
         public HttpClient Client { get; private set; } = null!;
 
+        public IConfiguration Configuration { get; private set; } = null!;
+
+        public AppDbContext AppDbContext { get; private set; } = null!;
+
         public async Task InitializeAsync()
         {
+            Configuration = ConfigurationHelper.CreateConfiguration();
+
             Host = new HostBuilder()
                 .ConfigureWebHost(hostBuilder =>
                 {
                     hostBuilder.UseTestServer()
-                        .UseConfiguration(ConfigurationHelper.CreateConfiguration())
+                        .UseConfiguration(Configuration)
                         .ConfigureServices((context, services) =>
                         {
                             services.AddServices(context.Configuration);
@@ -63,6 +70,8 @@ namespace Template.Test.Utility.Fixtures.Hosting
 
         public async Task DisposeAsync()
         {
+            await AppDbContext.Database.EnsureDeletedAsync();
+
             await Host.StopAsync();
             Host.Dispose();
             Client.Dispose();
@@ -79,18 +88,19 @@ namespace Template.Test.Utility.Fixtures.Hosting
 
         private async Task CreateDatabase()
         {
-            var dbContext = Host.Services.GetRequiredService<AppDbContext>();
+            AppDbContext = Host.Services.GetRequiredService<AppDbContext>();
 
-            if (await dbContext.Database.CanConnectAsync())
+            if (await AppDbContext.Database.CanConnectAsync())
             {
-                await dbContext.Database.EnsureCreatedAsync();
+                await AppDbContext.Database.EnsureCreatedAsync();
             }
 
-            await dbContext.Database.MigrateAsync();
+            await AppDbContext.Database.MigrateAsync();
         }
 
         private void SetDefaultOptions()
         {
+            ResetUserAgent();
             ResetAcceptLanguage();
             RemoveJwtBearerToken();
             SetEmailSenderResult(true);

@@ -3,6 +3,7 @@ using Cayd.AspNetCore.Settings.DependencyInjection;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Mvc;
 using System.Reflection;
+using Template.Api;
 using Template.Api.Configurations;
 using Template.Api.Filters;
 using Template.Api.Logging.Sinks;
@@ -57,6 +58,7 @@ public static partial class Program
             options.ConfigureInvalidModelStateResponse();
         });
 
+        services.AddPresentationServices();
         services.AddPersistenceServices(configuration);
         services.AddInfrastructureServices();
         services.AddApplicationServices();
@@ -83,6 +85,8 @@ public static partial class Program
 
         app.UseAuthentication();
         app.UseAuthorization();
+
+        app.UseMiddleware<RequestContextPopulator>();
 
         app.UseRequestLocalization(new RequestLocalizationOptions()
             .SetDefaultCulture("en")
