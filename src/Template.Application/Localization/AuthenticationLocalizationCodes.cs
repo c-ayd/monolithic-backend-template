@@ -14,5 +14,9 @@
         public const string EmailRequired = "email_required";
         public const string EmailTooLong = "email_too_long";
         public const string EmailInvalid = "email_invalid";
+
+        public const string PasswordRequired = "password_required";
+        public const string PasswordInvalid = "password_invalid";
+        public const string PasswordLengthError = "password_length_error";
     }
 }
