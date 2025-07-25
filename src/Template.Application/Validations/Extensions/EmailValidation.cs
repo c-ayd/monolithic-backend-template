@@ -10,12 +10,12 @@ namespace Template.Application.Validations.Extensions
             => rule
                 .NotEmpty()
                     .WithMessage("Email is null or empty")
-                    .WithErrorCode(AuthenticationLocalizationCodes.EmailRequired)
+                    .WithErrorCode(AuthenticationLocalizationKeys.EmailRequired)
                 .MaximumLength(UserConstants.EmailMaxLength)
                     .WithMessage("Email address is too long")
-                    .WithErrorCode(AuthenticationLocalizationCodes.EmailTooLong)
+                    .WithErrorCode(AuthenticationLocalizationKeys.EmailTooLong)
                 .Matches(UserConstants.EmailRegex)
                     .WithMessage("Email is invalid")
-                    .WithErrorCode(AuthenticationLocalizationCodes.EmailInvalid);
+                    .WithErrorCode(AuthenticationLocalizationKeys.EmailInvalid);
     }
 }

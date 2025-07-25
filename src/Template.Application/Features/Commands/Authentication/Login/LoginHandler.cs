@@ -43,7 +43,7 @@ namespace Template.Application.Features.Commands.Authentication.Login
         {
             var securityState = await _unitOfWork.Users.GetSecurityStateByEmailAsync(request.Email!);
             if (securityState == null)
-                return new ExecErrorDetail("The credentials are wrong", AuthenticationLocalizationCodes.LoginWrongCredentials);
+                return new ExecErrorDetail("The credentials are wrong", AuthenticationLocalizationKeys.LoginWrongCredentials);
 
             // Account lock check
             if (securityState.IsLocked)
@@ -51,7 +51,7 @@ namespace Template.Application.Features.Commands.Authentication.Login
                 if (DateTime.UtcNow < securityState.UnlockDate)
                 {
                     return new ExecLocked($"The account is locked until {securityState.UnlockDate}",
-                        AuthenticationLocalizationCodes.LoginAlreadyLocked,
+                        AuthenticationLocalizationKeys.LoginAlreadyLocked,
                         new
                         {
                             securityState.UnlockDate
@@ -85,13 +85,13 @@ namespace Template.Application.Features.Commands.Authentication.Login
                     {
                         await _unitOfWork.SaveChangesAsync();
 
-                        return new ExecErrorDetail("The credentials are wrong", AuthenticationLocalizationCodes.LoginWrongCredentials);
+                        return new ExecErrorDetail("The credentials are wrong", AuthenticationLocalizationKeys.LoginWrongCredentials);
                     }
 
                     await _unitOfWork.SaveChangesAsync();
 
                     return new ExecLocked($"The account is locked due to {securityState.FailedAttempts} failed attemps",
-                        AuthenticationLocalizationCodes.LoginLocked,
+                        AuthenticationLocalizationKeys.LoginLocked,
                         new
                         {
                             securityState.FailedAttempts,
@@ -102,13 +102,13 @@ namespace Template.Application.Features.Commands.Authentication.Login
                     {
                         PasswordVersion = Convert.FromBase64String(securityState.PasswordHashed!)[0]
                     });
-                    return new ExecInternalServerError("Something went wrong", CommonLocalizationCodes.InternalServerError);
+                    return new ExecInternalServerError("Something went wrong", CommonLocalizationKeys.InternalServerError);
                 case EPasswordVerificationResult.LengthMismatch:
                     _flexLogger.LogError("Passwords' lengths do not match.", new
                     {
                         PasswordVersion = Convert.FromBase64String(securityState.PasswordHashed!)[0]
                     });
-                    return new ExecInternalServerError("Something went wrong", CommonLocalizationCodes.InternalServerError);
+                    return new ExecInternalServerError("Something went wrong", CommonLocalizationKeys.InternalServerError);
                 case EPasswordVerificationResult.SuccessRehashNeeded:
                     securityState.PasswordHashed = _hashing.HashPassword(request.Password!);
                     break;
@@ -119,7 +119,7 @@ namespace Template.Application.Features.Commands.Authentication.Login
                     {
                         VerificationResult = passwordVerificationResult
                     });
-                    return new ExecInternalServerError("Something went wrong", CommonLocalizationCodes.InternalServerError);
+                    return new ExecInternalServerError("Something went wrong", CommonLocalizationKeys.InternalServerError);
             }
 
             // Generate JWT token

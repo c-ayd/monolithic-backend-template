@@ -1,6 +1,6 @@
 ﻿namespace Template.Application.Localization
 {
-    public static class AuthenticationLocalizationCodes
+    public static class AuthenticationLocalizationKeys
     {
         /** 
          * NOTE: These values are only placeholders. If your frontend is multilingual,

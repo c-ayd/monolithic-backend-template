@@ -10,12 +10,12 @@ namespace Template.Application.Validations.Extensions
             => rule
                 .NotEmpty()
                     .WithMessage("Password is null or empty")
-                    .WithErrorCode(AuthenticationLocalizationCodes.PasswordRequired)
+                    .WithErrorCode(AuthenticationLocalizationKeys.PasswordRequired)
                 .Length(PasswordConstants.MinLength, PasswordConstants.MaxLength)
                     .WithMessage("Password must be between 10 and 100 characters")
-                    .WithErrorCode(AuthenticationLocalizationCodes.PasswordLengthError)
+                    .WithErrorCode(AuthenticationLocalizationKeys.PasswordLengthError)
                 .Matches(PasswordConstants.PasswordRegex)
                     .WithMessage("Password must include at least one numeric and one alphanumeric character")
-                    .WithErrorCode(AuthenticationLocalizationCodes.PasswordInvalid);
+                    .WithErrorCode(AuthenticationLocalizationKeys.PasswordInvalid);
     }
 }

@@ -47,7 +47,7 @@ namespace Template.Application.Features.Commands.Authentication.Register
             // Check if the user exists
             var user = await _unitOfWork.Users.GetByEmailAsync(request.Email!);
             if (user != null)
-                return new ExecConflict("This email address already exists", AuthenticationLocalizationCodes.RegisterEmailExists);
+                return new ExecConflict("This email address already exists", AuthenticationLocalizationKeys.RegisterEmailExists);
 
             // Add a new user to the database
             var newUser = new User()
@@ -93,7 +93,7 @@ namespace Template.Application.Features.Commands.Authentication.Register
                 new
                 {
                     Status = "The user has been created, but the verification email could not be sent",
-                    LocalizationCode = AuthenticationLocalizationCodes.RegisterSucceededButSendingEmailFailed
+                    LocalizationCode = AuthenticationLocalizationKeys.RegisterSucceededButSendingEmailFailed
                 });
             }
             
