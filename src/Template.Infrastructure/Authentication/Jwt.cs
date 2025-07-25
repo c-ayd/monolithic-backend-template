@@ -37,16 +37,14 @@ namespace Template.Infrastructure.Authentication
         public JwtTokenDto Generate(ICollection<Claim>? claims, DateTime? notBefore)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
-            var expirationDate = notBefore != null ?
-                notBefore.Value.AddDays(_jwtSettings.RefreshTokenLifeSpanInDays) :
-                DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenLifeSpanInDays);
-
             var token = new JwtSecurityToken(
                 claims: claims,
                 issuer: _jwtSettings.Issuer,
                 audience: _jwtSettings.Audience,
                 notBefore: notBefore,
-                expires: expirationDate,
+                expires: notBefore != null ?
+                    notBefore.Value.AddMinutes(_jwtSettings.AccessTokenLifeSpanInMinutes) :
+                    DateTime.UtcNow.AddMinutes(_jwtSettings.AccessTokenLifeSpanInMinutes),
                 signingCredentials: new SigningCredentials(key, SecurityAlgorithms.HmacSha256)
             );
 
@@ -54,7 +52,9 @@ namespace Template.Infrastructure.Authentication
             {
                 AccessToken = new JwtSecurityTokenHandler().WriteToken(token),
                 RefreshToken = _tokenGenerator.Generate(),
-                RefreshTokenExpirationDate = expirationDate
+                RefreshTokenExpirationDate = notBefore != null ?
+                    notBefore.Value.AddDays(_jwtSettings.RefreshTokenLifeSpanInDays) :
+                    DateTime.UtcNow.AddDays(_jwtSettings.RefreshTokenLifeSpanInDays)
             };
         }
     }
