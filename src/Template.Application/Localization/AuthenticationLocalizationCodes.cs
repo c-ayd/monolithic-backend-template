@@ -21,5 +21,9 @@
 
         public const string RegisterEmailExists = "register_email_exists";
         public const string RegisterSucceededButSendingEmailFailed = "register_success_email_fail";
+
+        public const string LoginWrongCredentials = "login_wrong_credentials";
+        public const string LoginAlreadyLocked = "login_locked";
+        public const string LoginLocked = "login_locked";
     }
 }
