@@ -19,6 +19,9 @@ namespace Template.Test.Integration.Api
         private readonly JwtSettings _jwtSettings;
         private readonly Jwt _jwt;
 
+        private readonly string _authenticationEndpoint = "/test/authentication";
+        private readonly string _authorizationEndpoint = "/test/authorization";
+
         public AuthTest(TestHostFixture testHostFixture)
         {
             _testHostFixture = testHostFixture;
@@ -38,7 +41,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authentication");
+            var response = await _testHostFixture.Client.GetAsync(_authenticationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -58,7 +61,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authentication");
+            var response = await _testHostFixture.Client.GetAsync(_authenticationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -77,7 +80,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authentication");
+            var response = await _testHostFixture.Client.GetAsync(_authenticationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -93,7 +96,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authentication");
+            var response = await _testHostFixture.Client.GetAsync(_authenticationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -105,7 +108,7 @@ namespace Template.Test.Integration.Api
         public async Task AuthenticationEndpoint_WhenJwtBearerTokenDoesNotExist_ShouldReturnUnauthorized()
         {
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authentication");
+            var response = await _testHostFixture.Client.GetAsync(_authenticationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -124,7 +127,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, response.StatusCode);
@@ -143,7 +146,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -159,7 +162,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Forbidden, response.StatusCode);
@@ -179,7 +182,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -198,7 +201,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -214,7 +217,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);
@@ -226,7 +229,7 @@ namespace Template.Test.Integration.Api
         public async Task AuthorizationEndpoint_WhenJwtBearerTokenDoesNotExist_ShouldReturnUnauthorized()
         {
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/authorization");
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, response.StatusCode);

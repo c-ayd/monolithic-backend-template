@@ -9,6 +9,8 @@ namespace Template.Test.Integration.Api
     {
         private readonly TestHostFixture _testHostFixture;
 
+        private readonly string _endpoint = "/test/localization";
+
         public LocalizationTest(TestHostFixture testHostFixture)
         {
             _testHostFixture = testHostFixture;
@@ -21,7 +23,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.UpdateAcceptLanguage("de-DE");
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/localization");
+            var response = await _testHostFixture.Client.GetAsync(_endpoint);
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<string>(content);
 
@@ -38,7 +40,7 @@ namespace Template.Test.Integration.Api
             _testHostFixture.UpdateAcceptLanguage("es-ES");
 
             // Act
-            var response = await _testHostFixture.Client.GetAsync("/test/localization");
+            var response = await _testHostFixture.Client.GetAsync(_endpoint);
             var content = await response.Content.ReadAsStringAsync();
             var result = JsonSerializer.Deserialize<string>(content);
 
