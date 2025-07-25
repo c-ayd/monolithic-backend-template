@@ -28,6 +28,10 @@ namespace Template.Infrastructure.Messaging
 
             using var smtpClient = new SmtpClient(_smtpSettings.Server, _smtpSettings.Port);
 #if DEBUG
+            var isEmailSent = (bool?)AppDomain.CurrentDomain.GetData("EmailSenderResult");
+            if (isEmailSent.HasValue && !isEmailSent.Value)
+                throw new Exception("The email is not sent for testing.");
+
             var fullPath = Path.GetFullPath(@".\Temp\Emails");
             if (!Directory.Exists(fullPath))
             {
