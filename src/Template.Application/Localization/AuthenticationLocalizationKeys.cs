@@ -27,5 +27,9 @@
         public const string LoginLocked = "login_locked";
 
         public const string LogoutUnauthorized = "logout_unauthorized";
+
+        public const string VerifyEmailNoToken = "verify_email_no_token";
+        public const string VerifyEmailTokenNotFound = "verify_email_token_not_found";
+        public const string VerifyEmailTokenExpired = "verify_email_token_expired";
     }
 }
