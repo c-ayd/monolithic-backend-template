@@ -320,5 +320,66 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             Assert.Empty(result);
         }
+
+        [Fact]
+        public async Task DeleteAllByUserIdAsync_WhenTokensRelatedToUserExist_ShouldDeleteAllTokensRelatedToUser()
+        {
+            // Arrange
+            var user1 = new User()
+            {
+                Tokens = new List<Token>()
+                {
+                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                }
+            };
+            var user2 = new User()
+            {
+                Tokens = new List<Token>()
+                {
+                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                }
+            };
+
+            await _appDbContext.Users.AddAsync(user1);
+            await _appDbContext.Users.AddAsync(user2);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId1 = user1.Id;
+            var userId2 = user2.Id;
+            _appDbContext.UntrackEntities(user1.Tokens.ToArray());
+            _appDbContext.UntrackEntity(user1);
+            _appDbContext.UntrackEntities(user2.Tokens.ToArray());
+            _appDbContext.UntrackEntity(user2);
+
+            // Act
+            var result = await _tokenRepository.DeleteAllByUserIdAsync(userId1);
+
+            // Assert
+            Assert.Equal(user1.Tokens.Count, result);
+
+            var user1Tokens = await _appDbContext.Tokens
+                .Where(l => l.UserId.Equals(userId1))
+                .ToListAsync();
+            Assert.Empty(user1Tokens);
+
+            var user2Tokens = await _appDbContext.Tokens
+                .Where(l => l.UserId.Equals(userId2))
+                .ToListAsync();
+            Assert.Equal(user2.Tokens.Count, user2Tokens.Count);
+        }
+
+        [Fact]
+        public async Task DeleteAllByUserIdAsync_WhenTokensRelatedToUserDoNotExist_ShouldDeleteNothing()
+        {
+            // Act
+            var result = await _tokenRepository.DeleteAllByUserIdAsync(Guid.NewGuid());
+
+            // Assert
+            Assert.Equal(0, result);
+        }
     }
 }

@@ -27,6 +27,18 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(u => u.Email == email)
                 .FirstOrDefaultAsync(cancellationToken);
 
+        public async Task<User?> GetByIdWithSecurityStateAsync(Guid id, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
+                .Where(u => u.Id.Equals(id))
+                .Include(u => u.SecurityState)
+                .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<User?> GetByEmailWithSecurityStateAsync(string email, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
+                .Where(u => u.Email == email)
+                .Include(u => u.SecurityState)
+                .FirstOrDefaultAsync(cancellationToken);
+
         public async Task<Guid?> GetIdByEmailAsync(string email, CancellationToken cancellationToken = default)
         {
             var id = await _appDbContext.Users

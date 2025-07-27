@@ -104,6 +104,81 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
+        public async Task GetByIdWithSecurityStateAsync_WhenUserExists_ShouldReturnUserWithSecurityState()
+        {
+            // Arrange
+            var user = new User()
+            {
+                SecurityState = new SecurityState()
+                {
+                    FailedAttempts = 2
+                }
+            };
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetByIdWithSecurityStateAsync(userId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.SecurityState);
+            Assert.Equal(2, result.SecurityState.FailedAttempts);
+        }
+
+        [Fact]
+        public async Task GetByIdWithSecurityStateAsync_WhenUserDoesNotExist_ShouldReturnNull()
+        {
+            // Act
+            var result = await _userRepository.GetByIdWithSecurityStateAsync(Guid.NewGuid());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetByEmailWithSecurityStateAsync_WhenUserExists_ShouldReturnUserWithSecurityState()
+        {
+            // Arrange
+            var email = EmailGenerator.Generate();
+            var user = new User()
+            {
+                Email = email,
+                SecurityState = new SecurityState()
+                {
+                    FailedAttempts = 2
+                }
+            };
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetByEmailWithSecurityStateAsync(email);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.SecurityState);
+            Assert.Equal(2, result.SecurityState.FailedAttempts);
+        }
+
+        [Fact]
+        public async Task GetByEmailWithSecurityStateAsync_WhenUserDoesNotExist_ShouldReturnNull()
+        {
+            // Act
+            var result = await _userRepository.GetByEmailWithSecurityStateAsync(EmailGenerator.Generate());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
         public async Task GetIdByEmailAsync_WhenUserExists_ShouldReturnUserId()
         {
             // Arrange

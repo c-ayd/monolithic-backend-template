@@ -44,5 +44,10 @@ namespace Template.Persistence.Repositories.UserManagement
 
         public void DeleteAll(IEnumerable<Token> tokens)
             => _appDbContext.Tokens.RemoveRange(tokens);
+
+        public async Task<int> DeleteAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+            => await _appDbContext.Tokens
+                .Where(t => t.UserId.Equals(userId))
+                .ExecuteDeleteAsync(cancellationToken);
     }
 }
