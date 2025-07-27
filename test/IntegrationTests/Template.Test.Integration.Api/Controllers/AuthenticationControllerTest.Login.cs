@@ -16,7 +16,7 @@ namespace Template.Test.Integration.Api.Controllers
 {
     public partial class AuthenticationControllerTest
     {
-        private readonly string _loginEndpoint = "/auth/login";
+        private const string _loginEndpoint = "/auth/login";
 
         [Fact]
         public async Task Login_WhenUserDoesNotExists_ShouldReturnBadRequest()

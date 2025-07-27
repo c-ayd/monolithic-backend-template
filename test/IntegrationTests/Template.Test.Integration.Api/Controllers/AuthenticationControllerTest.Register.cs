@@ -9,7 +9,7 @@ namespace Template.Test.Integration.Api.Controllers
 {
     public partial class AuthenticationControllerTest
     {
-        private readonly string _registerEndpoint = "/auth/register";
+        private const string _registerEndpoint = "/auth/register";
 
         [Fact]
         public async Task Register_WhenUserExists_ShouldReturnConflict()

@@ -9,7 +9,7 @@ namespace Template.Test.Integration.Api.Controllers
 {
     public partial class AuthenticationControllerTest
     {
-        private readonly string _logoutEndpoint = "/auth/logout";
+        private const string _logoutEndpoint = "/auth/logout";
 
         [Fact]
         public async Task Logout_WhenNotLoggedIn_ShouldReturnUnauthorized()
