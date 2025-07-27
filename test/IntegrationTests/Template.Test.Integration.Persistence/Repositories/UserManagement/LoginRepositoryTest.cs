@@ -310,36 +310,54 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task DeleteAllByUserIdAsync_WhenLoginsRelatedToUserExist_ShouldDeleteAll()
+        public async Task DeleteAllByUserIdAsync_WhenLoginsRelatedToUserExist_ShouldDeleteAllLoginsRelatedToUser()
         {
             // Arrange
-            var user = new User();
-            await _appDbContext.Users.AddAsync(user);
-            await _appDbContext.SaveChangesAsync();
-
-            user.Logins = new List<Login>()
+            var user1 = new User()
             {
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                Logins = new List<Login>()
+                {
+                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                }
+            };
+            var user2 = new User()
+            {
+                Logins = new List<Login>()
+                {
+                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                }
             };
 
+            await _appDbContext.Users.AddAsync(user1);
+            await _appDbContext.Users.AddAsync(user2);
             await _appDbContext.SaveChangesAsync();
 
-            var userId = user.Id;
-            _appDbContext.UntrackEntities(user.Logins.ToArray());
-            _appDbContext.UntrackEntity(user);
+            var userId1 = user1.Id;
+            var userId2 = user2.Id;
+            _appDbContext.UntrackEntities(user1.Logins.ToArray());
+            _appDbContext.UntrackEntity(user1);
+            _appDbContext.UntrackEntities(user2.Logins.ToArray());
+            _appDbContext.UntrackEntity(user2);
 
             // Act
-            var result = await _loginRepository.DeleteAllByUserIdAsync(userId);
+            var result = await _loginRepository.DeleteAllByUserIdAsync(userId1);
 
             // Assert
-            Assert.Equal(user.Logins.Count, result);
+            Assert.Equal(user1.Logins.Count, result);
 
-            var logins = await _appDbContext.Logins
-                .Where(l => l.UserId.Equals(userId))
+            var user1Logins = await _appDbContext.Logins
+                .Where(l => l.UserId.Equals(userId1))
                 .ToListAsync();
-            Assert.Empty(logins);
+            Assert.Empty(user1Logins);
+
+            var user2Logins = await _appDbContext.Logins
+                .Where(l => l.UserId.Equals(userId2))
+                .ToListAsync();
+            Assert.Equal(user2.Logins.Count, user2Logins.Count);
         }
 
         [Fact]
