@@ -8,7 +8,7 @@ namespace Template.Persistence.SeedData
     {
         public static async Task SeedDataAppDbContext(this WebApplication app)
         {
-            //using var scope = app.Services.CreateAsyncScope();
+            //await using var scope = app.Services.CreateAsyncScope();
             //var dbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
 
             // NOTE: Use the code above to access the database. Then check if there is any data
