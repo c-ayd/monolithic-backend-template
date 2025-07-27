@@ -63,10 +63,14 @@ namespace Template.Api.Middlewares
                         if (parts == null || parts.Length != 2)
                             return new { Language = s, Weight = 0.0 };
 
-                        if (double.TryParse(parts[1], out double weight))
-                            return new { Language = s, Weight = 0.0 };
+                        var qualityParts = parts[1].Split('=');
+                        if (qualityParts.Length != 2)
+                            return new { Language = parts[0], Weight = 0.0 };
 
-                        return new { Language = s, Weight = weight };
+                        if (double.TryParse(qualityParts[1], out double weight))
+                            return new { Language = parts[0], Weight = weight };
+
+                        return new { Language = parts[0], Weight = 0.0 };
                     }
 
                     return new { Language = s, Weight = 1.0 };

@@ -42,7 +42,13 @@ namespace Template.Test.Integration.Api.Middlewares
 
             _testHostFixture.AddJwtBearerToken(token.AccessToken);
             _testHostFixture.UpdateUserAgent("TestAgent", "1.0");
-            _testHostFixture.UpdateAcceptLanguage("es-ES");
+            _testHostFixture.UpdateAcceptLanguage(new Dictionary<string, double>()
+            {
+                { "es-ES", 0.1 },
+                { "fr-FR", 0.9 },
+                { "de-DE", 0.5 },
+                { "en", 1.0 }
+            });
 
             // Act
             var response = await _testHostFixture.Client.GetAsync("/test/request-context");
@@ -58,8 +64,10 @@ namespace Template.Test.Integration.Api.Middlewares
             Assert.NotNull(result);
             Assert.Equal(userId, result.UserId);
             Assert.Equal("TestAgent/1.0", result.DeviceInfo);
-            Assert.Single(result.PreferredLanguages);
-            Assert.Equal("es-ES", result.PreferredLanguages[0]);
+            Assert.Equal("en", result.PreferredLanguages[0]);
+            Assert.Equal("fr-FR", result.PreferredLanguages[1]);
+            Assert.Equal("de-DE", result.PreferredLanguages[2]);
+            Assert.Equal("es-ES", result.PreferredLanguages[3]);
 
             _testHostFixture.RemoveJwtBearerToken();
             _testHostFixture.ResetUserAgent();
