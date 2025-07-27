@@ -1,10 +1,12 @@
 ﻿using Cayd.Test.Generators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
 using System.Text.Json;
 using Template.Api.Utilities;
+using Template.Application.Dtos.Controllers.Authentication;
 using Template.Application.Features.Commands.Authentication.Login;
 using Template.Application.Settings;
 using Template.Domain.Entities.UserManagement;
@@ -252,7 +254,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task Login_WhenCredentialsAreCorrect_ShouldReturnOkWithTokens()
+        public async Task Login_WhenCredentialsAreCorrect_ShouldReturnOkWithCookiesAndAccessToken()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -286,21 +288,36 @@ namespace Template.Test.Integration.Api.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+            Assert.True(result.Headers.Contains(HeaderNames.SetCookie));
+
+            var cookies = result.Headers.GetValues(HeaderNames.SetCookie);
+            Assert.Single(cookies);
+
+            var cookieDictionary = cookies.ElementAt(0)
+                .Split(';')
+                .Select(s => s.Split('='))
+                .ToDictionary(kvp => kvp[0].Trim(), kvp => kvp.Length > 1 ? kvp[1].Trim() : null);
+            Assert.NotNull(cookieDictionary[CookieUtility.RefreshTokenKey]);
+            Assert.NotNull(cookieDictionary["expires"]);
+            Assert.Contains("secure", cookieDictionary);
+            Assert.Contains("httponly", cookieDictionary);
+            Assert.Equal("/auth", cookieDictionary["path"]);
+            Assert.Equal("none", cookieDictionary["samesite"]);
 
             var json = await result.Content.ReadAsStringAsync();
             using var jsonDocument = JsonDocument.Parse(json);
             var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
-            var response = JsonSerializer.Deserialize<LoginResponse>(dataElement.GetRawText(), new JsonSerializerOptions()
+            var response = JsonSerializer.Deserialize<LoginDto>(dataElement.GetRawText(), new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             });
             Assert.NotNull(response);
+            Assert.NotNull(response.AccessToken);
 
-            var login = await _testHostFixture.AppDbContext.Logins
-                .Where(l => l.UserId.Equals(user.Id) &&
-                    l.RefreshToken == response.RefreshToken)
-                .FirstOrDefaultAsync();
-            Assert.NotNull(login);
+            var logins = await _testHostFixture.AppDbContext.Logins
+                .Where(l => l.UserId.Equals(user.Id))
+                .ToListAsync();
+            Assert.Single(logins);
         }
     }
 }
