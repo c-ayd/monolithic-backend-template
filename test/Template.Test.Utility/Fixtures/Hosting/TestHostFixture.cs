@@ -103,7 +103,7 @@ namespace Template.Test.Utility.Fixtures.Hosting
             ResetUserAgent();
             ResetAcceptLanguage();
             RemoveJwtBearerToken();
-            SetEmailSenderResult(true);
+            EmailHelper.SetEmailSenderResult(true);
         }
     }
 }

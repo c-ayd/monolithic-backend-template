@@ -4,6 +4,7 @@ using System.Net;
 using System.Net.Http.Json;
 using Template.Application.Features.Commands.Authentication.Register;
 using Template.Domain.Entities.UserManagement.Enums;
+using Template.Test.Utility;
 
 namespace Template.Test.Integration.Api.Controllers
 {
@@ -50,7 +51,7 @@ namespace Template.Test.Integration.Api.Controllers
                     requireNonAlphanumeric: false)
             };
 
-            AppDomain.CurrentDomain.SetData("EmailSenderResult", false);
+            EmailHelper.SetEmailSenderResult(false);
 
             // Act
             var result = await _testHostFixture.Client.PostAsJsonAsync(_registerEndpoint, request);
@@ -69,11 +70,11 @@ namespace Template.Test.Integration.Api.Controllers
             Assert.NotNull(token);
             Assert.Equal(ETokenPurpose.EmailVerification, token.Purpose);
 
-            AppDomain.CurrentDomain.SetData("EmailSenderResult", true);
+            EmailHelper.SetEmailSenderResult(true);
         }
 
         [Fact]
-        public async Task Register_WhenUserIsCreatedAndEmailIsSent_ShouldReturnOkAndCreateUserAndToken()
+        public async Task Register_WhenUserIsCreatedAndEmailIsSent_ShouldReturnOkAndCreateUserAndGenerateTokenAndSendEmail()
         {
             // Arrange
             var request = new RegisterRequest()
@@ -103,6 +104,10 @@ namespace Template.Test.Integration.Api.Controllers
                 .FirstOrDefaultAsync();
             Assert.NotNull(token);
             Assert.Equal(ETokenPurpose.EmailVerification, token.Purpose);
+
+            var email = await EmailHelper.GetLatestTempEmailFile();
+            Assert.NotNull(email);
+            Assert.Equal(request.Email, email.ReceiverEmail);
         }
     }
 }

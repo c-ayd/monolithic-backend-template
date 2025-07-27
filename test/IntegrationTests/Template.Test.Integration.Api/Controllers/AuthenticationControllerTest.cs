@@ -12,7 +12,7 @@ using Template.Test.Utility.Fixtures.Hosting;
 namespace Template.Test.Integration.Api.Controllers
 {
     [Collection(nameof(TestHostCollection))]
-    public partial class AuthenticationControllerTest
+    public partial class AuthenticationControllerTest : IDisposable
     {
         private readonly TestHostFixture _testHostFixture;
         private readonly IHashing _hashing;
@@ -27,6 +27,11 @@ namespace Template.Test.Integration.Api.Controllers
             var config = ConfigurationHelper.CreateConfiguration();
             var jwtSettings = config.GetSection(JwtSettings.SettingsKey).Get<JwtSettings>()!;
             _jwt = new Jwt(Options.Create(jwtSettings), new TokenGenerator());
+        }
+
+        public void Dispose()
+        {
+            EmailHelper.ClearTempEmailFiles();
         }
     }
 }
