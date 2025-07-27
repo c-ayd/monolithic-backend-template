@@ -54,7 +54,7 @@ namespace Template.Api.Logging.Sinks
 
         private async Task PrepareDatabase()
         {
-            using var adminConnection = new NpgsqlConnection(_adminConnectionString);
+            await using var adminConnection = new NpgsqlConnection(_adminConnectionString);
             await adminConnection.OpenAsync();
 
             if (!(await CheckIfDatabaseExistsAsync(adminConnection)))
@@ -70,7 +70,7 @@ namespace Template.Api.Logging.Sinks
 
         private async Task<bool> CheckIfDatabaseExistsAsync(NpgsqlConnection adminConnection)
         {
-            using var command = new NpgsqlCommand();
+            await using var command = new NpgsqlCommand();
             command.Connection = adminConnection;
             command.CommandText = "SELECT 1 FROM pg_database WHERE datname = @dbName";
             command.Parameters.AddWithValue("dbName", _databaseName);
@@ -81,7 +81,7 @@ namespace Template.Api.Logging.Sinks
 
         private async Task CreateDatabaseAsync(NpgsqlConnection adminConnection)
         {
-            using var command = new NpgsqlCommand();
+            await using var command = new NpgsqlCommand();
             command.Connection = adminConnection;
             command.CommandText = $"CREATE DATABASE \"{_databaseName}\"";
             await command.ExecuteNonQueryAsync();
@@ -89,10 +89,10 @@ namespace Template.Api.Logging.Sinks
 
         private async Task<bool> CheckIfTableExistsAsync()
         {
-            using var connection = new NpgsqlConnection(_connectionString);
+            await using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            using var command = new NpgsqlCommand();
+            await using var command = new NpgsqlCommand();
             command.Connection = connection;
             command.CommandText = new StringBuilder()
                 .Append("SELECT EXISTS (SELECT 1 FROM information_schema.tables ")
@@ -106,10 +106,10 @@ namespace Template.Api.Logging.Sinks
 
         private async Task CreateTableAsync()
         {
-            using var connection = new NpgsqlConnection(_connectionString);
+            await using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
 
-            using var command = new NpgsqlCommand();
+            await using var command = new NpgsqlCommand();
             command.Connection = connection;
             command.CommandText = new StringBuilder()
                 .Append("CREATE TABLE public.\"").Append(_tableName).Append("\" (")
@@ -140,7 +140,7 @@ namespace Template.Api.Logging.Sinks
                 await PrepareDatabase();
             }
 
-            using var connection = new NpgsqlConnection(_connectionString);
+            await using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
 
             var command = new NpgsqlCommand();

@@ -30,7 +30,7 @@ namespace Template.Api.Logging.Sinks
         public override async Task SaveLogsAsync(IReadOnlyList<FlexLogContext> buffer)
         {
             var filePath = Path.Combine(_folderPath, $"Logs_{DateTime.UtcNow.ToString("yyyy-MM-dd")}.txt");
-            using var streamWriter = new StreamWriter(filePath, append: true);
+            await using var streamWriter = new StreamWriter(filePath, append: true);
 
             var strBuilder = new StringBuilder();
             foreach (var log in buffer)
