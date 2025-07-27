@@ -270,12 +270,17 @@ namespace Template.Test.Integration.Api.Controllers
                 Email = email,
                 SecurityState = new SecurityState()
                 {
-                    PasswordHashed = _hashing.HashPassword(password)
+                    PasswordHashed = _hashing.HashPassword(password),
+                    FailedAttempts = 1
                 }
             };
 
             await _testHostFixture.AppDbContext.Users.AddAsync(user);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
+            _testHostFixture.AppDbContext.UntrackEntity(user);
 
             var request = new LoginRequest()
             {
@@ -318,6 +323,12 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(l => l.UserId.Equals(user.Id))
                 .ToListAsync();
             Assert.Single(logins);
+
+            var securityState = await _testHostFixture.AppDbContext.SecurityStates
+                .Where(ss => ss.UserId.Equals(userId))
+                .FirstOrDefaultAsync();
+            Assert.NotNull(securityState);
+            Assert.Equal(0, securityState.FailedAttempts);
         }
     }
 }

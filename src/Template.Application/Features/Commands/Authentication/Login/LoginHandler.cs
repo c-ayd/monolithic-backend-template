@@ -75,6 +75,11 @@ namespace Template.Application.Features.Commands.Authentication.Login
                         securityState.FailedAttempts = 0;
                         securityState.IsLocked = true;
                         securityState.UnlockDate = DateTime.UtcNow.AddMinutes(_accountLockSettings.SecondLockTimeInMinutes);
+
+                        _flexLogger.LogWarning("An account is locked.", new
+                        {
+                            securityState.UserId
+                        });
                     }
                     else if (securityState.FailedAttempts >= _accountLockSettings.FailedAttemptsForFirstLock)
                     {
@@ -110,9 +115,11 @@ namespace Template.Application.Features.Commands.Authentication.Login
                     });
                     return new ExecInternalServerError("Something went wrong", CommonLocalizationKeys.InternalServerError);
                 case EPasswordVerificationResult.SuccessRehashNeeded:
+                    securityState.FailedAttempts = 0;
                     securityState.PasswordHashed = _hashing.HashPassword(request.Password!);
                     break;
                 case EPasswordVerificationResult.Success:
+                    securityState.FailedAttempts = 0;
                     break;
                 default:
                     _flexLogger.LogError("Password verification result is outside of the enum range.", new
