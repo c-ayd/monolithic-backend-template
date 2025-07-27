@@ -1,5 +1,6 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.ClientError;
+using Cayd.AspNetCore.ExecutionResult.ServerError;
 using MediatR;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.UOW;
@@ -45,7 +46,7 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
                 await _unitOfWork.SaveChangesAsync();
 
                 // This code should never be executed. When a user is soft deleted, its tokens should be deleted as well.
-                return new ExecNotFound("Token does not exist", AuthenticationLocalizationKeys.VerifyEmailTokenNotFound);
+                return new ExecInternalServerError("Something went wrong", CommonLocalizationKeys.InternalServerError);
             }
 
             securityState.IsEmailVerified = true;

@@ -64,7 +64,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task VerifyEmail_WhenSecurityStateOfUserNotFound_ShouldReturnNotFound()
+        public async Task VerifyEmail_WhenSecurityStateOfUserNotFound_ShouldReturnInternalServerError()
         {
             // Arrange
             var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
@@ -96,7 +96,7 @@ namespace Template.Test.Integration.Api.Controllers
             var result = await _testHostFixture.Client.PatchAsJsonAsync(_verifyEmailEndpoint, request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
+            Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
         }
 
         [Fact]
