@@ -92,7 +92,65 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetByRefreshTokenAsync_WhenRefreshTokenExists_ShouldReturnLogin()
+        public async Task GetByUserIdAndRefreshTokenAsync_WhenUserIdAndRefreshTokenExist_ShouldReturnLogin()
+        {
+            // Arrange
+            var user = new User();
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var refreshToken = StringGenerator.GenerateUsingAsciiChars(10);
+            var login = new Login()
+            {
+                RefreshToken = refreshToken,
+                UserId = user.Id
+            };
+            await _loginRepository.AddAsync(login);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+            _appDbContext.UntrackEntity(login);
+
+            // Act
+            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(userId, refreshToken);
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task GetByUserIdAndRefreshTokenAsync_WhenUserIdExistsButRefreshTokenDoesNotExist_ShouldReturnNull()
+        {
+            // Arrange
+            var user = new User();
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var refreshToken = StringGenerator.GenerateUsingAsciiChars(10);
+            var login = new Login()
+            {
+                RefreshToken = refreshToken,
+                UserId = user.Id
+            };
+            await _loginRepository.AddAsync(login);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+            _appDbContext.UntrackEntity(login);
+
+            // Act
+            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(userId, StringGenerator.GenerateUsingAsciiChars(10));
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetByUserIdAndRefreshTokenAsync_WhenUserIdDoesNotExistButRefreshTokenExists_ShouldReturnNull()
         {
             // Arrange
             var user = new User();
@@ -113,17 +171,17 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(login);
 
             // Act
-            var result = await _loginRepository.GetByRefreshTokenAsync(refreshToken);
+            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(Guid.NewGuid(), refreshToken);
 
             // Assert
-            Assert.NotNull(result);
+            Assert.Null(result);
         }
 
         [Fact]
-        public async Task GetByRefreshTokenAsync_WhenRefreshTokenDoesNotExist_ShouldReturnNull()
+        public async Task GetByUserIdAndRefreshTokenAsync_WhenUserIdAndRefreshTokenDoNotExist_ShouldReturnNull()
         {
             // Act
-            var result = await _loginRepository.GetByRefreshTokenAsync(StringGenerator.GenerateUsingAsciiChars(10));
+            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(Guid.NewGuid(), StringGenerator.GenerateUsingAsciiChars(10));
 
             // Assert
             Assert.Null(result);
@@ -249,6 +307,49 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
                 .ToListAsync();
 
             Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task DeleteAllByUserIdAsync_WhenLoginsRelatedToUserExist_ShouldDeleteAll()
+        {
+            // Arrange
+            var user = new User();
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            user.Logins = new List<Login>()
+            {
+                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+            };
+
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _loginRepository.DeleteAllByUserIdAsync(userId);
+
+            // Assert
+            Assert.Equal(user.Logins.Count, result);
+
+            var logins = await _appDbContext.Logins
+                .Where(l => l.UserId.Equals(userId))
+                .ToListAsync();
+            Assert.Empty(logins);
+        }
+
+        [Fact]
+        public async Task DeleteAllByUserIdAsync_WhenLoginsRelatedToUserDoNotExist_ShouldDeleteNothing()
+        {
+            // Act
+            var result = await _loginRepository.DeleteAllByUserIdAsync(Guid.NewGuid());
+
+            // Assert
+            Assert.Equal(0, result);
         }
     }
 }
