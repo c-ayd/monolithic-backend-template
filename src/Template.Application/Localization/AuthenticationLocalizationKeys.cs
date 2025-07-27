@@ -25,5 +25,7 @@
         public const string LoginWrongCredentials = "login_wrong_credentials";
         public const string LoginAlreadyLocked = "login_locked";
         public const string LoginLocked = "login_locked";
+
+        public const string LogoutUnauthorized = "logout_unauthorized";
     }
 }
