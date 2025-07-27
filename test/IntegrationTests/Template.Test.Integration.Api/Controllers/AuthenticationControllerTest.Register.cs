@@ -1,10 +1,9 @@
 ﻿using Cayd.Test.Generators;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using System.Net;
 using System.Net.Http.Json;
 using Template.Application.Features.Commands.Authentication.Register;
-using Template.Persistence.DbContexts;
+using Template.Domain.Entities.UserManagement.Enums;
 
 namespace Template.Test.Integration.Api.Controllers
 {
@@ -37,7 +36,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task Register_WhenUserIsCreatedButEmailIsNotSend_ShouldReturnMultiStatus()
+        public async Task Register_WhenUserIsCreatedButEmailIsNotSend_ShouldReturnMultiStatusAndCreateUserAndToken()
         {
             // Arrange
             var request = new RegisterRequest()
@@ -59,11 +58,22 @@ namespace Template.Test.Integration.Api.Controllers
             // Assert
             Assert.Equal(HttpStatusCode.MultiStatus, result.StatusCode);
 
+            var user = await _testHostFixture.AppDbContext.Users
+                .Where(u => u.Email == request.Email)
+                .FirstOrDefaultAsync();
+            Assert.NotNull(user);
+
+            var token = await _testHostFixture.AppDbContext.Tokens
+                .Where(t => t.UserId.Equals(user.Id))
+                .FirstOrDefaultAsync();
+            Assert.NotNull(token);
+            Assert.Equal(ETokenPurpose.EmailVerification, token.Purpose);
+
             AppDomain.CurrentDomain.SetData("EmailSenderResult", true);
         }
 
         [Fact]
-        public async Task Register_WhenUserIsCreatedAndEmailIsSent_ShouldReturnOk()
+        public async Task Register_WhenUserIsCreatedAndEmailIsSent_ShouldReturnOkAndCreateUserAndToken()
         {
             // Arrange
             var request = new RegisterRequest()
@@ -83,11 +93,16 @@ namespace Template.Test.Integration.Api.Controllers
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
 
-            var dbContext = _testHostFixture.Host.Services.GetRequiredService<AppDbContext>();
-            var user = await dbContext.Users
+            var user = await _testHostFixture.AppDbContext.Users
                 .Where(u => u.Email == request.Email)
                 .FirstOrDefaultAsync();
             Assert.NotNull(user);
+
+            var token = await _testHostFixture.AppDbContext.Tokens
+                .Where(t => t.UserId.Equals(user.Id))
+                .FirstOrDefaultAsync();
+            Assert.NotNull(token);
+            Assert.Equal(ETokenPurpose.EmailVerification, token.Purpose);
         }
     }
 }
