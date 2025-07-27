@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
 using Template.Api.Http;
+using Template.Api.Utilities;
 using Template.Application.Abstractions.Http;
 using Template.Application.Validations.Constants.Entities.UserManagement;
 
@@ -21,6 +22,7 @@ namespace Template.Api.Middlewares
             if (requestContext != null)
             {
                 requestContext.UserId = GetUserId(context.User);
+                requestContext.RefreshToken = GetRefreshToken(context.Request);
                 requestContext.IpAddress = context.Connection.RemoteIpAddress;
                 requestContext.DeviceInfo = GetDeviceInfo(context.Request.Headers.UserAgent);
                 requestContext.PreferredLanguages = GetPreferredLanguages(context.Request.Headers.AcceptLanguage);
@@ -36,6 +38,14 @@ namespace Template.Api.Middlewares
                 return null;
 
             return Guid.TryParse(nameIdentifier, out var userId) ? userId : null;
+        }
+
+        private string? GetRefreshToken(HttpRequest request)
+        {
+            return request.Cookies
+                .Where(c => c.Key == CookieUtility.RefreshTokenKey)
+                .Select(c => c.Value)
+                .FirstOrDefault();
         }
 
         private string? GetDeviceInfo(StringValues userAgentHeader)

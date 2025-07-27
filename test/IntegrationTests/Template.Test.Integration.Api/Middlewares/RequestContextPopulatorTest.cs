@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
 using Template.Api.Http;
+using Template.Api.Utilities;
 using Template.Infrastructure.Authentication;
 using Template.Infrastructure.Crypto;
 using Template.Infrastructure.Settings.Authentication;
@@ -40,6 +41,7 @@ namespace Template.Test.Integration.Api.Middlewares
                 new Claim(ClaimTypes.NameIdentifier, userId.ToString())
             });
 
+            _testHostFixture.SetCookies(new Dictionary<string, string>() { { CookieUtility.RefreshTokenKey, "refresh-token-value" } });
             _testHostFixture.AddJwtBearerToken(token.AccessToken);
             _testHostFixture.UpdateUserAgent("TestAgent", "1.0");
             _testHostFixture.UpdateAcceptLanguage(new Dictionary<string, double>()
@@ -63,6 +65,7 @@ namespace Template.Test.Integration.Api.Middlewares
 
             Assert.NotNull(result);
             Assert.Equal(userId, result.UserId);
+            Assert.Equal("refresh-token-value", result.RefreshToken);
             Assert.Equal("TestAgent/1.0", result.DeviceInfo);
             Assert.Equal("en", result.PreferredLanguages[0]);
             Assert.Equal("fr-FR", result.PreferredLanguages[1]);
