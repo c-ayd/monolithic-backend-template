@@ -20,10 +20,12 @@ namespace Template.Api.Configurations
                 ValidateAudience = true,
                 ValidateIssuerSigningKey = true,
                 ValidateLifetime = true,
+                RequireSignedTokens = true,
 
                 ValidIssuer = jwtSettings.Issuer,
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
+                ValidAlgorithms = new List<string>() { SecurityAlgorithms.HmacSha256 },
                 LifetimeValidator = delegate(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
                 {
                     if (notBefore != null && notBefore > DateTime.UtcNow)
