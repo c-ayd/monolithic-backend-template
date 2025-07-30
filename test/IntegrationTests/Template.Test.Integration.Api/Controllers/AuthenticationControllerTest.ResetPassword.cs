@@ -93,7 +93,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.ResetPassword,
                         ExpirationDate = DateTime.UtcNow.AddDays(-1)
                     }
@@ -133,7 +133,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.ResetPassword,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }
@@ -180,7 +180,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Login()
                     {
-                        RefreshToken = StringGenerator.GenerateUsingAsciiChars(10),
+                        RefreshTokenHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }
                 },
@@ -188,13 +188,13 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.ResetPassword,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     },
                     new Token()
                     {
-                        Value = StringGenerator.GenerateUsingAsciiChars(10),
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         Purpose = ETokenPurpose.EmailVerification,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }
@@ -263,7 +263,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Login()
                     {
-                        RefreshToken = StringGenerator.GenerateUsingAsciiChars(10),
+                        RefreshTokenHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }
                 },
@@ -271,13 +271,13 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.ResetPassword,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     },
                     new Token()
                     {
-                        Value = StringGenerator.GenerateUsingAsciiChars(10),
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         Purpose = ETokenPurpose.EmailVerification,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }

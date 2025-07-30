@@ -13,7 +13,7 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
             builder.Property(l => l.Id)
                 .HasValueGenerator<GuidIdGenerator>();
 
-            builder.HasIndex(l => l.RefreshToken)
+            builder.HasIndex(l => l.RefreshTokenHashed)
                 .IsUnique();
 
             builder.Property(l => l.DeviceInfo)

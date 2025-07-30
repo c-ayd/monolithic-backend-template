@@ -22,10 +22,10 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(l => l.Id.Equals(id))
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<Login?> GetByUserIdAndRefreshTokenAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default)
+        public async Task<Login?> GetByUserIdAndHashedRefreshTokenAsync(Guid userId, string hashedRefreshToken, CancellationToken cancellationToken = default)
             => await _appDbContext.Logins
                 .Where(l => l.UserId.Equals(userId) &&
-                    l.RefreshToken == refreshToken)
+                    l.RefreshTokenHashed == hashedRefreshToken)
                 .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<ICollection<Login>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)

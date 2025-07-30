@@ -147,9 +147,10 @@ namespace Template.Application.Features.Commands.Authentication.Login
 
             var jwtToken = _jwt.GenerateJwtToken(claims);
 
+            // Add a new login to the database
             await _unitOfWork.Logins.AddAsync(new Domain.Entities.UserManagement.Login()
             {
-                RefreshToken = jwtToken.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(jwtToken.RefreshToken),
                 ExpirationDate = jwtToken.RefreshTokenExpirationDate,
                 IpAddress = _requestContext.IpAddress,
                 DeviceInfo = _requestContext.DeviceInfo,

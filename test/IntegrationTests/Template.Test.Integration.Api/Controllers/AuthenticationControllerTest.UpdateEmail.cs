@@ -295,7 +295,11 @@ namespace Template.Test.Integration.Api.Controllers
                 },
                 Tokens = new List<Token>()
                 {
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                    new Token() 
+                    { 
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)), 
+                        Purpose = ETokenPurpose.ResetPassword 
+                    }
                 }
             };
 
@@ -368,7 +372,11 @@ namespace Template.Test.Integration.Api.Controllers
                 },
                 Tokens = new List<Token>()
                 {
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                    new Token() 
+                    {
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
+                        Purpose = ETokenPurpose.ResetPassword 
+                    }
                 }
             };
 

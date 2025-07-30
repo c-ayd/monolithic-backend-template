@@ -34,7 +34,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             var token = new Token()
             {
-                Value = StringGenerator.GenerateUsingAsciiChars(10),
+                ValueHashed = StringGenerator.GenerateUsingAsciiChars(10),
                 UserId = user.Id
             };
 
@@ -64,7 +64,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             var token = new Token()
             {
-                Value = StringGenerator.GenerateUsingAsciiChars(10),
+                ValueHashed = StringGenerator.GenerateUsingAsciiChars(10),
                 UserId = user.Id
             };
             await _tokenRepository.AddAsync(token);
@@ -104,7 +104,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             var tokenPurpose = ETokenPurpose.ResetPassword;
             var token = new Token()
             {
-                Value = tokenValue,
+                ValueHashed = tokenValue,
                 Purpose = tokenPurpose,
                 UserId = user.Id
             };
@@ -116,7 +116,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(token);
 
             // Act
-            var result = await _tokenRepository.GetByValueAndPurposeAsync(tokenValue, tokenPurpose);
+            var result = await _tokenRepository.GetByHashedValueAndPurposeAsync(tokenValue, tokenPurpose);
 
             // Assert
             Assert.NotNull(result);
@@ -133,7 +133,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
             var token = new Token()
             {
-                Value = tokenValue,
+                ValueHashed = tokenValue,
                 Purpose = ETokenPurpose.ResetPassword,
                 UserId = user.Id
             };
@@ -145,7 +145,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(token);
 
             // Act
-            var result = await _tokenRepository.GetByValueAndPurposeAsync(tokenValue, ETokenPurpose.EmailVerification);
+            var result = await _tokenRepository.GetByHashedValueAndPurposeAsync(tokenValue, ETokenPurpose.EmailVerification);
 
             // Assert
             Assert.Null(result);
@@ -161,9 +161,9 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             user.Tokens = new List<Token>()
             {
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10) }
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10) }
             };
 
             await _appDbContext.SaveChangesAsync();
@@ -217,9 +217,9 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             user.Tokens = new List<Token>()
             {
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.EmailVerification },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.EmailVerification },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
             };
 
             await _appDbContext.SaveChangesAsync();
@@ -246,9 +246,9 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             user.Tokens = new List<Token>()
             {
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
             };
 
             await _appDbContext.SaveChangesAsync();
@@ -284,7 +284,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             var token = new Token()
             {
-                Value = StringGenerator.GenerateUsingAsciiChars(10),
+                ValueHashed = StringGenerator.GenerateUsingAsciiChars(10),
                 UserId = user.Id
             };
             await _tokenRepository.AddAsync(token);
@@ -317,9 +317,9 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             user.Tokens = new List<Token>()
             {
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
             };
 
             await _appDbContext.SaveChangesAsync();
@@ -348,18 +348,18 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             {
                 Tokens = new List<Token>()
                 {
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
                 }
             };
             var user2 = new User()
             {
                 Tokens = new List<Token>()
                 {
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
                 }
             };
 
@@ -409,18 +409,18 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             {
                 Tokens = new List<Token>()
                 {
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.EmailVerification },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.EmailVerification },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
                 }
             };
             var user2 = new User()
             {
                 Tokens = new List<Token>()
                 {
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
-                    new Token() { Value = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword },
+                    new Token() { ValueHashed = StringGenerator.GenerateUsingAsciiChars(10), Purpose = ETokenPurpose.ResetPassword }
                 }
             };
 

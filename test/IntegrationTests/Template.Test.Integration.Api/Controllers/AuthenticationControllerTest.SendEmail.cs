@@ -160,14 +160,14 @@ namespace Template.Test.Integration.Api.Controllers
                 Tokens = new List<Token>()
                 {
                     new Token() 
-                    { 
-                        Value = StringGenerator.GenerateUsingAsciiChars(10),
+                    {
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         Purpose = ETokenPurpose.EmailVerification,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     },
                     new Token()
                     {
-                        Value = StringGenerator.GenerateUsingAsciiChars(10),
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         Purpose = ETokenPurpose.ResetPassword,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }

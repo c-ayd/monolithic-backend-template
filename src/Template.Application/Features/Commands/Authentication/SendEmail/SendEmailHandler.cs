@@ -81,7 +81,7 @@ namespace Template.Application.Features.Commands.Authentication.SendEmail
             // Token creation
             var token = new Token()
             {
-                Value = _hashing.HashSha256(tokenValue),
+                ValueHashed = _hashing.HashSha256(tokenValue),
                 Purpose = request.Purpose.Value,
                 ExpirationDate = expirationDate,
                 UserId = securityState.UserId,

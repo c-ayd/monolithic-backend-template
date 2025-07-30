@@ -59,7 +59,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.EmailVerification,
                         ExpirationDate = DateTime.UtcNow.AddDays(-1)
                     }
@@ -92,7 +92,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.EmailVerification,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }
@@ -132,7 +132,7 @@ namespace Template.Test.Integration.Api.Controllers
                 {
                     new Token()
                     {
-                        Value = _hashing.HashSha256(tokenValue),
+                        ValueHashed = _hashing.HashSha256(tokenValue),
                         Purpose = ETokenPurpose.EmailVerification,
                         ExpirationDate = DateTime.UtcNow.AddDays(1)
                     }

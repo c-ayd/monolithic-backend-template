@@ -65,7 +65,7 @@ namespace Template.Application.Features.Commands.Authentication.Register
             var emailVerificationExpirationTimeInHours = _tokenLifetimesSettings.EmailVerificationLifetimeInHours;
             var emailVerificationToken = new Token()
             {
-                Value = _hashing.HashSha256(emailVerificationTokenValue),
+                ValueHashed = _hashing.HashSha256(emailVerificationTokenValue),
                 Purpose = ETokenPurpose.EmailVerification,
                 ExpirationDate = DateTime.UtcNow.AddHours(emailVerificationExpirationTimeInHours),
                 User = newUser

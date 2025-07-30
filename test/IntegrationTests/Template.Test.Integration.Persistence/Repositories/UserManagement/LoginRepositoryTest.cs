@@ -33,7 +33,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             var login = new Login()
             {
-                RefreshToken = StringGenerator.GenerateUsingAsciiChars(10),
+                RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
                 UserId = user.Id
             };
 
@@ -63,7 +63,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             var login = new Login()
             {
-                RefreshToken = StringGenerator.GenerateUsingAsciiChars(10),
+                RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
                 UserId = user.Id
             };
             await _loginRepository.AddAsync(login);
@@ -102,7 +102,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             var refreshToken = StringGenerator.GenerateUsingAsciiChars(10);
             var login = new Login()
             {
-                RefreshToken = refreshToken,
+                RefreshTokenHashed = refreshToken,
                 UserId = user.Id
             };
             await _loginRepository.AddAsync(login);
@@ -114,7 +114,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(login);
 
             // Act
-            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(userId, refreshToken);
+            var result = await _loginRepository.GetByUserIdAndHashedRefreshTokenAsync(userId, refreshToken);
 
             // Assert
             Assert.NotNull(result);
@@ -131,7 +131,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             var refreshToken = StringGenerator.GenerateUsingAsciiChars(10);
             var login = new Login()
             {
-                RefreshToken = refreshToken,
+                RefreshTokenHashed = refreshToken,
                 UserId = user.Id
             };
             await _loginRepository.AddAsync(login);
@@ -143,7 +143,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(login);
 
             // Act
-            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(userId, StringGenerator.GenerateUsingAsciiChars(10));
+            var result = await _loginRepository.GetByUserIdAndHashedRefreshTokenAsync(userId, StringGenerator.GenerateUsingAsciiChars(10));
 
             // Assert
             Assert.Null(result);
@@ -160,7 +160,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             var refreshToken = StringGenerator.GenerateUsingAsciiChars(10);
             var login = new Login()
             {
-                RefreshToken = refreshToken,
+                RefreshTokenHashed = refreshToken,
                 UserId = user.Id
             };
             await _loginRepository.AddAsync(login);
@@ -171,7 +171,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(login);
 
             // Act
-            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(Guid.NewGuid(), refreshToken);
+            var result = await _loginRepository.GetByUserIdAndHashedRefreshTokenAsync(Guid.NewGuid(), refreshToken);
 
             // Assert
             Assert.Null(result);
@@ -181,7 +181,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         public async Task GetByUserIdAndRefreshTokenAsync_WhenUserIdAndRefreshTokenDoNotExist_ShouldReturnNull()
         {
             // Act
-            var result = await _loginRepository.GetByUserIdAndRefreshTokenAsync(Guid.NewGuid(), StringGenerator.GenerateUsingAsciiChars(10));
+            var result = await _loginRepository.GetByUserIdAndHashedRefreshTokenAsync(Guid.NewGuid(), StringGenerator.GenerateUsingAsciiChars(10));
 
             // Assert
             Assert.Null(result);
@@ -197,9 +197,9 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             user.Logins = new List<Login>()
             {
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) }
             };
 
             await _appDbContext.SaveChangesAsync();
@@ -253,7 +253,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             var login = new Login()
             {
-                RefreshToken = StringGenerator.GenerateUsingAsciiChars(10),
+                RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
                 UserId = user.Id
             };
             await _loginRepository.AddAsync(login);
@@ -286,9 +286,9 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             user.Logins = new List<Login>()
             {
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) }
             };
 
             await _appDbContext.SaveChangesAsync();
@@ -317,18 +317,18 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             {
                 Logins = new List<Login>()
                 {
-                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) }
                 }
             };
             var user2 = new User()
             {
                 Logins = new List<Login>()
                 {
-                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) },
-                    new Login() { RefreshToken = StringGenerator.GenerateUsingAsciiChars(10) }
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) },
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) }
                 }
             };
 

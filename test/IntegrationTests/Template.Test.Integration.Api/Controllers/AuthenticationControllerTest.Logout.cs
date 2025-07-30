@@ -53,7 +53,7 @@ namespace Template.Test.Integration.Api.Controllers
 
             var login = new Login()
             {
-                RefreshToken = token.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token.RefreshToken),
                 ExpirationDate = token.RefreshTokenExpirationDate,
                 UserId = user.Id
             };
@@ -107,13 +107,13 @@ namespace Template.Test.Integration.Api.Controllers
 
             var login1 = new Login()
             {
-                RefreshToken = token1.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token1.RefreshToken),
                 ExpirationDate = token1.RefreshTokenExpirationDate,
                 UserId = user.Id
             };
             var login2 = new Login()
             {
-                RefreshToken = token2.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token2.RefreshToken),
                 ExpirationDate = token2.RefreshTokenExpirationDate,
                 UserId = user.Id
             };
@@ -142,7 +142,7 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(l => l.UserId.Equals(user.Id))
                 .ToListAsync();
             Assert.Single(logins);
-            Assert.NotEqual(token1.RefreshToken, logins[0].RefreshToken);
+            Assert.False(_hashing.CompareSha256(logins[0].RefreshTokenHashed, token1.RefreshToken), "The login is not deleted.");
 
             _testHostFixture.RemoveJwtBearerToken();
             _testHostFixture.ClearCookies();
@@ -183,13 +183,13 @@ namespace Template.Test.Integration.Api.Controllers
 
             var login1 = new Login()
             {
-                RefreshToken = token1.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token1.RefreshToken),
                 ExpirationDate = token1.RefreshTokenExpirationDate,
                 UserId = user.Id
             };
             var login2 = new Login()
             {
-                RefreshToken = token2.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token2.RefreshToken),
                 ExpirationDate = token2.RefreshTokenExpirationDate,
                 UserId = user.Id
             };
@@ -218,7 +218,7 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(l => l.UserId.Equals(user.Id))
                 .ToListAsync();
             Assert.Single(logins);
-            Assert.NotEqual(token1.RefreshToken, logins[0].RefreshToken);
+            Assert.False(_hashing.CompareSha256(logins[0].RefreshTokenHashed, token1.RefreshToken), "The login is not deleted.");
 
             _testHostFixture.RemoveJwtBearerToken();
             _testHostFixture.ClearCookies();
@@ -259,13 +259,13 @@ namespace Template.Test.Integration.Api.Controllers
 
             var login1 = new Login()
             {
-                RefreshToken = token1.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token1.RefreshToken),
                 ExpirationDate = token1.RefreshTokenExpirationDate,
                 UserId = user.Id
             };
             var login2 = new Login()
             {
-                RefreshToken = token2.RefreshToken,
+                RefreshTokenHashed = _hashing.HashSha256(token2.RefreshToken),
                 ExpirationDate = token2.RefreshTokenExpirationDate,
                 UserId = user.Id
             };

@@ -24,7 +24,7 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
         public async Task<ExecResult<VerifyEmailResponse>> Handle(VerifyEmailRequest request, CancellationToken cancellationToken)
         {
             var hashedTokenValue = _hashing.HashSha256(request.Token!);
-            var token = await _unitOfWork.Tokens.GetByValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.EmailVerification);
+            var token = await _unitOfWork.Tokens.GetByHashedValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.EmailVerification);
             if (token == null)
                 return new ExecNotFound("Token does not exist", AuthenticationLocalizationKeys.TokenNotFound);
 

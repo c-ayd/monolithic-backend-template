@@ -28,7 +28,7 @@ namespace Template.Application.Features.Commands.Authentication.ResetPassword
         public async Task<ExecResult<ResetPasswordResponse>> Handle(ResetPasswordRequest request, CancellationToken cancellationToken)
         {
             var hashedTokenValue = _hashing.HashSha256(request.Token!);
-            var token = await _unitOfWork.Tokens.GetByValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.ResetPassword);
+            var token = await _unitOfWork.Tokens.GetByHashedValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.ResetPassword);
             if (token == null)
                 return new ExecNotFound("Token does not exist", AuthenticationLocalizationKeys.TokenNotFound);
 

@@ -5,7 +5,7 @@ namespace Template.Domain.Entities.UserManagement
 {
     public class Token : EntityBase<Guid>
     {
-        public string Value { get; set; } = null!;
+        public string ValueHashed { get; set; } = null!;
         public ETokenPurpose Purpose { get; set; }
         public DateTime ExpirationDate { get; set; }
 

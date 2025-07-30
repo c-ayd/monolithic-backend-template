@@ -51,7 +51,7 @@ namespace Template.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    RefreshToken = table.Column<string>(type: "text", nullable: false),
+                    RefreshTokenHashed = table.Column<string>(type: "text", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     IpAddress = table.Column<IPAddress>(type: "inet", nullable: true),
                     DeviceInfo = table.Column<string>(type: "character varying(512)", maxLength: 512, nullable: true),
@@ -124,7 +124,7 @@ namespace Template.Persistence.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
-                    Value = table.Column<string>(type: "text", nullable: false),
+                    ValueHashed = table.Column<string>(type: "text", nullable: false),
                     Purpose = table.Column<int>(type: "integer", nullable: false),
                     ExpirationDate = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
                     UserId = table.Column<Guid>(type: "uuid", nullable: false),
@@ -142,9 +142,9 @@ namespace Template.Persistence.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Logins_RefreshToken",
+                name: "IX_Logins_RefreshTokenHashed",
                 table: "Logins",
-                column: "RefreshToken",
+                column: "RefreshTokenHashed",
                 unique: true);
 
             migrationBuilder.CreateIndex(
@@ -175,9 +175,9 @@ namespace Template.Persistence.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Tokens_Value",
+                name: "IX_Tokens_ValueHashed",
                 table: "Tokens",
-                column: "Value",
+                column: "ValueHashed",
                 unique: true);
 
             migrationBuilder.CreateIndex(

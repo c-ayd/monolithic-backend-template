@@ -7,7 +7,7 @@ namespace Template.Domain.Repositories.UserManagement
     {
         Task AddAsync(Login newLogin);
         Task<Login?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<Login?> GetByUserIdAndRefreshTokenAsync(Guid userId, string refreshToken, CancellationToken cancellationToken = default);
+        Task<Login?> GetByUserIdAndHashedRefreshTokenAsync(Guid userId, string hashedRefreshToken, CancellationToken cancellationToken = default);
         Task<ICollection<Login>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
         void Delete(Login login);
         void DeleteAll(IEnumerable<Login> logins);

@@ -23,9 +23,9 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(t => t.Id.Equals(id))
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<Token?> GetByValueAndPurposeAsync(string value, ETokenPurpose purpose, CancellationToken cancellationToken = default)
+        public async Task<Token?> GetByHashedValueAndPurposeAsync(string hashedValue, ETokenPurpose purpose, CancellationToken cancellationToken = default)
             => await _appDbContext.Tokens
-                .Where(t => t.Value == value &&
+                .Where(t => t.ValueHashed == hashedValue &&
                     t.Purpose == purpose)
                 .FirstOrDefaultAsync(cancellationToken);
 

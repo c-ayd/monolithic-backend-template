@@ -12,7 +12,7 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
             builder.Property(t => t.Id)
                 .HasValueGenerator<GuidIdGenerator>();
 
-            builder.HasIndex(t => t.Value)
+            builder.HasIndex(t => t.ValueHashed)
                 .IsUnique();
         }
     }

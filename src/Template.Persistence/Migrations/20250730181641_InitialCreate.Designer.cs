@@ -13,7 +13,7 @@ using Template.Persistence.DbContexts;
 namespace Template.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250724203934_InitialCreate")]
+    [Migration("20250730181641_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -60,7 +60,7 @@ namespace Template.Persistence.Migrations
                     b.Property<IPAddress>("IpAddress")
                         .HasColumnType("inet");
 
-                    b.Property<string>("RefreshToken")
+                    b.Property<string>("RefreshTokenHashed")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -72,7 +72,7 @@ namespace Template.Persistence.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("RefreshToken")
+                    b.HasIndex("RefreshTokenHashed")
                         .IsUnique();
 
                     b.HasIndex("UserId");
@@ -169,7 +169,7 @@ namespace Template.Persistence.Migrations
                     b.Property<Guid>("UserId")
                         .HasColumnType("uuid");
 
-                    b.Property<string>("Value")
+                    b.Property<string>("ValueHashed")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -177,7 +177,7 @@ namespace Template.Persistence.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.HasIndex("Value")
+                    b.HasIndex("ValueHashed")
                         .IsUnique();
 
                     b.ToTable("Tokens");
