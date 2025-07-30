@@ -25,7 +25,8 @@ namespace Template.Persistence.Repositories.UserManagement
 
         public async Task<Token?> GetByValueAndPurposeAsync(string value, ETokenPurpose purpose, CancellationToken cancellationToken = default)
             => await _appDbContext.Tokens
-                .Where(t => t.Value == value)
+                .Where(t => t.Value == value &&
+                    t.Purpose == purpose)
                 .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<ICollection<Token>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)

@@ -125,6 +125,26 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         [Fact]
         public async Task GetByValueAndPurposeAsync_WhenTokenDoesNotExist_ShouldReturnNull()
         {
+            // Arrange
+            var user = new User();
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
+            var tokenPurpose = ETokenPurpose.ResetPassword;
+            var token = new Token()
+            {
+                Value = tokenValue,
+                Purpose = tokenPurpose,
+                UserId = user.Id
+            };
+            await _tokenRepository.AddAsync(token);
+            await _appDbContext.SaveChangesAsync();
+
+            _appDbContext.UntrackEntities(user.Tokens.ToArray());
+            _appDbContext.UntrackEntity(user);
+            _appDbContext.UntrackEntity(token);
+
             // Act
             var result = await _tokenRepository.GetByValueAndPurposeAsync(StringGenerator.GenerateUsingAsciiChars(10), ETokenPurpose.EmailVerification);
 
