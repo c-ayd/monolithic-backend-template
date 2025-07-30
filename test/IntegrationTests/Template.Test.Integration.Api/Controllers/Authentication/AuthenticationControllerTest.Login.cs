@@ -1,37 +1,32 @@
 ﻿using Cayd.Test.Generators;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Net.Http.Headers;
 using System.Net;
 using System.Net.Http.Json;
-using System.Security.Claims;
-using Template.Application.Dtos.Crypto.Enums;
-using Template.Application.Features.Commands.Authentication.UpdatePassword;
+using System.Text.Json;
+using Template.Api.Utilities;
+using Template.Application.Dtos.Controllers.Authentication;
+using Template.Application.Features.Commands.Authentication.Login;
 using Template.Application.Settings;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 using Template.Test.Utility.TestValues;
 
-namespace Template.Test.Integration.Api.Controllers
+namespace Template.Test.Integration.Api.Controllers.Authentication
 {
     public partial class AuthenticationControllerTest
     {
-        private const string _updatePasswordEndpoint = "/auth/update-password";
+        private const string _loginEndpoint = "/auth/login";
 
         [Theory]
-        [MemberData(nameof(TestValues.GetInvalidPassword), MemberType = typeof(TestValues))]
-        public async Task UpdatePassword_WhenNewPasswordIsInvalid_ShouldReturnBadRequest(string? newPassword)
+        [MemberData(nameof(TestValues.GetInvalidEmails), MemberType = typeof(TestValues))]
+        public async Task Login_WhenEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)
         {
             // Arrange
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
+            var request = new LoginRequest()
             {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-            });
-
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
-
-            var request = new UpdatePasswordRequest()
-            {
-                NewPassword = newPassword,
+                Email = email,
                 Password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
@@ -41,7 +36,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -49,53 +44,29 @@ namespace Template.Test.Integration.Api.Controllers
 
         [Theory]
         [MemberData(nameof(TestValues.GetInvalidPassword), MemberType = typeof(TestValues))]
-        public async Task UpdatePassword_WhenPasswordIsInvalid_ShouldReturnBadRequest(string? password)
+        public async Task Login_WhenPasswordIsInvalid_ShouldReturnBadRequest(string? password)
         {
             // Arrange
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
+            var request = new LoginRequest()
             {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-            });
-
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
-
-            var request = new UpdatePasswordRequest()
-            {
-                NewPassword = PasswordGenerator.GenerateWithCustomRules(
-                    length: 10,
-                    requireDigit: true,
-                    requireLowercase: false,
-                    requireUppercase: false,
-                    requireNonAlphanumeric: false),
+                Email = EmailGenerator.Generate(),
                 Password = password
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
 
         [Fact]
-        public async Task UpdatePassword_WhenUserDoesNotExist_ShouldReturnInternalServerError()
+        public async Task Login_WhenUserDoesNotExists_ShouldReturnBadRequest()
         {
             // Arrange
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
+            var request = new LoginRequest()
             {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
-            });
-
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
-
-            var request = new UpdatePasswordRequest()
-            {
-                NewPassword = PasswordGenerator.GenerateWithCustomRules(
-                    length: 10,
-                    requireDigit: true,
-                    requireLowercase: false,
-                    requireUppercase: false,
-                    requireNonAlphanumeric: false),
+                Email = EmailGenerator.Generate(),
                 Password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
@@ -105,42 +76,82 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
-            Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
 
         [Fact]
-        public async Task UpdatePassword_WhenPasswordIsWrong_ShouldReturnBadRequestAndIncreaseFailedAttemps()
+        public async Task Login_AccountIsLocked_ShouldReturnLocked()
         {
             // Arrange
+            var email = EmailGenerator.Generate();
+            var password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false);
+
             var user = new User()
             {
+                Email = email,
                 SecurityState = new SecurityState()
                 {
-                    PasswordHashed = _hashing.HashPassword(StringGenerator.GenerateUsingAsciiChars(15))
+                    PasswordHashed = _hashing.HashPassword(password),
+                    IsLocked = true,
+                    UnlockDate = DateTime.UtcNow.AddDays(1)
                 }
             };
 
             await _testHostFixture.AppDbContext.Users.AddAsync(user);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
+            var request = new LoginRequest()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            });
+                Email = email,
+                Password = password
+            };
 
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
-            var request = new UpdatePasswordRequest()
-            {
-                NewPassword = PasswordGenerator.GenerateWithCustomRules(
+            // Assert
+            Assert.Equal(HttpStatusCode.Locked, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Login_WhenPasswordIsWrong_ShouldReturnBadRequestAndIncreaseFailedAttemps()
+        {
+            // Arrange
+            var email = EmailGenerator.Generate();
+            var password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
                     requireLowercase: false,
                     requireUppercase: false,
-                    requireNonAlphanumeric: false),
+                    requireNonAlphanumeric: false);
+
+            var user = new User()
+            {
+                Email = email,
+                SecurityState = new SecurityState()
+                {
+                    PasswordHashed = _hashing.HashPassword(password)
+                }
+            };
+
+            await _testHostFixture.AppDbContext.Users.AddAsync(user);
+            await _testHostFixture.AppDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
+            _testHostFixture.AppDbContext.UntrackEntity(user);
+
+            var request = new LoginRequest()
+            {
+                Email = email,
                 Password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
@@ -149,12 +160,8 @@ namespace Template.Test.Integration.Api.Controllers
                     requireNonAlphanumeric: false)
             };
 
-            var userId = user.Id;
-            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
-            _testHostFixture.AppDbContext.UntrackEntity(user);
-
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -167,16 +174,25 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task UpdatePassword_WhenPasswordIsWrongAndFailedAttempsReachesFirstLockCount_ShouldReturnLockedAndLockAccountAccordingly()
+        public async Task Login_WhenPasswordIsWrongAndFailedAttempsReachesFirstLockCount_ShouldReturnLockedAndLockAccountAccordingly()
         {
             // Arrange
             var accountLockSettings = _testHostFixture.Configuration.GetSection(AccountLockSettings.SettingsKey).Get<AccountLockSettings>()!;
 
+            var email = EmailGenerator.Generate();
+            var password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false);
+
             var user = new User()
             {
+                Email = email,
                 SecurityState = new SecurityState()
                 {
-                    PasswordHashed = _hashing.HashPassword(StringGenerator.GenerateUsingAsciiChars(15)),
+                    PasswordHashed = _hashing.HashPassword(password),
                     FailedAttempts = accountLockSettings.FailedAttemptsForFirstLock - 1,
                 }
             };
@@ -184,21 +200,13 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.Users.AddAsync(user);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            });
+            var userId = user.Id;
+            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
+            _testHostFixture.AppDbContext.UntrackEntity(user);
 
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
-
-            var request = new UpdatePasswordRequest()
+            var request = new LoginRequest()
             {
-                NewPassword = PasswordGenerator.GenerateWithCustomRules(
-                    length: 10,
-                    requireDigit: true,
-                    requireLowercase: false,
-                    requireUppercase: false,
-                    requireNonAlphanumeric: false),
+                Email = email,
                 Password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
@@ -207,12 +215,8 @@ namespace Template.Test.Integration.Api.Controllers
                     requireNonAlphanumeric: false)
             };
 
-            var userId = user.Id;
-            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
-            _testHostFixture.AppDbContext.UntrackEntity(user);
-
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Locked, result.StatusCode);
@@ -231,16 +235,25 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task UpdatePassword_WhenPasswordIsWrongAndFailedAttempsReachesSecondLockCount_ShouldReturnLockedAndLockAccountAccordingly()
+        public async Task Login_WhenPasswordIsWrongAndFailedAttempsReachesSecondLockCount_ShouldReturnLockedAndLockAccountAccordingly()
         {
             // Arrange
             var accountLockSettings = _testHostFixture.Configuration.GetSection(AccountLockSettings.SettingsKey).Get<AccountLockSettings>()!;
 
+            var email = EmailGenerator.Generate();
+            var password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false);
+
             var user = new User()
             {
+                Email = email,
                 SecurityState = new SecurityState()
                 {
-                    PasswordHashed = _hashing.HashPassword(StringGenerator.GenerateUsingAsciiChars(15)),
+                    PasswordHashed = _hashing.HashPassword(password),
                     FailedAttempts = accountLockSettings.FailedAttemptsForSecondLock - 1,
                 }
             };
@@ -248,21 +261,13 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.Users.AddAsync(user);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            });
+            var userId = user.Id;
+            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
+            _testHostFixture.AppDbContext.UntrackEntity(user);
 
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
-
-            var request = new UpdatePasswordRequest()
+            var request = new LoginRequest()
             {
-                NewPassword = PasswordGenerator.GenerateWithCustomRules(
-                    length: 10,
-                    requireDigit: true,
-                    requireLowercase: false,
-                    requireUppercase: false,
-                    requireNonAlphanumeric: false),
+                Email = email,
                 Password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
@@ -271,12 +276,8 @@ namespace Template.Test.Integration.Api.Controllers
                     requireNonAlphanumeric: false)
             };
 
-            var userId = user.Id;
-            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
-            _testHostFixture.AppDbContext.UntrackEntity(user);
-
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Locked, result.StatusCode);
@@ -295,9 +296,10 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task UpdatePassword_WhenPasswordIsCorrect_ShouldReturnOkAndUpdatePasswordAndResetFailedAttemps()
+        public async Task Login_WhenCredentialsAreCorrect_ShouldReturnOkWithCookiesAndAccessTokenAndCreateLoginAndResetFailedAttemps()
         {
             // Arrange
+            var email = EmailGenerator.Generate();
             var password = PasswordGenerator.GenerateWithCustomRules(
                     length: 10,
                     requireDigit: true,
@@ -307,7 +309,7 @@ namespace Template.Test.Integration.Api.Controllers
 
             var user = new User()
             {
-                Email = EmailGenerator.Generate(),
+                Email = email,
                 SecurityState = new SecurityState()
                 {
                     PasswordHashed = _hashing.HashPassword(password),
@@ -318,41 +320,57 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.Users.AddAsync(user);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
-            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
-            {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
-            });
-
-            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
-
-            var newPassword = PasswordGenerator.GenerateWithCustomRules(
-                    length: 10,
-                    requireDigit: true,
-                    requireLowercase: false,
-                    requireUppercase: false,
-                    requireNonAlphanumeric: false);
-
-            var request = new UpdatePasswordRequest()
-            {
-                NewPassword = newPassword,
-                Password = password
-            };
-
             var userId = user.Id;
             _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
+            var request = new LoginRequest()
+            {
+                Email = email,
+                Password = password
+            };
+
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+
+            Assert.True(result.Headers.Contains(HeaderNames.SetCookie));
+
+            var cookies = result.Headers.GetValues(HeaderNames.SetCookie);
+            Assert.Single(cookies);
+
+            var cookieDictionary = cookies.ElementAt(0)
+                .Split(';')
+                .Select(s => s.Split('='))
+                .ToDictionary(kvp => kvp[0].Trim(), kvp => kvp.Length > 1 ? kvp[1].Trim() : null);
+            Assert.NotNull(cookieDictionary[CookieUtility.RefreshTokenKey]);
+            Assert.NotNull(cookieDictionary["expires"]);
+            Assert.Contains("secure", cookieDictionary);
+            Assert.Contains("httponly", cookieDictionary);
+            Assert.Equal("/auth", cookieDictionary["path"]);
+            Assert.Equal("none", cookieDictionary["samesite"]);
+
+            var json = await result.Content.ReadAsStringAsync();
+            using var jsonDocument = JsonDocument.Parse(json);
+            var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
+            var response = JsonSerializer.Deserialize<LoginDto>(dataElement.GetRawText(), new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            Assert.NotNull(response);
+            Assert.NotNull(response.AccessToken);
+
+            var logins = await _testHostFixture.AppDbContext.Logins
+                .Where(l => l.UserId.Equals(user.Id))
+                .ToListAsync();
+            Assert.Single(logins);
 
             var securityState = await _testHostFixture.AppDbContext.SecurityStates
                 .Where(ss => ss.UserId.Equals(userId))
                 .FirstOrDefaultAsync();
             Assert.NotNull(securityState);
-            Assert.Equal(EPasswordVerificationResult.Success, _hashing.VerifyPassword(securityState.PasswordHashed!, newPassword));
             Assert.Equal(0, securityState.FailedAttempts);
         }
     }

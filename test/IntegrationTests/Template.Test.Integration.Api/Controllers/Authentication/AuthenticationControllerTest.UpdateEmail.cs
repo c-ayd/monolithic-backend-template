@@ -12,7 +12,7 @@ using Template.Test.Utility;
 using Template.Test.Utility.Extensions.EFCore;
 using Template.Test.Utility.TestValues;
 
-namespace Template.Test.Integration.Api.Controllers
+namespace Template.Test.Integration.Api.Controllers.Authentication
 {
     public partial class AuthenticationControllerTest
     {

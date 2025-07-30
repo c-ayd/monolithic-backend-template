@@ -6,7 +6,7 @@ using Template.Api.Utilities;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 
-namespace Template.Test.Integration.Api.Controllers
+namespace Template.Test.Integration.Api.Controllers.Authentication
 {
     public partial class AuthenticationControllerTest
     {

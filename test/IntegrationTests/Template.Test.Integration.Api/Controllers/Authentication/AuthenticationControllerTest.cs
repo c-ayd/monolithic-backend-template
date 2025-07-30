@@ -9,7 +9,7 @@ using Template.Test.Integration.Api.Collections;
 using Template.Test.Utility;
 using Template.Test.Utility.Fixtures.Hosting;
 
-namespace Template.Test.Integration.Api.Controllers
+namespace Template.Test.Integration.Api.Controllers.Authentication
 {
     [Collection(nameof(TestHostCollection))]
     public partial class AuthenticationControllerTest : IDisposable
