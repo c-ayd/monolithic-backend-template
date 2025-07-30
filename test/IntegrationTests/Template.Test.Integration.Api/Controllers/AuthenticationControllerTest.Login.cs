@@ -296,7 +296,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task Login_WhenCredentialsAreCorrect_ShouldReturnOkWithCookiesAndAccessToken()
+        public async Task Login_WhenCredentialsAreCorrect_ShouldReturnOkWithCookiesAndAccessTokenAndCreateLoginAndResetFailedAttemps()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -335,6 +335,7 @@ namespace Template.Test.Integration.Api.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+
             Assert.True(result.Headers.Contains(HeaderNames.SetCookie));
 
             var cookies = result.Headers.GetValues(HeaderNames.SetCookie);

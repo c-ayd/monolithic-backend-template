@@ -105,7 +105,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task SendEmail_WhenEmailIsNotSent_ShouldReturnInternalServerErrorAndNotAddTokenToDatabase()
+        public async Task SendEmail_WhenEmailIsNotSent_ShouldReturnInternalServerErrorAndNotCreateToken()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -139,14 +139,12 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(t => t.UserId.Equals(user.Id))
                 .ToListAsync();
             Assert.Empty(tokens);
-
-            EmailHelper.SetEmailSenderResult(true);
         }
 
         [Theory]
         [InlineData(ETokenPurpose.EmailVerification)]
         [InlineData(ETokenPurpose.ResetPassword)]
-        public async Task SendEmail_WhenEmailIsSent_ShouldReturnOkAndSendEmailAndAddNewTokenToDatabaseWhileDeletingOtherSamePurposeTokens(ETokenPurpose purpose)
+        public async Task SendEmail_WhenEmailIsSent_ShouldReturnOkAndSendEmailAndCreateNewTokenAndDeleteOtherSameTypeTokens(ETokenPurpose purpose)
         {
             // Arrange
             var email = EmailGenerator.Generate();

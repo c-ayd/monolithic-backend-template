@@ -68,12 +68,10 @@ namespace Template.Test.Integration.Api.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
-
-            _testHostFixture.RemoveJwtBearerToken();
         }
 
         [Fact]
-        public async Task Logout_WhenLoggedInAndNoQueryStringIsGiven_ShouldDeleteOnlyCurrentLogin()
+        public async Task Logout_WhenLoggedInAndNoQueryStringIsGiven_ShouldReturnOkAndDeleteOnlyCurrentLogin()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -143,13 +141,10 @@ namespace Template.Test.Integration.Api.Controllers
                 .ToListAsync();
             Assert.Single(logins);
             Assert.False(_hashing.CompareSha256(logins[0].RefreshTokenHashed, token1.RefreshToken), "The login is not deleted.");
-
-            _testHostFixture.RemoveJwtBearerToken();
-            _testHostFixture.ClearCookies();
         }
 
         [Fact]
-        public async Task Logout_WhenLoggedInAndLogoutAllDevicesIsFalse_ShouldDeleteOnlyCurrentLogin()
+        public async Task Logout_WhenLoggedInAndLogoutAllDevicesIsFalse_ShouldReturnOkAndDeleteOnlyCurrentLogin()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -219,13 +214,10 @@ namespace Template.Test.Integration.Api.Controllers
                 .ToListAsync();
             Assert.Single(logins);
             Assert.False(_hashing.CompareSha256(logins[0].RefreshTokenHashed, token1.RefreshToken), "The login is not deleted.");
-
-            _testHostFixture.RemoveJwtBearerToken();
-            _testHostFixture.ClearCookies();
         }
 
         [Fact]
-        public async Task Logout_WhenLoggedInAndLogoutAllDevicesIsTrue_ShouldDeleteAllLoginRelatedToUser()
+        public async Task Logout_WhenLoggedInAndLogoutAllDevicesIsTrue_ShouldReturnOkAndDeleteAllLoginsRelatedToUser()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -294,9 +286,6 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(l => l.UserId.Equals(user.Id))
                 .ToListAsync();
             Assert.Empty(logins);
-
-            _testHostFixture.RemoveJwtBearerToken();
-            _testHostFixture.ClearCookies();
         }
     }
 }

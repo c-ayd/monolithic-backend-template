@@ -77,6 +77,15 @@ namespace Template.Test.Utility.Fixtures.Hosting
             Client.Dispose();
         }
 
+        public void SetDefaultOptions()
+        {
+            ClearCookies();
+            ResetUserAgent();
+            ResetAcceptLanguage();
+            RemoveJwtBearerToken();
+            EmailHelper.SetEmailSenderResult(true);
+        }
+
         private void AddAllTestEndpoints(IEndpointRouteBuilder endpoints)
         {
             var methods = typeof(TestEndpoints).GetMethods(BindingFlags.Public | BindingFlags.Static);
@@ -96,14 +105,6 @@ namespace Template.Test.Utility.Fixtures.Hosting
             }
 
             await AppDbContext.Database.MigrateAsync();
-        }
-
-        private void SetDefaultOptions()
-        {
-            ResetUserAgent();
-            ResetAcceptLanguage();
-            RemoveJwtBearerToken();
-            EmailHelper.SetEmailSenderResult(true);
         }
     }
 }

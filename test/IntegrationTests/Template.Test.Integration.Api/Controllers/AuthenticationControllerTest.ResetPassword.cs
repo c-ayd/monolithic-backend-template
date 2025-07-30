@@ -166,7 +166,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task ResetPassword_WhenTokenIsValidAndLogoutAllDevicesIsFalse_ShouldReturnOkAndResetPasswordAndDeleteTokenAndKeepLoginsOfUser()
+        public async Task ResetPassword_WhenTokenIsValidAndLogoutAllDevicesIsFalse_ShouldReturnOkAndUpdatePasswordAndKeepLoginsAndDeleteAllTokensExceptNewEmailVerificationToken()
         {
             // Arrange
             var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
@@ -249,7 +249,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task ResetPassword_WhenTokenIsValidAndLogoutAllDevicesIsTrue_ShouldReturnOkAndResetPasswordAndDeleteTokenAndDeleteAllLoginsOfUser()
+        public async Task ResetPassword_WhenTokenIsValidAndLogoutAllDevicesIsTrue_ShouldReturnOkAndUpdatePasswordAndDeleteAllLoginsAndDeleteAllTokensExceptNewEmailVerificationToken()
         {
             // Arrange
             var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);

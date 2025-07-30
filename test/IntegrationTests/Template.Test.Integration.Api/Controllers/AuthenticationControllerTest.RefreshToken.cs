@@ -80,13 +80,10 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(l => l.UserId.Equals(userId))
                 .ToListAsync();
             Assert.Empty(logins);
-
-            _testHostFixture.RemoveJwtBearerToken();
-            _testHostFixture.ClearCookies();
         }
 
         [Fact]
-        public async Task RefreshToken_WhenTokenIsValid_ShouldReturnOkWithCookiesAndAccessToken()
+        public async Task RefreshToken_WhenTokenIsValid_ShouldReturnOkWithCookiesAndAccessTokenAndUpdateCurrentLogin()
         {
             // Arrange
             var user = new User();
@@ -148,9 +145,6 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(l => l.UserId.Equals(userId))
                 .ToListAsync();
             Assert.Single(logins);
-
-            _testHostFixture.RemoveJwtBearerToken();
-            _testHostFixture.ClearCookies();
         }
     }
 }

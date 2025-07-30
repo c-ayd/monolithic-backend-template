@@ -21,6 +21,7 @@ namespace Template.Test.Integration.Api.Controllers
         public AuthenticationControllerTest(TestHostFixture testHostFixture)
         {
             _testHostFixture = testHostFixture;
+            _testHostFixture.SetDefaultOptions();
 
             _hashing = new Hashing();
 

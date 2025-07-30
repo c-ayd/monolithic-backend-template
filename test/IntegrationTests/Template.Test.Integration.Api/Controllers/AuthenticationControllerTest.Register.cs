@@ -79,7 +79,7 @@ namespace Template.Test.Integration.Api.Controllers
         }
 
         [Fact]
-        public async Task Register_WhenUserIsCreatedButEmailIsNotSend_ShouldReturnMultiStatusAndCreateUserAndToken()
+        public async Task Register_WhenUserIsCreatedButEmailIsNotSend_ShouldReturnMultiStatusAndCreateUserAndCreateEmailVerificationToken()
         {
             // Arrange
             var request = new RegisterRequest()
@@ -111,12 +111,10 @@ namespace Template.Test.Integration.Api.Controllers
                 .FirstOrDefaultAsync();
             Assert.NotNull(token);
             Assert.Equal(ETokenPurpose.EmailVerification, token.Purpose);
-
-            EmailHelper.SetEmailSenderResult(true);
         }
 
         [Fact]
-        public async Task Register_WhenUserIsCreatedAndEmailIsSent_ShouldReturnOkAndCreateUserAndGenerateTokenAndSendEmail()
+        public async Task Register_WhenUserIsCreatedAndEmailIsSent_ShouldReturnOkAndCreateUserAndCreateEmailVerificationTokenAndSendEmail()
         {
             // Arrange
             var request = new RegisterRequest()

@@ -46,8 +46,6 @@ namespace Template.Test.Integration.Api.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-
-            _testHostFixture.RemoveJwtBearerToken();
         }
 
         [Theory]
@@ -73,8 +71,6 @@ namespace Template.Test.Integration.Api.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
-
-            _testHostFixture.RemoveJwtBearerToken();
         }
 
         [Fact]
@@ -104,8 +100,6 @@ namespace Template.Test.Integration.Api.Controllers
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
-
-            _testHostFixture.RemoveJwtBearerToken();
         }
 
         [Fact]
@@ -156,8 +150,6 @@ namespace Template.Test.Integration.Api.Controllers
                 .FirstOrDefaultAsync();
             Assert.NotNull(securityState);
             Assert.Equal(1, securityState.FailedAttempts);
-
-            _testHostFixture.RemoveJwtBearerToken();
         }
 
         [Fact]
@@ -214,7 +206,9 @@ namespace Template.Test.Integration.Api.Controllers
             Assert.True(securityState.IsLocked, "The account is not marked as locked.");
             Assert.NotNull(securityState.UnlockDate);
 
-            _testHostFixture.RemoveJwtBearerToken();
+            var totalMinutes = (securityState.UnlockDate.Value - DateTime.UtcNow).TotalMinutes;
+            Assert.True(totalMinutes >= accountLockSettings.FirstLockTimeInMinutes - 1 && totalMinutes <= accountLockSettings.FirstLockTimeInMinutes,
+                $"The unlock date is not in range. Total minutes: {totalMinutes}");
         }
 
         [Fact]
@@ -271,7 +265,9 @@ namespace Template.Test.Integration.Api.Controllers
             Assert.True(securityState.IsLocked, "The account is not marked as locked.");
             Assert.NotNull(securityState.UnlockDate);
 
-            _testHostFixture.RemoveJwtBearerToken();
+            var totalMinutes = (securityState.UnlockDate.Value - DateTime.UtcNow).TotalMinutes;
+            Assert.True(totalMinutes >= accountLockSettings.SecondLockTimeInMinutes - 1 && totalMinutes <= accountLockSettings.SecondLockTimeInMinutes,
+                $"The unlock date is not in range. Total minutes: {totalMinutes}");
         }
 
         [Fact]
@@ -343,14 +339,10 @@ namespace Template.Test.Integration.Api.Controllers
                 .ToListAsync();
             Assert.Single(tokens);
             Assert.Equal(ETokenPurpose.ResetPassword, tokens[0].Purpose);
-
-            _testHostFixture.RemoveJwtBearerToken();
-
-            EmailHelper.SetEmailSenderResult(true);
         }
 
         [Fact]
-        public async Task UpdateEmail_WhenPasswordIsCorrect_ShouldReturnOkAndUpdateEmailAndGenerateTokenAndSendEmail()
+        public async Task UpdateEmail_WhenPasswordIsCorrect_ShouldReturnOkAndUpdateEmailAndResetFailedAttempsAndCreateTokenAndSendEmail()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -430,8 +422,6 @@ namespace Template.Test.Integration.Api.Controllers
             var sentEmail = await EmailHelper.GetLatestTempEmailFileAsync();
             Assert.NotNull(sentEmail);
             Assert.Equal(newEmail, sentEmail.ReceiverEmail);
-
-            _testHostFixture.RemoveJwtBearerToken();
         }
     }
 }
