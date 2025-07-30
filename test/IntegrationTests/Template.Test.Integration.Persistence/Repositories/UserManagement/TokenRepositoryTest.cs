@@ -131,11 +131,10 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             await _appDbContext.SaveChangesAsync();
 
             var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
-            var tokenPurpose = ETokenPurpose.ResetPassword;
             var token = new Token()
             {
                 Value = tokenValue,
-                Purpose = tokenPurpose,
+                Purpose = ETokenPurpose.ResetPassword,
                 UserId = user.Id
             };
             await _tokenRepository.AddAsync(token);
@@ -146,7 +145,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             _appDbContext.UntrackEntity(token);
 
             // Act
-            var result = await _tokenRepository.GetByValueAndPurposeAsync(StringGenerator.GenerateUsingAsciiChars(10), ETokenPurpose.EmailVerification);
+            var result = await _tokenRepository.GetByValueAndPurposeAsync(tokenValue, ETokenPurpose.EmailVerification);
 
             // Assert
             Assert.Null(result);
