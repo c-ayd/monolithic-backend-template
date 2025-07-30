@@ -7,6 +7,7 @@ using Template.Application.Features.Commands.Authentication.Logout;
 using Template.Application.Features.Commands.Authentication.Register;
 using Template.Application.Features.Commands.Authentication.ResetPassword;
 using Template.Application.Features.Commands.Authentication.UpdateEmail;
+using Template.Application.Features.Commands.Authentication.UpdatePassword;
 using Template.Application.Features.Commands.Authentication.VerifyEmail;
 using Template.Application.Mappings;
 
@@ -85,6 +86,17 @@ namespace Template.Api.Controllers
 
         [HttpPatch("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
+        {
+            var result = await _sender.Send(request);
+            return result.Match(
+                (code, response, metadata) => JsonUtility.Success(code, metadata),
+                (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
+            );
+        }
+
+        [Authorize]
+        [HttpPatch("update-password")]
+        public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
         {
             var result = await _sender.Send(request);
             return result.Match(
