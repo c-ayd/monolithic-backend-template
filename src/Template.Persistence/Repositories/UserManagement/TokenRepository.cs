@@ -50,5 +50,11 @@ namespace Template.Persistence.Repositories.UserManagement
             => await _appDbContext.Tokens
                 .Where(t => t.UserId.Equals(userId))
                 .ExecuteDeleteAsync(cancellationToken);
+
+        public async Task<int> DeleteAllByUserIdAndPurposeAsync(Guid userId, ETokenPurpose purpose, CancellationToken cancellationToken = default)
+            => await _appDbContext.Tokens
+                .Where(t => t.UserId.Equals(userId) &&
+                    t.Purpose == purpose)
+                .ExecuteDeleteAsync(cancellationToken);
     }
 }

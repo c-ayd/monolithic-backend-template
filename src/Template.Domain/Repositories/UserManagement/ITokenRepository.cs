@@ -21,7 +21,19 @@ namespace Template.Domain.Repositories.UserManagement
         /// </para>
         /// </summary>
         /// <param name="userId">ID of the user to delete related tokens</param>
+        /// <param name="cancellationToken"></param>
         /// <returns>Returns the number of affected rows.</returns>
         Task<int> DeleteAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+        /// <summary>
+        /// Deletes all tokens related to a given user ID and their purposes from the database.
+        /// <para>
+        /// It skips EF Core's tracking system.
+        /// </para>
+        /// </summary>
+        /// <param name="userId">ID of the user to delete related tokens</param>
+        /// <param name="purpose">Purpose of the tokens that are going to be deleted</param>
+        /// <param name="cancellationToken"></param>
+        /// <returns>Returns the number of affected rows.</returns>
+        Task<int> DeleteAllByUserIdAndPurposeAsync(Guid userId, ETokenPurpose purpose, CancellationToken cancellationToken = default);
     }
 }

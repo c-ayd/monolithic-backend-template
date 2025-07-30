@@ -31,5 +31,9 @@
         public const string TokenEmpty = "token_empty";
         public const string TokenNotFound = "token_not_found";
         public const string TokenExpired = "token_expired";
+
+        public const string SendEmailPurposeRequired = "send_email_purpose_required";
+        public const string SendEmailPurposeOutOfRange = "send_email_purpose_out_of_range";
+        public const string SendEmailVerificationOfEmailIsAlreadyDone = "send_email_verification_of_email_is_already_done";
     }
 }
