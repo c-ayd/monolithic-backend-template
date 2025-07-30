@@ -19,13 +19,5 @@ namespace Template.Test.Utility.Extensions.EFCore
                 dbContext.UntrackEntity(entity);
             }
         }
-
-        public static void UntrackEntityCollection<T>(this DbContext dbContext, ICollection<T> collection)
-        {
-            foreach (var entity in collection)
-            {
-                dbContext.UntrackEntity(entity);
-            }
-        }
     }
 }

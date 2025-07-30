@@ -205,8 +205,8 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
             var userId = user.Id;
-            _testHostFixture.AppDbContext.UntrackEntityCollection(user.Logins);
-            _testHostFixture.AppDbContext.UntrackEntityCollection(user.Tokens);
+            _testHostFixture.AppDbContext.UntrackEntities(user.Logins.ToArray());
+            _testHostFixture.AppDbContext.UntrackEntities(user.Tokens.ToArray());
             _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
@@ -288,8 +288,8 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
             var userId = user.Id;
-            _testHostFixture.AppDbContext.UntrackEntityCollection(user.Logins);
-            _testHostFixture.AppDbContext.UntrackEntityCollection(user.Tokens);
+            _testHostFixture.AppDbContext.UntrackEntities(user.Logins.ToArray());
+            _testHostFixture.AppDbContext.UntrackEntities(user.Tokens.ToArray());
             _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
             _testHostFixture.AppDbContext.UntrackEntity(user);
 

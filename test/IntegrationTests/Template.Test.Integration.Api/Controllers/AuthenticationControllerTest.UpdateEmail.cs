@@ -317,7 +317,7 @@ namespace Template.Test.Integration.Api.Controllers
 
             var userId = user.Id;
             _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
-            _testHostFixture.AppDbContext.UntrackEntityCollection(user.Tokens);
+            _testHostFixture.AppDbContext.UntrackEntities(user.Tokens.ToArray());
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
             EmailHelper.SetEmailSenderResult(false);
@@ -390,7 +390,7 @@ namespace Template.Test.Integration.Api.Controllers
 
             var userId = user.Id;
             _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
-            _testHostFixture.AppDbContext.UntrackEntityCollection(user.Tokens);
+            _testHostFixture.AppDbContext.UntrackEntities(user.Tokens.ToArray());
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
             // Act
