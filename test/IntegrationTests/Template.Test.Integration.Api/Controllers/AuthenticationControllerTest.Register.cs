@@ -36,14 +36,15 @@ namespace Template.Test.Integration.Api.Controllers
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
         }
 
-        [Fact]
-        public async Task Register_WhenPasswordIsInvalid_ShouldReturnBadRequest()
+        [Theory]
+        [MemberData(nameof(TestValues.GetInvalidPassword), MemberType = typeof(TestValues))]
+        public async Task Register_WhenPasswordIsInvalid_ShouldReturnBadRequest(string? password)
         {
             // Arrange
             var request = new RegisterRequest()
             {
                 Email = EmailGenerator.Generate(),
-                Password = PasswordGenerator.Generate()
+                Password = password
             };
 
             // Act

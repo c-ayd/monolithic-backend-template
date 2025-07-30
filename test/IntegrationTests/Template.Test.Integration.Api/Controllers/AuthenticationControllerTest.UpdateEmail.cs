@@ -20,7 +20,7 @@ namespace Template.Test.Integration.Api.Controllers
 
         [Theory]
         [MemberData(nameof(TestValues.GetInvalidEmails), MemberType = typeof(TestValues))]
-        public async Task UpdateEmail_WhenEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)
+        public async Task UpdateEmail_WhenNewEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)
         {
             // Arrange
             var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
@@ -50,8 +50,9 @@ namespace Template.Test.Integration.Api.Controllers
             _testHostFixture.RemoveJwtBearerToken();
         }
 
-        [Fact]
-        public async Task UpdateEmail_WhenPasswordIsInvalid_ShouldReturnBadRequest()
+        [Theory]
+        [MemberData(nameof(TestValues.GetInvalidPassword), MemberType = typeof(TestValues))]
+        public async Task UpdateEmail_WhenPasswordIsInvalid_ShouldReturnBadRequest(string? password)
         {
             // Arrange
             var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
@@ -64,7 +65,7 @@ namespace Template.Test.Integration.Api.Controllers
             var request = new UpdateEmailRequest()
             {
                 NewEmail = EmailGenerator.Generate(),
-                Password = PasswordGenerator.Generate()
+                Password = password
             };
 
             // Act

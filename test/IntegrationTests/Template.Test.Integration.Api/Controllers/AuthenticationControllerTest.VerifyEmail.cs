@@ -7,6 +7,7 @@ using Template.Application.Features.Commands.Authentication.VerifyEmail;
 using Template.Domain.Entities.UserManagement;
 using Template.Domain.Entities.UserManagement.Enums;
 using Template.Test.Utility.Extensions.EFCore;
+using Template.Test.Utility.TestValues;
 
 namespace Template.Test.Integration.Api.Controllers
 {
@@ -15,9 +16,7 @@ namespace Template.Test.Integration.Api.Controllers
         private const string _verifyEmailEndpoint = "/auth/verify-email";
 
         [Theory]
-        [InlineData(null)]
-        [InlineData("")]
-        [InlineData(" ")]
+        [MemberData(nameof(TestValues.GetInvalidStrings), MemberType = typeof(TestValues))]
         public async Task VerifyEmail_WhenTokenIsInvalid_ShouldReturnBadRequest(string? token)
         {
             // Arrange
