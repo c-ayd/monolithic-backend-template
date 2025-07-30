@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Template.Api.Utilities;
 using Template.Application.Features.Commands.Authentication.Login;
 using Template.Application.Features.Commands.Authentication.Logout;
+using Template.Application.Features.Commands.Authentication.RefreshToken;
 using Template.Application.Features.Commands.Authentication.Register;
 using Template.Application.Features.Commands.Authentication.ResetPassword;
 using Template.Application.Features.Commands.Authentication.SendEmail;
@@ -112,6 +113,20 @@ namespace Template.Api.Controllers
             var result = await _sender.Send(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
+                (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
+            );
+        }
+
+        [HttpPost("refresh-token")]
+        public async Task<IActionResult> RefreshToken()
+        {
+            var result = await _sender.Send(new RefreshTokenRequest());
+            return result.Match(
+                (code, response, metadata) =>
+                {
+                    HttpContext.Response.Cookies.AddRefreshToken(response.RefreshToken, response.RefreshTokenExpirationDate);
+                    return JsonUtility.Success(code, AuthenticationMappings.RefreshTokenMapping(response), metadata);
+                },
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
         }

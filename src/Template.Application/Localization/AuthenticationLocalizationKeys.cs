@@ -35,5 +35,7 @@
         public const string SendEmailPurposeRequired = "send_email_purpose_required";
         public const string SendEmailPurposeOutOfRange = "send_email_purpose_out_of_range";
         public const string SendEmailVerificationOfEmailIsAlreadyDone = "send_email_verification_of_email_is_already_done";
+
+        public const string RefreshTokenNotLoggedIn = "refresh_token_not_logged_in";
     }
 }
