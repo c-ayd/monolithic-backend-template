@@ -4,6 +4,7 @@ using System.Net;
 using System.Security.Claims;
 using Template.Api.Utilities;
 using Template.Domain.Entities.UserManagement;
+using Template.Test.Utility.Extensions.EFCore;
 
 namespace Template.Test.Integration.Api.Controllers
 {
@@ -121,6 +122,9 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.Logins.AddAsync(login2);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
+            _testHostFixture.AppDbContext.UntrackEntity(login1);
+            _testHostFixture.AppDbContext.UntrackEntity(login2);
+
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
@@ -194,6 +198,9 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.Logins.AddAsync(login2);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
 
+            _testHostFixture.AppDbContext.UntrackEntity(login1);
+            _testHostFixture.AppDbContext.UntrackEntity(login2);
+
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
@@ -266,6 +273,9 @@ namespace Template.Test.Integration.Api.Controllers
             await _testHostFixture.AppDbContext.Logins.AddAsync(login1);
             await _testHostFixture.AppDbContext.Logins.AddAsync(login2);
             await _testHostFixture.AppDbContext.SaveChangesAsync();
+
+            _testHostFixture.AppDbContext.UntrackEntity(login1);
+            _testHostFixture.AppDbContext.UntrackEntity(login2);
 
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
