@@ -14,6 +14,25 @@ namespace Template.Test.Integration.Api.Controllers
     {
         private const string _verifyEmailEndpoint = "/auth/verify-email";
 
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        public async Task VerifyEmail_WhenTokenIsInvalid_ShouldReturnBadRequest(string? token)
+        {
+            // Arrange
+            var request = new VerifyEmailRequest()
+            {
+                Token = token
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PatchAsJsonAsync(_verifyEmailEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
         [Fact]
         public async Task VerifyEmail_WhenTokenIsNotFound_ShouldReturnNotFound()
         {

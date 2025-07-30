@@ -11,12 +11,53 @@ using Template.Application.Features.Commands.Authentication.Login;
 using Template.Application.Settings;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
+using Template.Test.Utility.TestValues;
 
 namespace Template.Test.Integration.Api.Controllers
 {
     public partial class AuthenticationControllerTest
     {
         private const string _loginEndpoint = "/auth/login";
+
+        [Theory]
+        [MemberData(nameof(TestValues.GetInvalidEmails), MemberType = typeof(TestValues))]
+        public async Task Login_WhenEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)
+        {
+            // Arrange
+            var request = new LoginRequest()
+            {
+                Email = email,
+                Password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false)
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Login_WhenPasswordIsInvalid_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var request = new LoginRequest()
+            {
+                Email = EmailGenerator.Generate(),
+                Password = PasswordGenerator.Generate()
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_loginEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
 
         [Fact]
         public async Task Login_WhenUserDoesNotExists_ShouldReturnBadRequest()

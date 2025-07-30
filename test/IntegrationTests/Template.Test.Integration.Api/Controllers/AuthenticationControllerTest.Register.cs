@@ -5,12 +5,53 @@ using System.Net.Http.Json;
 using Template.Application.Features.Commands.Authentication.Register;
 using Template.Domain.Entities.UserManagement.Enums;
 using Template.Test.Utility;
+using Template.Test.Utility.TestValues;
 
 namespace Template.Test.Integration.Api.Controllers
 {
     public partial class AuthenticationControllerTest
     {
         private const string _registerEndpoint = "/auth/register";
+
+        [Theory]
+        [MemberData(nameof(TestValues.GetInvalidEmails), MemberType = typeof(TestValues))]
+        public async Task Register_WhenEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)
+        {
+            // Arrange
+            var request = new RegisterRequest()
+            {
+                Email = email,
+                Password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false)
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_registerEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
+
+        [Fact]
+        public async Task Register_WhenPasswordIsInvalid_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var request = new RegisterRequest()
+            {
+                Email = EmailGenerator.Generate(),
+                Password = PasswordGenerator.Generate()
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_registerEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+        }
 
         [Fact]
         public async Task Register_WhenUserExists_ShouldReturnConflict()

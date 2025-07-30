@@ -10,12 +10,71 @@ using Template.Domain.Entities.UserManagement;
 using Template.Domain.Entities.UserManagement.Enums;
 using Template.Test.Utility;
 using Template.Test.Utility.Extensions.EFCore;
+using Template.Test.Utility.TestValues;
 
 namespace Template.Test.Integration.Api.Controllers
 {
     public partial class AuthenticationControllerTest
     {
         public const string _updateEmailEndpoint = "/auth/update-email";
+
+        [Theory]
+        [MemberData(nameof(TestValues.GetInvalidEmails), MemberType = typeof(TestValues))]
+        public async Task UpdateEmail_WhenEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)
+        {
+            // Arrange
+            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+            });
+
+            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
+
+            var request = new UpdateEmailRequest()
+            {
+                NewEmail = email,
+                Password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false)
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+
+            _testHostFixture.RemoveJwtBearerToken();
+        }
+
+        [Fact]
+        public async Task UpdateEmail_WhenPasswordIsInvalid_ShouldReturnBadRequest()
+        {
+            // Arrange
+            var jwtToken = _jwt.GenerateJwtToken(new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+            });
+
+            _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
+
+            var request = new UpdateEmailRequest()
+            {
+                NewEmail = EmailGenerator.Generate(),
+                Password = PasswordGenerator.Generate()
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
+
+            _testHostFixture.RemoveJwtBearerToken();
+        }
 
         [Fact]
         public async Task UpdateEmail_WhenUserDoesNotExist_ShouldReturnInternalServerError()
