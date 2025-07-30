@@ -11,7 +11,7 @@ using Template.Application.Features.Commands.Authentication.SendEmail;
 using Template.Application.Features.Commands.Authentication.UpdateEmail;
 using Template.Application.Features.Commands.Authentication.UpdatePassword;
 using Template.Application.Features.Commands.Authentication.VerifyEmail;
-using Template.Application.Mappings;
+using Template.Application.Mappings.Authentication;
 
 namespace Template.Api.Controllers
 {

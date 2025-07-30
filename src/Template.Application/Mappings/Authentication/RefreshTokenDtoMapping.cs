@@ -1,7 +1,7 @@
 ﻿using Template.Application.Dtos.Controllers.Authentication;
 using Template.Application.Features.Commands.Authentication.RefreshToken;
 
-namespace Template.Application.Mappings
+namespace Template.Application.Mappings.Authentication
 {
     public static partial class AuthenticationMappings
     {
