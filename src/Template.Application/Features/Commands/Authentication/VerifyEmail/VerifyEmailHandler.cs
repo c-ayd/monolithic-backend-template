@@ -26,7 +26,7 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
             var hashedTokenValue = _hashing.HashSha256(request.Token!);
             var token = await _unitOfWork.Tokens.GetByValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.EmailVerification);
             if (token == null)
-                return new ExecNotFound("Token does not exist", AuthenticationLocalizationKeys.VerifyEmailTokenNotFound);
+                return new ExecNotFound("Token does not exist", AuthenticationLocalizationKeys.TokenNotFound);
 
             // Delete the token after using it
             _unitOfWork.Tokens.Delete(token);
@@ -36,7 +36,7 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
             {
                 await _unitOfWork.SaveChangesAsync();
 
-                return new ExecGone("Token is expired", AuthenticationLocalizationKeys.VerifyEmailTokenExpired);
+                return new ExecGone("Token is expired", AuthenticationLocalizationKeys.TokenExpired);
             }
 
             // Update email verification value of the account

@@ -28,8 +28,8 @@
 
         public const string LogoutUnauthorized = "logout_unauthorized";
 
-        public const string VerifyEmailNoToken = "verify_email_no_token";
-        public const string VerifyEmailTokenNotFound = "verify_email_token_not_found";
-        public const string VerifyEmailTokenExpired = "verify_email_token_expired";
+        public const string TokenEmpty = "token_empty";
+        public const string TokenNotFound = "token_not_found";
+        public const string TokenExpired = "token_expired";
     }
 }

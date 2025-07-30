@@ -10,7 +10,7 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
             RuleFor(_ => _.Token)
                 .NotEmpty()
                     .WithMessage("Token is null or empty")
-                    .WithErrorCode(AuthenticationLocalizationKeys.VerifyEmailNoToken);
+                    .WithErrorCode(AuthenticationLocalizationKeys.TokenEmpty);
         }
     }
 }
