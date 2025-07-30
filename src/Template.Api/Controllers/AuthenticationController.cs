@@ -5,6 +5,7 @@ using Template.Api.Utilities;
 using Template.Application.Features.Commands.Authentication.Login;
 using Template.Application.Features.Commands.Authentication.Logout;
 using Template.Application.Features.Commands.Authentication.Register;
+using Template.Application.Features.Commands.Authentication.ResetPassword;
 using Template.Application.Features.Commands.Authentication.UpdateEmail;
 using Template.Application.Features.Commands.Authentication.VerifyEmail;
 using Template.Application.Mappings;
@@ -74,6 +75,16 @@ namespace Template.Api.Controllers
         [Authorize]
         [HttpPatch("update-email")]
         public async Task<IActionResult> UpdateEmail(UpdateEmailRequest request)
+        {
+            var result = await _sender.Send(request);
+            return result.Match(
+                (code, response, metadata) => JsonUtility.Success(code, metadata),
+                (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
+            );
+        }
+
+        [HttpPatch("reset-password")]
+        public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
             var result = await _sender.Send(request);
             return result.Match(
