@@ -64,7 +64,7 @@ namespace Template.Api.Controllers
             );
         }
 
-        [HttpPatch("verify-email")]
+        [HttpPost("verify-email")]
         public async Task<IActionResult> VerifyEmail(VerifyEmailRequest request)
         {
             var result = await _sender.Send(request);
@@ -85,7 +85,7 @@ namespace Template.Api.Controllers
             );
         }
 
-        [HttpPatch("reset-password")]
+        [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
             var result = await _sender.Send(request);
@@ -106,7 +106,7 @@ namespace Template.Api.Controllers
             );
         }
 
-        [HttpPut("send-email")]
+        [HttpPost("send-email")]
         public async Task<IActionResult> SendEmail(SendEmailRequest request)
         {
             var result = await _sender.Send(request);

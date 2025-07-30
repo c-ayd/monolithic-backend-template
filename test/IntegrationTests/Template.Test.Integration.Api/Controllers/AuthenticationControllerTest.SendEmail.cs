@@ -27,7 +27,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PutAsJsonAsync(_sendEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_sendEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -44,7 +44,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PutAsJsonAsync(_sendEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_sendEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -62,7 +62,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PutAsJsonAsync(_sendEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_sendEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
@@ -98,7 +98,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PutAsJsonAsync(_sendEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_sendEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Conflict, result.StatusCode);
@@ -130,7 +130,7 @@ namespace Template.Test.Integration.Api.Controllers
             EmailHelper.SetEmailSenderResult(false);
 
             // Act
-            var result = await _testHostFixture.Client.PutAsJsonAsync(_sendEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_sendEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
@@ -188,7 +188,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PutAsJsonAsync(_sendEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_sendEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

@@ -34,7 +34,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -53,7 +53,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -76,7 +76,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
@@ -116,7 +116,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Gone, result.StatusCode);
@@ -159,7 +159,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
@@ -225,7 +225,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
@@ -308,7 +308,7 @@ namespace Template.Test.Integration.Api.Controllers
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_resetPasswordEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_resetPasswordEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
