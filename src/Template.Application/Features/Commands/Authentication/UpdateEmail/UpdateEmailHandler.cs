@@ -129,6 +129,7 @@ namespace Template.Application.Features.Commands.Authentication.UpdateEmail
             {
                 // Set new email address
                 user.Email = request.NewEmail;
+                user.SecurityState.IsEmailVerified = false;
 
                 // Revoke all tokens related to user
                 await _unitOfWork.Tokens.DeleteAllByUserIdAsync(user.Id);

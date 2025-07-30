@@ -363,6 +363,7 @@ namespace Template.Test.Integration.Api.Controllers
                 SecurityState = new SecurityState()
                 {
                     PasswordHashed = _hashing.HashPassword(password),
+                    IsEmailVerified = true,
                     FailedAttempts = 1
                 },
                 Tokens = new List<Token>()
@@ -409,6 +410,7 @@ namespace Template.Test.Integration.Api.Controllers
                 .Where(ss => ss.UserId.Equals(userId))
                 .FirstOrDefaultAsync();
             Assert.NotNull(securityState);
+            Assert.False(securityState.IsEmailVerified, "The new email is in the verified state.");
             Assert.Equal(0, securityState.FailedAttempts);
 
             var tokens = await _testHostFixture.AppDbContext.Tokens
