@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Template.Application.Validations.Constants.Entities.UserManagement;
 using Template.Domain.Entities.UserManagement;
+using Template.Persistence.Converters;
 using Template.Persistence.Generators;
 
 namespace Template.Persistence.EntityConfigurations.UserManagement
@@ -16,7 +17,8 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
             builder.HasIndex(u => u.Email);
 
             builder.Property(u => u.Email)
-                .HasMaxLength(UserConstants.EmailMaxLength);
+                .HasMaxLength(UserConstants.EmailMaxLength)
+                .HasConversion<ToLowerConverter>();
 
             // Relationships
             builder.HasOne(u => u.SecurityState)
