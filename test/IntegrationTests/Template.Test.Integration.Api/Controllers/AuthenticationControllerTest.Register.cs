@@ -147,7 +147,7 @@ namespace Template.Test.Integration.Api.Controllers
             Assert.NotNull(token);
             Assert.Equal(ETokenPurpose.EmailVerification, token.Purpose);
 
-            var email = await EmailHelper.GetLatestTempEmailFile();
+            var email = await EmailHelper.GetLatestTempEmailFileAsync();
             Assert.NotNull(email);
             Assert.Equal(request.Email, email.ReceiverEmail);
         }

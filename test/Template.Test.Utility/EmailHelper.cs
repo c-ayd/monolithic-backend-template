@@ -6,7 +6,7 @@ namespace Template.Test.Utility
     {
         public static readonly string _tempEmailPath = Path.GetFullPath(@".\Temp\Emails");
 
-        public static async Task<EmailContent?> GetLatestTempEmailFile()
+        public static async Task<EmailContent?> GetLatestTempEmailFileAsync()
         {
             var emlFile = new DirectoryInfo(_tempEmailPath).GetFiles("*.eml")
                 .OrderByDescending(f => f.CreationTime)

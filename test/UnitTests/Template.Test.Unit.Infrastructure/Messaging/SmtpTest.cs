@@ -39,7 +39,7 @@ namespace Template.Test.Unit.Infrastructure.Messaging
             await _smtp.SendAsync(to, subject, body, isBodyHtml);
 
             // Assert
-            var emailContent = await EmailHelper.GetLatestTempEmailFile();
+            var emailContent = await EmailHelper.GetLatestTempEmailFileAsync();
 
             Assert.NotNull(emailContent);
             Assert.NotNull(emailContent.SenderDisplayName);
