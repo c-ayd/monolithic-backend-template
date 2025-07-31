@@ -34,7 +34,9 @@ namespace Template.Api.Configurations
                         return false;
 
                     return expires != null && expires > DateTime.UtcNow;
-                }
+                },
+
+                RoleClaimType = ClaimTypes.Role
             };
 
             options.Events = new JwtBearerEvents()

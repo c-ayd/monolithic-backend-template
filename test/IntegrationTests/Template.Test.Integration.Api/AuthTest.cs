@@ -122,7 +122,28 @@ namespace Template.Test.Integration.Api
             // Arrange
             var tokens = _jwt.GenerateJwtToken(new List<Claim>()
             {
-                new Claim(TestPolicy.ClaimName, "test-value")
+                new Claim(ClaimTypes.Role, TestPolicy.RoleName)
+            });
+            _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
+
+            // Act
+            var response = await _testHostFixture.Client.GetAsync(_authorizationEndpoint);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            _testHostFixture.RemoveJwtBearerToken();
+        }
+
+        [Fact]
+        public async Task AuthorizationEndpoint_WhenJwtBearerTokenAndMoreClaimsThanNeededExistAndAreValid_ShouldReturnOk()
+        {
+            // Arrange
+            var tokens = _jwt.GenerateJwtToken(new List<Claim>()
+            {
+                new Claim(ClaimTypes.Role, TestPolicy.RoleName),
+                new Claim(ClaimTypes.Role, "test-value-2"),
+                new Claim(ClaimTypes.Role, "test-value-3")
             });
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 
@@ -141,7 +162,7 @@ namespace Template.Test.Integration.Api
             // Arrange
             var tokens = _jwt.GenerateJwtToken(new List<Claim>()
             {
-                new Claim(TestPolicy.ClaimName, "wrong-value")
+                new Claim(ClaimTypes.Role, "wrong-value")
             });
             _testHostFixture.AddJwtBearerToken(tokens.AccessToken);
 

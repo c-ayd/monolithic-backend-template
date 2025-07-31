@@ -40,7 +40,7 @@ namespace Template.Test.Utility.Fixtures.Hosting
                             {
                                 config.AddPolicy(TestPolicy.PolicyName, p =>
                                 {
-                                    p.RequireClaim(TestPolicy.ClaimName, "test-value");
+                                    p.RequireRole(TestPolicy.RoleName);
                                 });
                             });
                             services.AddFlexLog(context.Configuration, config =>
