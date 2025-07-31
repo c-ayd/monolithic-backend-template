@@ -149,7 +149,7 @@ namespace Template.Application.Features.Commands.Authentication.UpdateEmail
 
                 // Send a verification email
                 var emailTemplate = _emailTemplates.GetEmailVerificationTemplate(emailVerificationTokenValue, emailVerificationExpirationTimeInHours);
-                await _emailSender.SendAsync(request.NewEmail!, emailTemplate.Subject!, emailTemplate.Body!, isBodyHtml: false); // NOTE: If the expected template is HTML, switch it to 'true'
+                await _emailSender.SendAsync(request.NewEmail!.ToLower(), emailTemplate.Subject!, emailTemplate.Body!, isBodyHtml: false); // NOTE: If the expected template is HTML, switch it to 'true'
 
                 await transaction.CommitAsync();
             }

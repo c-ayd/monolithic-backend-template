@@ -332,7 +332,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefaultAsync();
             Assert.NotNull(userResult);
-            Assert.Equal(email, userResult.Email);
+            Assert.Equal(email.ToLower(), userResult.Email);
 
             var tokens = await _testHostFixture.AppDbContext.Tokens
                 .Where(t => t.UserId.Equals(userId))
@@ -404,7 +404,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefaultAsync();
             Assert.NotNull(userResult);
-            Assert.Equal(newEmail, userResult.Email);
+            Assert.Equal(newEmail.ToLower(), userResult.Email);
 
             var securityState = await _testHostFixture.AppDbContext.SecurityStates
                 .Where(ss => ss.UserId.Equals(userId))
@@ -421,7 +421,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
 
             var sentEmail = await EmailHelper.GetLatestTempEmailFileAsync();
             Assert.NotNull(sentEmail);
-            Assert.Equal(newEmail, sentEmail.ReceiverEmail);
+            Assert.Equal(newEmail.ToLower(), sentEmail.ReceiverEmail);
         }
     }
 }
