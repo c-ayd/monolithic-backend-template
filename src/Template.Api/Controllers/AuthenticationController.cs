@@ -11,7 +11,7 @@ using Template.Application.Features.Commands.Authentication.SendEmail;
 using Template.Application.Features.Commands.Authentication.UpdateEmail;
 using Template.Application.Features.Commands.Authentication.UpdatePassword;
 using Template.Application.Features.Commands.Authentication.VerifyEmail;
-using Template.Application.Mappings.Authentication;
+using Template.Application.Mappings.Controllers.Authentication;
 
 namespace Template.Api.Controllers
 {
@@ -44,7 +44,7 @@ namespace Template.Api.Controllers
                 (code, response, metadata) =>
                 {
                     HttpContext.Response.Cookies.AddRefreshToken(response.RefreshToken, response.RefreshTokenExpirationDate);
-                    return JsonUtility.Success(code, AuthenticationMappings.LoginMapping(response), metadata);
+                    return JsonUtility.Success(code, AuthenticationMappings.Map(response), metadata);
                 },
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
@@ -125,7 +125,7 @@ namespace Template.Api.Controllers
                 (code, response, metadata) =>
                 {
                     HttpContext.Response.Cookies.AddRefreshToken(response.RefreshToken, response.RefreshTokenExpirationDate);
-                    return JsonUtility.Success(code, AuthenticationMappings.RefreshTokenMapping(response), metadata);
+                    return JsonUtility.Success(code, AuthenticationMappings.Map(response), metadata);
                 },
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
