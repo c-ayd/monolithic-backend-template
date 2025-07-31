@@ -8,7 +8,7 @@
 
   <ItemGroup>
     <PackageReference Include="Cayd.AspNetCore.ExecutionResult" Version="1.0.0" />
-    <PackageReference Include="Cayd.AspNetCore.FlexLog" Version="2.0.1" />
+    <PackageReference Include="Cayd.AspNetCore.FlexLog" Version="2.0.2" />
     <PackageReference Include="Cayd.AspNetCore.Settings" Version="2.0.1" />
     <PackageReference Include="FluentValidation" Version="12.0.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="12.0.0" />
