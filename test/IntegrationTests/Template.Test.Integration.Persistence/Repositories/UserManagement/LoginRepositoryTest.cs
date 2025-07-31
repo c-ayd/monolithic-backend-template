@@ -468,5 +468,95 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             // Assert
             Assert.Equal(2, result.Count);
         }
+
+        [Fact]
+        public async Task DeleteByIdAsync_WhenLoginDoesNotExist_ShouldReturnZero()
+        {
+            // Act
+            var result = await _loginRepository.DeleteByIdAndUserIdAsync(Guid.NewGuid(), Guid.NewGuid());
+
+            // Assert
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public async Task DeleteByIdAsync_WhenLoginExistsButGivenUserIdIsWrong_ShouldReturnZero()
+        {
+            // Arrange
+            var user = new User()
+            {
+                Logins = new List<Login>()
+                {
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10)
+                    }
+                }
+            };
+
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var loginId = user.Logins.ElementAt(0).Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _loginRepository.DeleteByIdAndUserIdAsync(loginId, Guid.NewGuid());
+
+            // Assert
+            Assert.Equal(0, result);
+        }
+
+        [Fact]
+        public async Task DeleteByIdAsync_WhenLoginExists_ShouldReturnOneAndDeleteLogin()
+        {
+            // Arrange
+            var user = new User()
+            {
+                Logins = new List<Login>()
+                {
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10)
+                    }
+                }
+            };
+
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            var loginId = user.Logins.ElementAt(0).Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _loginRepository.DeleteByIdAndUserIdAsync(loginId, userId);
+
+            // Assert
+            Assert.Equal(1, result);
+
+            var login = await _appDbContext.Logins
+                .Where(l => l.Id.Equals(loginId))
+                .FirstOrDefaultAsync();
+            Assert.Null(login);
+        }
     }
 }

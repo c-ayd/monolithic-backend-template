@@ -45,6 +45,12 @@ namespace Template.Persistence.Repositories.UserManagement
         public void DeleteAll(IEnumerable<Login> logins)
             => _appDbContext.Logins.RemoveRange(logins);
 
+        public async Task<int> DeleteByIdAndUserIdAsync(Guid id, Guid userId, CancellationToken cancellationToken = default)
+            => await _appDbContext.Logins
+                .Where(l => l.Id.Equals(id) &&
+                    l.UserId.Equals(userId))
+                .ExecuteDeleteAsync(cancellationToken);
+
         public async Task<int> DeleteAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
             => await _appDbContext.Logins
                 .Where(l => l.UserId.Equals(userId))

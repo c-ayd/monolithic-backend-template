@@ -14,6 +14,15 @@ namespace Template.Domain.Repositories.UserManagement
         void DeleteAll(IEnumerable<Login> logins);
 
         /// <summary>
+        /// Deletes a login whose ID is the same as a given ID from the database.
+        /// <para>
+        /// It skips EF Core's tracking system.
+        /// </para>
+        /// </summary>
+        /// <param name="id">ID of the login to be deleted</param>
+        /// <returns>Returns the number of affected rows.</returns>
+        Task<int> DeleteByIdAndUserIdAsync(Guid id, Guid userId, CancellationToken cancellationToken = default);
+        /// <summary>
         /// Deletes all logins related to a given user ID from the database.
         /// <para>
         /// It skips EF Core's tracking system.
