@@ -42,7 +42,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -67,7 +67,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -96,7 +96,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             };
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
@@ -140,7 +140,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.BadRequest, result.StatusCode);
@@ -193,7 +193,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Locked, result.StatusCode);
@@ -252,7 +252,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.Locked, result.StatusCode);
@@ -323,7 +323,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             EmailHelper.SetEmailSenderResult(false);
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.InternalServerError, result.StatusCode);
@@ -395,7 +395,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             _testHostFixture.AppDbContext.UntrackEntity(user);
 
             // Act
-            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updateEmailEndpoint, request);
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);

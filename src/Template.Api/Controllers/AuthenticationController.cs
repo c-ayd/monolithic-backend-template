@@ -77,7 +77,7 @@ namespace Template.Api.Controllers
         }
 
         [Authorize]
-        [HttpPatch("update-email")]
+        [HttpPost("update-email")]
         public async Task<IActionResult> UpdateEmail(UpdateEmailRequest request)
         {
             var result = await _sender.Send(request);
