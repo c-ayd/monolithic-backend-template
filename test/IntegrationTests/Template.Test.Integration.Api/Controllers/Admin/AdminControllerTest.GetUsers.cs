@@ -29,7 +29,8 @@ namespace Template.Test.Integration.Api.Controllers.Admin
             // Arrange
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString())
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, "test-value")
             });
 
             _testHostFixture.AddJwtBearerToken(token.AccessToken);
