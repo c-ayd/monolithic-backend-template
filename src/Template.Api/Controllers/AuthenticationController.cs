@@ -11,6 +11,7 @@ using Template.Application.Features.Commands.Authentication.SendEmail;
 using Template.Application.Features.Commands.Authentication.UpdateEmail;
 using Template.Application.Features.Commands.Authentication.UpdatePassword;
 using Template.Application.Features.Commands.Authentication.VerifyEmail;
+using Template.Application.Features.Queries.Authentication.GetLogins;
 using Template.Application.Mappings.Controllers.Authentication;
 
 namespace Template.Api.Controllers
@@ -127,6 +128,17 @@ namespace Template.Api.Controllers
                     HttpContext.Response.Cookies.AddRefreshToken(response.RefreshToken, response.RefreshTokenExpirationDate);
                     return JsonUtility.Success(code, AuthenticationMappings.Map(response), metadata);
                 },
+                (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
+            );
+        }
+
+        [Authorize]
+        [HttpPost("logins")]
+        public async Task<IActionResult> GetLogins(GetLoginsRequest request, CancellationToken cancellationToken)
+        {
+            var result = await _sender.Send(request, cancellationToken);
+            return result.Match(
+                (code, response, metadata) => JsonUtility.Success(code, AuthenticationMappings.Map(response), metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
         }
