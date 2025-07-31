@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.IdentityModel.Tokens;
 using System.Net.Mime;
+using System.Security.Claims;
 using System.Text;
 using Template.Api.Utilities;
 using Template.Infrastructure.Settings.Authentication;
@@ -26,6 +27,7 @@ namespace Template.Api.Configurations
                 ValidAudience = jwtSettings.Audience,
                 IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
                 ValidAlgorithms = new List<string>() { SecurityAlgorithms.HmacSha256 },
+                ClockSkew = TimeSpan.Zero,
                 LifetimeValidator = delegate(DateTime? notBefore, DateTime? expires, SecurityToken securityToken, TokenValidationParameters validationParameters)
                 {
                     if (notBefore != null && notBefore > DateTime.UtcNow)
