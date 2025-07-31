@@ -8,6 +8,7 @@ using Template.Api.Configurations;
 using Template.Api.Filters;
 using Template.Api.Logging.Sinks;
 using Template.Api.Middlewares;
+using Template.Api.Policies;
 using Template.Application;
 using Template.Infrastructure;
 using Template.Persistence;
@@ -46,7 +47,10 @@ public static partial class Program
                 options.ConfigureJwtBearer(configuration);
             });
 
-        services.AddAuthorization();
+        services.AddAuthorization(config =>
+        {
+            config.AddPolicy(AdminPolicy.PolicyName, p => p.RequireRole(AdminPolicy.RoleName));
+        });
 
         services.AddControllers(config =>
         {
