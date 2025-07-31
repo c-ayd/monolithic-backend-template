@@ -18,6 +18,8 @@ namespace Template.Domain.Repositories.UserManagement
         Task<ICollection<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<ICollection<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default);
 
+        Task<(ICollection<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int maxCountCheck, CancellationToken cancellationToken = default);
+
         void Delete(User user);
     }
 }

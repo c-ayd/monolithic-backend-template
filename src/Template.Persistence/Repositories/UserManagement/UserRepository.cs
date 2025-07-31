@@ -81,5 +81,31 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(u => u.Email == email)
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync(cancellationToken);
+
+        public async Task<(ICollection<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int numberOfNextPagesToCheck, CancellationToken cancellationToken = default)
+        {
+            var users = await _appDbContext.Users
+                .AsNoTracking()
+                .OrderByDescending(u => u.CreatedDate)
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .Include(u => u.SecurityState)
+                .Include(u => u.Roles)
+                .Include(u => u.Logins)
+                .ToListAsync(cancellationToken);
+
+            if (users.Count == 0)
+                return (users, 0);
+
+            var count = await _appDbContext.Users
+                .AsNoTracking()
+                .OrderByDescending(u => u.CreatedDate)
+                .Skip(page * pageSize)
+                .Take(pageSize * numberOfNextPagesToCheck)
+                .CountAsync(cancellationToken);
+
+            var numberOfNextPages = (count + pageSize - 1) / pageSize;
+            return (users, numberOfNextPages);
+        }
     }
 }

@@ -459,5 +459,66 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             // Assert
             Assert.Null(result);
         }
+
+        [Theory]
+        [InlineData(-1, 10)]
+        [InlineData(1, -1)]
+        public async Task GetAllWithFullContextAsync_WhenPageOrPageSizeIsNegative_ShouldThrowException(int page, int pageSize)
+        {
+            // Act
+            var result = await Record.ExceptionAsync(async () =>
+            {
+                await _userRepository.GetAllWithFullContextAsync(page, pageSize, 5);
+            });
+
+            // Assert
+            Assert.NotNull(result);
+        }
+
+        [Fact]
+        public async Task GetAllWithFullContextAsync_WhenPaginationIsOutOfRange_ShouldReturnEmptyCollectionAndZero()
+        {
+            // Arrange
+            for (int i = 0; i < 20; ++i)
+            {
+                await _userRepository.AddAsync(new User());
+            }
+
+            await _appDbContext.SaveChangesAsync();
+
+            int pageSize = 15;
+
+            // Act
+            var result = await _userRepository.GetAllWithFullContextAsync(int.MaxValue, pageSize, 5);
+
+            // Assert
+            var (users, numberOfNextPages) = result;
+            Assert.Empty(users);
+            Assert.Equal(0, numberOfNextPages);
+        }
+
+        [Fact]
+        public async Task GetAllWithFullContextAsync_WhenCalled_ShouldReturnUsersAccordingToPaginationAndReturnNumberOfNextPages()
+        {
+            // Arrange
+            for (int i = 0; i < 20; ++i)
+            {
+                await _userRepository.AddAsync(new User());
+            }
+
+            await _appDbContext.SaveChangesAsync();
+
+            int page = 1;
+            int pageSize = 15;
+
+            // Act
+            var result = await _userRepository.GetAllWithFullContextAsync(page, pageSize, 5);
+
+            // Assert
+            var (users, numberOfNextPages) = result;
+            Assert.NotEmpty(users);
+            Assert.Equal(pageSize, users.Count);
+            Assert.True(numberOfNextPages > 0, "The number of next pages is zero.");
+        }
     }
 }
