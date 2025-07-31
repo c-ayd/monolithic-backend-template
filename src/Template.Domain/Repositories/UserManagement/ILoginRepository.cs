@@ -9,6 +9,7 @@ namespace Template.Domain.Repositories.UserManagement
         Task<Login?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<Login?> GetByUserIdAndHashedRefreshTokenAsync(Guid userId, string hashedRefreshToken, CancellationToken cancellationToken = default);
         Task<ICollection<Login>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+        Task<ICollection<Login>> GetAllActiveByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
         void Delete(Login login);
         void DeleteAll(IEnumerable<Login> logins);
 

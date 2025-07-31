@@ -33,6 +33,12 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(l => l.UserId.Equals(userId))
                 .ToListAsync(cancellationToken);
 
+        public async Task<ICollection<Login>> GetAllActiveByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+            => await _appDbContext.Logins
+                .Where(l => l.UserId.Equals(userId) &&
+                    l.ExpirationDate > DateTime.UtcNow)
+                .ToListAsync(cancellationToken);
+
         public void Delete(Login login)
             => _appDbContext.Logins.Remove(login);
 

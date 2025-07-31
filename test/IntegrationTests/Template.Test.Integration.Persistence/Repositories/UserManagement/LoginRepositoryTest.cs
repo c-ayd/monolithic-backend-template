@@ -369,5 +369,104 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             // Assert
             Assert.Equal(0, result);
         }
+
+        [Fact]
+        public async Task GetAllActiveByUserIdAsync_WhenThereIsNoLogins_ShouldReturnEmptyCollection()
+        {
+            // Arrange
+            var user = new User();
+
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _loginRepository.GetAllActiveByUserIdAsync(userId);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetAllActiveByUserIdAsync_WhenThereIsNoActiveLogins_ShouldReturnEmptyCollection()
+        {
+            // Arrange
+            var user = new User()
+            {
+                Logins = new List<Login>()
+                {
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
+                        ExpirationDate = DateTime.UtcNow.AddDays(-1)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
+                        ExpirationDate = DateTime.UtcNow.AddDays(-1)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
+                        ExpirationDate = DateTime.UtcNow.AddDays(-1)
+                    }
+                }
+            };
+
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _loginRepository.GetAllActiveByUserIdAsync(userId);
+
+            // Assert
+            Assert.Empty(result);
+        }
+
+        [Fact]
+        public async Task GetAllActiveByUserIdAsync_WhenThereAreLogins_ShouldReturnOnlyActiveLogins()
+        {
+            // Arrange
+            var user = new User()
+            {
+                Logins = new List<Login>()
+                {
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
+                        ExpirationDate = DateTime.UtcNow.AddDays(1)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
+                        ExpirationDate = DateTime.UtcNow.AddDays(1)
+                    },
+                    new Login()
+                    {
+                        RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10),
+                        ExpirationDate = DateTime.UtcNow.AddDays(-1)
+                    }
+                }
+            };
+
+            await _appDbContext.Users.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _loginRepository.GetAllActiveByUserIdAsync(userId);
+
+            // Assert
+            Assert.Equal(2, result.Count);
+        }
     }
 }
