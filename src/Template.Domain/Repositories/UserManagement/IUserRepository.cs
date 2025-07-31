@@ -15,10 +15,10 @@ namespace Template.Domain.Repositories.UserManagement
         Task<string?> GetEmailByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<SecurityState?> GetSecurityStateByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<SecurityState?> GetSecurityStateByEmailAsync(string email, CancellationToken cancellationToken = default);
-        Task<ICollection<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default);
-        Task<ICollection<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default);
+        Task<List<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<List<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default);
 
-        Task<(ICollection<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int maxCountCheck, CancellationToken cancellationToken = default);
+        Task<(List<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int maxCountCheck, CancellationToken cancellationToken = default);
 
         void Delete(User user);
     }

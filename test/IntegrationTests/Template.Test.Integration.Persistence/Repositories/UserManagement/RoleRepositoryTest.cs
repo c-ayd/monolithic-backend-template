@@ -174,7 +174,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllAsync_WhenPaginationIsWrong_ShouldReturnEmptyList()
+        public async Task GetAllAsync_WhenPaginationIsWrong_ShouldThrowException()
         {
             // Arrange
             var roles = new List<Role>()
@@ -199,10 +199,13 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             int pageSize = -5;
 
             // Act
-            var result = await _roleRepository.GetAllAsync(page, pageSize);
+            var result = await Record.ExceptionAsync(async () =>
+            {
+                await _roleRepository.GetAllAsync(page, pageSize);
+            });
 
             // Assert
-            Assert.Empty(result);
+            Assert.NotNull(result);
         }
 
         [Fact]

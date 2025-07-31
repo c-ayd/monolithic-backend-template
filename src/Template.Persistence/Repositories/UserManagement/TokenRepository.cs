@@ -29,12 +29,12 @@ namespace Template.Persistence.Repositories.UserManagement
                     t.Purpose == purpose)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<ICollection<Token>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+        public async Task<List<Token>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
             => await _appDbContext.Tokens
                 .Where(t => t.UserId.Equals(userId))
                 .ToListAsync(cancellationToken);
 
-        public async Task<ICollection<Token>> GetAllByUserIdAndPurposeAsync(Guid userId, ETokenPurpose purpose, CancellationToken cancellationToken = default)
+        public async Task<List<Token>> GetAllByUserIdAndPurposeAsync(Guid userId, ETokenPurpose purpose, CancellationToken cancellationToken = default)
             => await _appDbContext.Tokens
                 .Where(t => t.UserId.Equals(userId) &&
                     t.Purpose == purpose)

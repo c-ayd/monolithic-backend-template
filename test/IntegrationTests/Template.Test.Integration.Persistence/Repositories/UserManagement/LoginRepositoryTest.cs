@@ -216,7 +216,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenLoginsRelatedToUserDoNotExist_ShouldReturnEmptyCollection()
+        public async Task GetAllByUserIdAsync_WhenLoginsRelatedToUserDoNotExist_ShouldReturnEmptyList()
         {
             // Arrange
             var user = new User();
@@ -234,7 +234,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenUserDoesNotExist_ShouldReturnEmptyCollection()
+        public async Task GetAllByUserIdAsync_WhenUserDoesNotExist_ShouldReturnEmptyList()
         {
             // Act
             var result = await _loginRepository.GetAllByUserIdAsync(Guid.NewGuid());
@@ -371,7 +371,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllActiveByUserIdAsync_WhenThereIsNoLogins_ShouldReturnEmptyCollection()
+        public async Task GetAllActiveByUserIdAsync_WhenThereIsNoLogins_ShouldReturnEmptyList()
         {
             // Arrange
             var user = new User();
@@ -390,7 +390,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllActiveByUserIdAsync_WhenThereIsNoActiveLogins_ShouldReturnEmptyCollection()
+        public async Task GetAllActiveByUserIdAsync_WhenThereIsNoActiveLogins_ShouldReturnEmptyList()
         {
             // Arrange
             var user = new User()
@@ -505,7 +505,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             await _appDbContext.Users.AddAsync(user);
             await _appDbContext.SaveChangesAsync();
 
-            var loginId = user.Logins.ElementAt(0).Id;
+            var loginId = user.Logins[0].Id;
             _appDbContext.UntrackEntities(user.Logins.ToArray());
             _appDbContext.UntrackEntity(user);
 
@@ -543,7 +543,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             await _appDbContext.SaveChangesAsync();
 
             var userId = user.Id;
-            var loginId = user.Logins.ElementAt(0).Id;
+            var loginId = user.Logins[0].Id;
             _appDbContext.UntrackEntities(user.Logins.ToArray());
             _appDbContext.UntrackEntity(user);
 

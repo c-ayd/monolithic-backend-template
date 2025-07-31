@@ -70,19 +70,19 @@ namespace Template.Persistence.Repositories.UserManagement
         public void Delete(User user)
             => _appDbContext.Remove(user);
 
-        public async Task<ICollection<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<List<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .Where(u => u.Id.Equals(id))
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<ICollection<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default)
+        public async Task<List<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .Where(u => u.Email == email)
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<(ICollection<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int numberOfNextPagesToCheck, CancellationToken cancellationToken = default)
+        public async Task<(List<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int numberOfNextPagesToCheck, CancellationToken cancellationToken = default)
         {
             var users = await _appDbContext.Users
                 .AsNoTracking()

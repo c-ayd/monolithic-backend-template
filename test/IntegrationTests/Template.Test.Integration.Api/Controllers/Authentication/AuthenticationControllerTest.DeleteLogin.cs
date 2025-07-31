@@ -97,7 +97,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
             _testHostFixture.AddJwtBearerToken(jwtToken.AccessToken);
 
             var userId = user.Id;
-            var loginId = user.Logins.ElementAt(0).Id;
+            var loginId = user.Logins[0].Id;
             _testHostFixture.AppDbContext.UntrackEntities(user.Logins.ToArray());
             _testHostFixture.AppDbContext.UntrackEntity(user);
 

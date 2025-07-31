@@ -180,7 +180,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenTokensRelatedToUserDoNotExist_ShouldReturnEmptyCollection()
+        public async Task GetAllByUserIdAsync_WhenTokensRelatedToUserDoNotExist_ShouldReturnEmptyList()
         {
             // Arrange
             var user = new User();
@@ -198,7 +198,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllByUserIdAsync_WhenUserDoesNotExist_ShouldReturnEmptyCollection()
+        public async Task GetAllByUserIdAsync_WhenUserDoesNotExist_ShouldReturnEmptyList()
         {
             // Act
             var result = await _tokenRepository.GetAllByUserIdAsync(Guid.NewGuid());
@@ -237,7 +237,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllByUserIdAndPurposeAsync_WhenTokensRelatedToUserAndPurposeDoNotExist_ShouldReturnEmptyCollection()
+        public async Task GetAllByUserIdAndPurposeAsync_WhenTokensRelatedToUserAndPurposeDoNotExist_ShouldReturnEmptyList()
         {
             // Arrange
             var user = new User();
@@ -265,7 +265,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllByUserIdAndPurposeAsync_WhenUserDoesNotExist_ShouldReturnEmptyCollection()
+        public async Task GetAllByUserIdAndPurposeAsync_WhenUserDoesNotExist_ShouldReturnEmptyList()
         {
             // Act
             var result = await _tokenRepository.GetAllByUserIdAndPurposeAsync(Guid.NewGuid(), ETokenPurpose.EmailVerification);

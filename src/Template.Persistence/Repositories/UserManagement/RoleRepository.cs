@@ -27,17 +27,12 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Where(r => r.Name == name)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<ICollection<Role>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken = default)
-        {
-            if (page < 0 || pageSize < 0)
-                return Array.Empty<Role>();
-
-            return await _appDbContext.Roles
+        public async Task<List<Role>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken = default)
+            => await _appDbContext.Roles
                 .OrderByDescending(r => r.CreatedDate)
-                .Skip(pageSize * (page - 1))
+                .Skip((page - 1) * pageSize)
                 .Take(pageSize)
                 .ToListAsync(cancellationToken);
-        }
 
         public void Delete(Role role)
             => _appDbContext.Roles.Remove(role);

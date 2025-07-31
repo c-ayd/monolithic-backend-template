@@ -13,8 +13,8 @@ namespace Template.Domain.Entities.UserManagement
 
         // Relationships
         public SecurityState? SecurityState { get; set; }
-        public ICollection<Role> Roles { get; set; } = new List<Role>();
-        public ICollection<Login> Logins { get; set; } = new List<Login>();
-        public ICollection<Token> Tokens { get; set; } = new List<Token>();
+        public List<Role> Roles { get; set; } = new List<Role>();
+        public List<Login> Logins { get; set; } = new List<Login>();
+        public List<Token> Tokens { get; set; } = new List<Token>();
     }
 }

@@ -10,6 +10,6 @@ namespace Template.Domain.Entities.UserManagement
         public DateTime? DeletedDate { get; private set; }
 
         // Relationships
-        public ICollection<User> Users { get; set; } = new List<User>();
+        public List<User> Users { get; set; } = new List<User>();
     }
 }

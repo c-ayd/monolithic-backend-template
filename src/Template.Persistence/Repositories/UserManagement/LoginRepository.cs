@@ -28,12 +28,12 @@ namespace Template.Persistence.Repositories.UserManagement
                     l.RefreshTokenHashed == hashedRefreshToken)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<ICollection<Login>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+        public async Task<List<Login>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
             => await _appDbContext.Logins
                 .Where(l => l.UserId.Equals(userId))
                 .ToListAsync(cancellationToken);
 
-        public async Task<ICollection<Login>> GetAllActiveByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
+        public async Task<List<Login>> GetAllActiveByUserIdAsync(Guid userId, CancellationToken cancellationToken = default)
             => await _appDbContext.Logins
                 .Where(l => l.UserId.Equals(userId) &&
                     l.ExpirationDate > DateTime.UtcNow)

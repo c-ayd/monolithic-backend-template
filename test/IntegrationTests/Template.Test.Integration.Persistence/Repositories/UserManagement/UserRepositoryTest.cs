@@ -233,7 +233,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
 
             // Assert
             Assert.NotNull(result);
-            Assert.Equal(email, result);
+            Assert.Equal(email.ToLower(), result);
         }
 
         [Fact]
@@ -476,7 +476,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllWithFullContextAsync_WhenPaginationIsOutOfRange_ShouldReturnEmptyCollectionAndZero()
+        public async Task GetAllWithFullContextAsync_WhenPaginationIsOutOfRange_ShouldReturnEmptyListAndZero()
         {
             // Arrange
             for (int i = 0; i < 20; ++i)

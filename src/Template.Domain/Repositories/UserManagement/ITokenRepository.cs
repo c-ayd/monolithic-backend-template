@@ -9,8 +9,8 @@ namespace Template.Domain.Repositories.UserManagement
         Task AddAsync(Token newToken);
         Task<Token?> GetByIdAsync(Guid id, CancellationToken cancellationToken = default);
         Task<Token?> GetByHashedValueAndPurposeAsync(string hashedValue, ETokenPurpose purpose, CancellationToken cancellationToken = default);
-        Task<ICollection<Token>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
-        Task<ICollection<Token>> GetAllByUserIdAndPurposeAsync(Guid userId, ETokenPurpose purpose, CancellationToken cancellationToken = default);
+        Task<List<Token>> GetAllByUserIdAsync(Guid userId, CancellationToken cancellationToken = default);
+        Task<List<Token>> GetAllByUserIdAndPurposeAsync(Guid userId, ETokenPurpose purpose, CancellationToken cancellationToken = default);
         void Delete(Token token);
         void DeleteAll(IEnumerable<Token> tokens);
 
