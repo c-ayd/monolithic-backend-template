@@ -13,7 +13,7 @@ using Template.Persistence.DbContexts;
 namespace Template.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250730181641_InitialCreate")]
+    [Migration("20250731113142_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -101,9 +101,6 @@ namespace Template.Persistence.Migrations
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("character varying(100)");
-
-                    b.Property<DateTime?>("UpdatedDate")
-                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
 

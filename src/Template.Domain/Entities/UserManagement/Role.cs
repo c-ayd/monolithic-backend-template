@@ -2,11 +2,9 @@
 
 namespace Template.Domain.Entities.UserManagement
 {
-    public class Role : EntityBase<int>, IUpdateAudit, ISoftDelete
+    public class Role : EntityBase<int>, ISoftDelete
     {
         public string Name { get; set; } = null!;
-
-        public DateTime? UpdatedDate { get; private set; }
 
         public bool IsDeleted { get; private set; }
         public DateTime? DeletedDate { get; private set; }
