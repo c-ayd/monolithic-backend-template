@@ -6,5 +6,7 @@
 
         public const string PaginationPositiveNumber = "pagination_positive_number";
         public const string PaginationSizeLimit = "pagination_size_limit";
+
+        public const string InvalidId = "invalid_id";
     }
 }

@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Template.Api.Utilities;
+using Template.Application.Features.Commands.Authentication.DeleteLogin;
 using Template.Application.Features.Commands.Authentication.Login;
 using Template.Application.Features.Commands.Authentication.Logout;
 using Template.Application.Features.Commands.Authentication.RefreshToken;
@@ -139,6 +140,21 @@ namespace Template.Api.Controllers
             var result = await _sender.Send(request, cancellationToken);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, AuthenticationMappings.Map(response), metadata),
+                (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
+            );
+        }
+
+        [Authorize]
+        [HttpDelete("logins/{id}")]
+        public async Task<IActionResult> DeleteLogin(Guid? id)
+        {
+            var result = await _sender.Send(new DeleteLoginRequest()
+            {
+                Id = id
+            });
+
+            return result.Match(
+                (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
         }

@@ -37,5 +37,7 @@
         public const string SendEmailVerificationOfEmailIsAlreadyDone = "send_email_verification_of_email_is_already_done";
 
         public const string RefreshTokenNotLoggedIn = "refresh_token_not_logged_in";
+
+        public const string DeleteLoginNotFound = "delete_login_not_found";
     }
 }
