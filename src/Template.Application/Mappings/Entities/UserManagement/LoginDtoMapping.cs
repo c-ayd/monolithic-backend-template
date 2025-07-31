@@ -8,6 +8,7 @@ namespace Template.Application.Mappings.Entities.UserManagement
         public static LoginDto Map(Login login)
             => new LoginDto()
             {
+                Id = login.Id,
                 IpAddress = login.IpAddress,
                 DeviceInfo = login.DeviceInfo,
                 UpdatedDate = login.UpdatedDate,
