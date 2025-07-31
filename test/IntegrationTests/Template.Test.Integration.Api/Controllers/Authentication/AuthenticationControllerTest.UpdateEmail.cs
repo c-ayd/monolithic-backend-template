@@ -18,6 +18,28 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
     {
         public const string _updateEmailEndpoint = "/auth/update-email";
 
+        [Fact]
+        public async Task UpdateEmail_WhenNotLoggedIn_ShouldReturnUnauthorized()
+        {
+            // Arrange
+            var request = new UpdateEmailRequest()
+            {
+                NewEmail = EmailGenerator.Generate(),
+                Password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false)
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_updateEmailEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+        }
+
         [Theory]
         [MemberData(nameof(TestValues.GetInvalidEmails), MemberType = typeof(TestValues))]
         public async Task UpdateEmail_WhenNewEmailAddressIsInvalid_ShouldReturnBadRequest(string? email)

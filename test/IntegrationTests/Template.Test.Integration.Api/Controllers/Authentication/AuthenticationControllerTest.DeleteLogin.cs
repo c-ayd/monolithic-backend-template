@@ -11,6 +11,16 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
     {
         public const string _deleteLoginEndpoint = "/auth/logins/";
 
+        [Fact]
+        public async Task DeleteLogin_WhenNotLoggedIn_ShouldReturnUnauthorized()
+        {
+            // Act
+            var result = await _testHostFixture.Client.DeleteAsync(_deleteLoginEndpoint + Guid.NewGuid());
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+        }
+
         [Theory]
         [InlineData("abcdefg")]
         [InlineData("00000000-0000-0000-0000-000000000000")]

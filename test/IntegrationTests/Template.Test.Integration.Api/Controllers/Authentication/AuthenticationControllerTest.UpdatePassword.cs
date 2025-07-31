@@ -17,6 +17,33 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
     {
         private const string _updatePasswordEndpoint = "/auth/update-password";
 
+        [Fact]
+        public async Task UpdatePassword_WhenNotLoggedIn_ShouldReturnUnauthorized()
+        {
+            // Arrange
+            var request = new UpdatePasswordRequest()
+            {
+                NewPassword = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false),
+                Password = PasswordGenerator.GenerateWithCustomRules(
+                    length: 10,
+                    requireDigit: true,
+                    requireLowercase: false,
+                    requireUppercase: false,
+                    requireNonAlphanumeric: false)
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PatchAsJsonAsync(_updatePasswordEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.Unauthorized, result.StatusCode);
+        }
+
         [Theory]
         [MemberData(nameof(TestValues.GetInvalidPassword), MemberType = typeof(TestValues))]
         public async Task UpdatePassword_WhenNewPasswordIsInvalid_ShouldReturnBadRequest(string? newPassword)
