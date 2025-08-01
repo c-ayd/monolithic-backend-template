@@ -3,6 +3,7 @@ using System.Security.Claims;
 using Template.Api.Http;
 using Template.Api.Utilities;
 using Template.Application.Abstractions.Http;
+using Template.Application.Policies;
 using Template.Application.Validations.Constants.Entities.UserManagement;
 
 namespace Template.Api.Middlewares
@@ -22,6 +23,7 @@ namespace Template.Api.Middlewares
             if (requestContext != null)
             {
                 requestContext.UserId = GetUserId(context.User);
+                requestContext.IsEmailVerified = GetEmailVerifiaction(context.User);
                 requestContext.RefreshToken = GetRefreshToken(context.Request);
                 requestContext.IpAddress = context.Connection.RemoteIpAddress;
                 requestContext.DeviceInfo = GetDeviceInfo(context.Request.Headers.UserAgent);
@@ -38,6 +40,15 @@ namespace Template.Api.Middlewares
                 return null;
 
             return Guid.TryParse(nameIdentifier, out var userId) ? userId : null;
+        }
+
+        private bool? GetEmailVerifiaction(ClaimsPrincipal user)
+        {
+            var emailVerification = user.Claims.FirstOrDefault(c => c.Type == EmailVerificationPolicy.ClaimName)?.Value;
+            if (emailVerification == null)
+                return null;
+
+            return emailVerification == EmailVerificationPolicy.ClaimValue;
         }
 
         private string? GetRefreshToken(HttpRequest request)

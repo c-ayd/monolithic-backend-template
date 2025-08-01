@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Template.Api.Utilities;
 using Template.Application.Dtos.Controllers.Authentication;
+using Template.Application.Policies;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 
@@ -53,7 +54,8 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
 
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(EmailVerificationPolicy.ClaimName, true.ToString())
             });
             _testHostFixture.AddJwtBearerToken(token.AccessToken);
             _testHostFixture.SetCookies(new Dictionary<string, string>() { { CookieUtility.RefreshTokenKey, token.RefreshToken } });
@@ -93,7 +95,8 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
 
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString())
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
+                new Claim(EmailVerificationPolicy.ClaimName, true.ToString())
             });
             _testHostFixture.AddJwtBearerToken(token.AccessToken);
             _testHostFixture.SetCookies(new Dictionary<string, string>() { { CookieUtility.RefreshTokenKey, token.RefreshToken } });

@@ -11,6 +11,7 @@ using Template.Application.Abstractions.Http;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Dtos.Crypto.Enums;
 using Template.Application.Localization;
+using Template.Application.Policies;
 using Template.Application.Settings;
 
 namespace Template.Application.Features.Commands.Authentication.Login
@@ -132,7 +133,8 @@ namespace Template.Application.Features.Commands.Authentication.Login
             // Generate JWT token
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, securityState.UserId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, securityState.UserId.ToString()),
+                new Claim(EmailVerificationPolicy.ClaimName, securityState.IsEmailVerified.ToString())
                 // NOTE: Add more claims if needed
             };
 

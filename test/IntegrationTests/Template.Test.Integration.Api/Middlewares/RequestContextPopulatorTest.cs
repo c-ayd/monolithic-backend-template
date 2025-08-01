@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Template.Api.Http;
 using Template.Api.Utilities;
+using Template.Application.Policies;
 using Template.Infrastructure.Authentication;
 using Template.Infrastructure.Crypto;
 using Template.Infrastructure.Settings.Authentication;
@@ -24,6 +25,7 @@ namespace Template.Test.Integration.Api.Middlewares
         public RequestContextPopulatorTest(TestHostFixture testHostFixture)
         {
             _testHostFixture = testHostFixture;
+            _testHostFixture.SetDefaultOptions();
 
             var config = ConfigurationHelper.CreateConfiguration();
             var jwtSettings = config.GetSection(JwtSettings.SettingsKey).Get<JwtSettings>()!;
@@ -32,13 +34,51 @@ namespace Template.Test.Integration.Api.Middlewares
         }
 
         [Fact]
-        public async Task RequestContextEndpoint_ShouldPopulateRequestContext()
+        public async Task RequestContextEndpoint_WhenNotLoggedIn_ShouldPopulateSomeRequestContext()
+        {
+            // Arrange
+            _testHostFixture.UpdateUserAgent("TestAgent", "1.0");
+            _testHostFixture.UpdateAcceptLanguage(new Dictionary<string, double>()
+            {
+                { "es-ES", 0.1 },
+                { "fr-FR", 0.9 },
+                { "de-DE", 0.5 },
+                { "en", 1.0 }
+            });
+
+            // Act
+            var response = await _testHostFixture.Client.GetAsync("/test/request-context");
+            var content = await response.Content.ReadAsStringAsync();
+            var result = JsonSerializer.Deserialize<RequestContext>(content, new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, response.StatusCode);
+
+            Assert.NotNull(result);
+            Assert.Null(result.UserId);
+            Assert.Null(result.IsEmailVerified);
+            Assert.Null(result.RefreshToken);
+            Assert.Equal("TestAgent/1.0", result.DeviceInfo);
+            Assert.Equal("en", result.PreferredLanguages[0]);
+            Assert.Equal("fr-FR", result.PreferredLanguages[1]);
+            Assert.Equal("de-DE", result.PreferredLanguages[2]);
+            Assert.Equal("es-ES", result.PreferredLanguages[3]);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task RequestContextEndpoint_WhenLoggedIn_ShouldPopulateAllRequestContext(bool emailVerification)
         {
             // Arrange
             var userId = Guid.NewGuid();
             var token = _jwt.GenerateJwtToken(new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, userId.ToString())
+                new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
+                new Claim(EmailVerificationPolicy.ClaimName, emailVerification.ToString())
             });
 
             _testHostFixture.SetCookies(new Dictionary<string, string>() { { CookieUtility.RefreshTokenKey, "refresh-token-value" } });
@@ -65,16 +105,13 @@ namespace Template.Test.Integration.Api.Middlewares
 
             Assert.NotNull(result);
             Assert.Equal(userId, result.UserId);
+            Assert.Equal(emailVerification, result.IsEmailVerified);
             Assert.Equal("refresh-token-value", result.RefreshToken);
             Assert.Equal("TestAgent/1.0", result.DeviceInfo);
             Assert.Equal("en", result.PreferredLanguages[0]);
             Assert.Equal("fr-FR", result.PreferredLanguages[1]);
             Assert.Equal("de-DE", result.PreferredLanguages[2]);
             Assert.Equal("es-ES", result.PreferredLanguages[3]);
-
-            _testHostFixture.RemoveJwtBearerToken();
-            _testHostFixture.ResetUserAgent();
-            _testHostFixture.ResetAcceptLanguage();
         }
     }
 }

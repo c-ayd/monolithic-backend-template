@@ -49,7 +49,11 @@ public static partial class Program
 
         services.AddAuthorization(config =>
         {
-            config.AddPolicy(AdminPolicy.PolicyName, p => p.RequireRole(AdminPolicy.RoleName));
+            config.AddPolicy(AdminPolicy.PolicyName,
+                p => p.RequireRole(AdminPolicy.RoleName));
+
+            config.AddPolicy(EmailVerificationPolicy.PolicyName,
+                p => p.RequireClaim(EmailVerificationPolicy.ClaimName, EmailVerificationPolicy.ClaimValue));
         });
 
         services.AddControllers(config =>

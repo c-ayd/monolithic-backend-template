@@ -7,6 +7,7 @@ using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Http;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Localization;
+using Template.Application.Policies;
 
 namespace Template.Application.Features.Commands.Authentication.RefreshToken
 {
@@ -30,7 +31,9 @@ namespace Template.Application.Features.Commands.Authentication.RefreshToken
 
         public async Task<ExecResult<RefreshTokenResponse>> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
         {
-            if (_requestContext.UserId == null || _requestContext.RefreshToken == null)
+            if (_requestContext.UserId == null || 
+                _requestContext.IsEmailVerified == null || 
+                _requestContext.RefreshToken == null)
                 return new ExecUnauthorized("The user is not logged in", AuthenticationLocalizationKeys.RefreshTokenNotLoggedIn);
 
             var hashedRefreshToken = _hashing.HashSha256(_requestContext.RefreshToken);
@@ -51,7 +54,8 @@ namespace Template.Application.Features.Commands.Authentication.RefreshToken
             // Generate JWT token
             var claims = new List<Claim>()
             {
-                new Claim(ClaimTypes.NameIdentifier, _requestContext.UserId.Value.ToString())
+                new Claim(ClaimTypes.NameIdentifier, _requestContext.UserId.Value.ToString()),
+                new Claim(EmailVerificationPolicy.ClaimName, _requestContext.IsEmailVerified.Value.ToString())
                 // NOTE: Add more claims if needed
             };
 
