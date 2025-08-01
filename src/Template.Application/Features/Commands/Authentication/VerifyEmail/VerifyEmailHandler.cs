@@ -49,6 +49,15 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
                 return new ExecInternalServerError("Something went wrong", CommonLocalizationKeys.InternalServerError);
             }
 
+            // Check email verification state
+            if (securityState.IsEmailVerified)
+            {
+                await _unitOfWork.SaveChangesAsync();
+
+                // This code should never be executed. When an email address is verified, the related token should be deleted as well.
+                return new ExecConflict("Email is already verified", AuthenticationLocalizationKeys.EmailAlreadyVerified);
+            }
+
             securityState.IsEmailVerified = true;
 
             await _unitOfWork.SaveChangesAsync();
