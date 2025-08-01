@@ -34,7 +34,7 @@ namespace Template.Infrastructure.Authentication
         public JwtTokenDto GenerateJwtToken(DateTime notBefore)
             => Generate(null, notBefore);
 
-        public JwtTokenDto Generate(ICollection<Claim>? claims, DateTime? notBefore)
+        private JwtTokenDto Generate(ICollection<Claim>? claims, DateTime? notBefore)
         {
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtSettings.SecretKey));
             var token = new JwtSecurityToken(
