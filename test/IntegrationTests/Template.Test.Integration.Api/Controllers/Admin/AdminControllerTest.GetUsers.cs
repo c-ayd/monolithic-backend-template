@@ -99,6 +99,16 @@ namespace Template.Test.Integration.Api.Controllers.Admin
 
             // Assert
             Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
+
+            var json = await result.Content.ReadAsStringAsync();
+            using var jsonDocument = JsonDocument.Parse(json);
+            var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
+            var responseData = JsonSerializer.Deserialize<List<UserDto>>(dataElement.GetRawText(), new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            Assert.NotNull(responseData);
+            Assert.Empty(responseData);
         }
 
         [Fact]
