@@ -6,9 +6,12 @@ namespace Template.Application.Mappings.Controllers.Admin
 {
     public static partial class AdminMappings
     {
-        public static List<UserDto> Map(GetUsersResponse response)
+        public static List<UserDto> Map(GetUsersResponse? response)
         {
             var result = new List<UserDto>();
+
+            if (response == null)
+                return result;
 
             foreach (var user in response.Users)
             {

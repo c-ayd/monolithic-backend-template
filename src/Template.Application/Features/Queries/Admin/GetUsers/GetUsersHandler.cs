@@ -23,7 +23,7 @@ namespace Template.Application.Features.Queries.Admin.GetUsers
 
             var (users, numberOfNextPages) = await _unitOfWork.Users.GetAllAsync(page, pageSize, PaginationConstants.MaxNumberOfNextPages, cancellationToken);
             if (users.Count == 0)
-                return new ExecNoContent<GetUsersResponse>(new GetUsersResponse() { Users = new List<User>() });
+                return new ExecNoContent<GetUsersResponse>();
 
             return new ExecOk<GetUsersResponse>(new GetUsersResponse()
             {
