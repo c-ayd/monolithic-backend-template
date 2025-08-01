@@ -72,12 +72,14 @@ namespace Template.Persistence.Repositories.UserManagement
 
         public async Task<List<Role>?> GetRolesByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
+                .AsNoTracking()
                 .Where(u => u.Id.Equals(id))
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync(cancellationToken);
 
         public async Task<List<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
+                .AsNoTracking()
                 .Where(u => u.Email == email)
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync(cancellationToken);

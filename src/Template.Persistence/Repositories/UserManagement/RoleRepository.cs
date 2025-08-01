@@ -29,6 +29,7 @@ namespace Template.Persistence.Repositories.UserManagement
 
         public async Task<List<Role>> GetAllAsync(int page, int pageSize, CancellationToken cancellationToken = default)
             => await _appDbContext.Roles
+                .AsNoTracking()
                 .OrderByDescending(r => r.CreatedDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
