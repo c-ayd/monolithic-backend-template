@@ -21,7 +21,7 @@ namespace Template.Application.Features.Queries.Admin.GetUsers
             int page = request.Page ?? 1;
             int pageSize = request.PageSize ?? 20;
 
-            var (users, numberOfNextPages) = await _unitOfWork.Users.GetAllWithFullContextAsync(page, pageSize, PaginationConstants.NumberOfNextPages, cancellationToken);
+            var (users, numberOfNextPages) = await _unitOfWork.Users.GetAllAsync(page, pageSize, PaginationConstants.MaxNumberOfNextPages, cancellationToken);
             if (users.Count == 0)
                 return new ExecNoContent<GetUsersResponse>(new GetUsersResponse() { Users = new List<User>() });
 

@@ -3,7 +3,7 @@ using System.Security.Claims;
 using System.Text.Json;
 using Template.Api.Policies;
 using Template.Api.Utilities;
-using Template.Application.Dtos.Controllers.Admin;
+using Template.Application.Dtos.Entities.UserManagement;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 
@@ -116,10 +116,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
             var users = new List<User>();
             for (int i = 0; i < 50; ++i)
             {
-                users.Add(new User()
-                {
-                    SecurityState = new SecurityState()
-                });
+                users.Add(new User());
             }
 
             await _testHostFixture.AppDbContext.Users.AddRangeAsync(users);
@@ -136,7 +133,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
             var json = await result.Content.ReadAsStringAsync();
             using var jsonDocument = JsonDocument.Parse(json);
             var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
-            var responseData = JsonSerializer.Deserialize<List<GetUserDto>>(dataElement.GetRawText(), new JsonSerializerOptions()
+            var responseData = JsonSerializer.Deserialize<List<UserDto>>(dataElement.GetRawText(), new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             });
@@ -167,10 +164,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
             var users = new List<User>();
             for (int i = 0; i < 50; ++i)
             {
-                users.Add(new User()
-                {
-                    SecurityState = new SecurityState()
-                });
+                users.Add(new User());
             }
 
             await _testHostFixture.AppDbContext.Users.AddRangeAsync(users);
@@ -190,7 +184,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
             var json = await result.Content.ReadAsStringAsync();
             using var jsonDocument = JsonDocument.Parse(json);
             var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
-            var responseData = JsonSerializer.Deserialize<List<GetUserDto>>(dataElement.GetRawText(), new JsonSerializerOptions()
+            var responseData = JsonSerializer.Deserialize<List<UserDto>>(dataElement.GetRawText(), new JsonSerializerOptions()
             {
                 PropertyNameCaseInsensitive = true
             });

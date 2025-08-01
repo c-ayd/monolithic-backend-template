@@ -463,12 +463,12 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         [Theory]
         [InlineData(-1, 10)]
         [InlineData(1, -1)]
-        public async Task GetAllWithFullContextAsync_WhenPageOrPageSizeIsNegative_ShouldThrowException(int page, int pageSize)
+        public async Task GetAllAsync_WhenPageOrPageSizeIsNegative_ShouldThrowException(int page, int pageSize)
         {
             // Act
             var result = await Record.ExceptionAsync(async () =>
             {
-                await _userRepository.GetAllWithFullContextAsync(page, pageSize, 5);
+                await _userRepository.GetAllAsync(page, pageSize, 5);
             });
 
             // Assert
@@ -476,7 +476,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllWithFullContextAsync_WhenPaginationIsOutOfRange_ShouldReturnEmptyListAndZero()
+        public async Task GetAllAsync_WhenPaginationIsOutOfRange_ShouldReturnEmptyListAndZero()
         {
             // Arrange
             for (int i = 0; i < 20; ++i)
@@ -489,7 +489,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             int pageSize = 15;
 
             // Act
-            var result = await _userRepository.GetAllWithFullContextAsync(int.MaxValue, pageSize, 5);
+            var result = await _userRepository.GetAllAsync(int.MaxValue, pageSize, 5);
 
             // Assert
             var (users, numberOfNextPages) = result;
@@ -498,7 +498,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
         }
 
         [Fact]
-        public async Task GetAllWithFullContextAsync_WhenCalled_ShouldReturnUsersAccordingToPaginationAndReturnNumberOfNextPages()
+        public async Task GetAllAsync_WhenCalled_ShouldReturnUsersAccordingToPaginationAndReturnNumberOfNextPages()
         {
             // Arrange
             for (int i = 0; i < 20; ++i)
@@ -512,7 +512,7 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             int pageSize = 15;
 
             // Act
-            var result = await _userRepository.GetAllWithFullContextAsync(page, pageSize, 5);
+            var result = await _userRepository.GetAllAsync(page, pageSize, 5);
 
             // Assert
             var (users, numberOfNextPages) = result;

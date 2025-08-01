@@ -82,16 +82,13 @@ namespace Template.Persistence.Repositories.UserManagement
                 .Select(u => u.Roles)
                 .FirstOrDefaultAsync(cancellationToken);
 
-        public async Task<(List<User>, int)> GetAllWithFullContextAsync(int page, int pageSize, int numberOfNextPagesToCheck, CancellationToken cancellationToken = default)
+        public async Task<(List<User>, int)> GetAllAsync(int page, int pageSize, int numberOfNextPagesToCheck, CancellationToken cancellationToken = default)
         {
             var users = await _appDbContext.Users
                 .AsNoTracking()
                 .OrderByDescending(u => u.CreatedDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
-                .Include(u => u.SecurityState)
-                .Include(u => u.Roles)
-                .Include(u => u.Logins)
                 .ToListAsync(cancellationToken);
 
             if (users.Count == 0)

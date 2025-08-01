@@ -4,6 +4,6 @@
     {
         public const int MaxPageSize = 100;
 
-        public const int NumberOfNextPages = 5;
+        public const int MaxNumberOfNextPages = 5;
     }
 }
