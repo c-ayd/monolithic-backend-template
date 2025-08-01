@@ -88,6 +88,7 @@ namespace Template.Persistence.Repositories.UserManagement
         {
             var users = await _appDbContext.Users
                 .AsNoTracking()
+                .IgnoreQueryFilters()
                 .OrderByDescending(u => u.CreatedDate)
                 .Skip((page - 1) * pageSize)
                 .Take(pageSize)
@@ -110,6 +111,7 @@ namespace Template.Persistence.Repositories.UserManagement
         public async Task<User?> GetWithFullContextByIdAsync(Guid id, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .AsNoTracking()
+                .IgnoreQueryFilters()
                 .Where(u => u.Id.Equals(id))
                 .Include(u => u.SecurityState)
                 .Include(u => u.Roles)
@@ -119,6 +121,7 @@ namespace Template.Persistence.Repositories.UserManagement
         public async Task<User?> GetWithFullContextByEmailAsync(string email, CancellationToken cancellationToken = default)
             => await _appDbContext.Users
                 .AsNoTracking()
+                .IgnoreQueryFilters()
                 .Where(u => u.Email == email)
                 .Include(u => u.SecurityState)
                 .Include(u => u.Roles)
