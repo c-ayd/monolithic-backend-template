@@ -5,7 +5,6 @@ using System.Text.Json;
 using Template.Api.Policies;
 using Template.Api.Utilities;
 using Template.Application.Dtos.Controllers.Admin;
-using Template.Application.Dtos.Entities.UserManagement;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 
@@ -91,6 +90,49 @@ namespace Template.Test.Integration.Api.Controllers.Admin
                 PropertyNameCaseInsensitive = true
             });
             Assert.Null(responseData);
+        }
+
+        [Fact]
+        public async Task GetUser_WhenUserIsSoftDeleted_ShouldRetunOkAndReturnOnlyUserContext()
+        {
+            // Arrange
+            var token = _jwt.GenerateJwtToken(new List<Claim>()
+            {
+                new Claim(ClaimTypes.NameIdentifier, Guid.NewGuid().ToString()),
+                new Claim(ClaimTypes.Role, AdminPolicy.RoleName)
+            });
+
+            _testHostFixture.AddJwtBearerToken(token.AccessToken);
+
+            var user = new User()
+            {
+                Email = EmailGenerator.Generate()
+            };
+            await _testHostFixture.AppDbContext.Users.AddAsync(user);
+            await _testHostFixture.AppDbContext.SaveChangesAsync();
+            _testHostFixture.AppDbContext.Users.Remove(user);
+            await _testHostFixture.AppDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _testHostFixture.AppDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _testHostFixture.Client.GetAsync(_getUserEndpoint + userId);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+
+            var json = await result.Content.ReadAsStringAsync();
+            using var jsonDocument = JsonDocument.Parse(json);
+            var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
+            var responseData = JsonSerializer.Deserialize<GetUserDto>(dataElement.GetRawText(), new JsonSerializerOptions()
+            {
+                PropertyNameCaseInsensitive = true
+            });
+            Assert.NotNull(responseData);
+            Assert.Null(responseData.SecurityState);
+            Assert.Empty(responseData.Roles);
+            Assert.Empty(responseData.Logins);
         }
 
         [Fact]

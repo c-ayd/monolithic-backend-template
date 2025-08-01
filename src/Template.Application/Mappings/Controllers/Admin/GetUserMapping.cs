@@ -12,9 +12,6 @@ namespace Template.Application.Mappings.Controllers.Admin
             if (response == null)
                 return null;
 
-            var user = UserManagementMappings.Map(response.User);
-            var securityState = UserManagementMappings.Map(response.User.SecurityState!);
-
             var roles = new List<RoleDto>();
             foreach (var role in response.User.Roles)
             {
@@ -29,8 +26,9 @@ namespace Template.Application.Mappings.Controllers.Admin
 
             return new GetUserDto()
             {
-                User = user,
-                SecurityState = securityState,
+                User = UserManagementMappings.Map(response.User),
+                SecurityState = response.User.SecurityState != null ? 
+                    UserManagementMappings.Map(response.User.SecurityState) : null,
                 Roles = roles,
                 Logins = logins
             };
