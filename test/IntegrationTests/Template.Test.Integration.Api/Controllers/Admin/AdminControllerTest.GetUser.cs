@@ -2,9 +2,9 @@
 using System.Net;
 using System.Security.Claims;
 using System.Text.Json;
-using Template.Api.Policies;
 using Template.Api.Utilities;
 using Template.Application.Dtos.Controllers.Admin;
+using Template.Application.Policies;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 

@@ -3,8 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using System.Net;
 using System.Net.Http.Json;
 using System.Security.Claims;
-using Template.Api.Policies;
 using Template.Application.Features.Commands.Admin.DeleteUser;
+using Template.Application.Policies;
 using Template.Domain.Entities.UserManagement;
 using Template.Test.Utility.Extensions.EFCore;
 

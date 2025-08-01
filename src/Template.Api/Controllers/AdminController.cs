@@ -1,12 +1,12 @@
 ﻿using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Template.Api.Policies;
 using Template.Api.Utilities;
 using Template.Application.Features.Commands.Admin.DeleteUser;
 using Template.Application.Features.Queries.Admin.GetUser;
 using Template.Application.Features.Queries.Admin.GetUsers;
 using Template.Application.Mappings.Controllers.Admin;
+using Template.Application.Policies;
 
 namespace Template.Api.Controllers
 {

@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 using Template.Persistence.DbContexts;
+using Template.Persistence.SeedData;
 using Template.Test.Utility.Hosting.Endpoints;
 using Template.Test.Utility.Hosting.Policies;
 using Template.Test.Utility.Hosting.Sinks;
@@ -62,9 +63,12 @@ namespace Template.Test.Utility.Fixtures.Hosting
                 .Build();
 
             await Host.StartAsync();
+
             Client = Host.GetTestClient();
 
             await CreateDatabase();
+            await SeedData();
+
             SetDefaultOptions();
         }
 
@@ -105,6 +109,11 @@ namespace Template.Test.Utility.Fixtures.Hosting
             }
 
             await AppDbContext.Database.MigrateAsync();
+        }
+
+        private async Task SeedData()
+        {
+            await Host.Services.SeedDataAppDbContext(Configuration);
         }
     }
 }

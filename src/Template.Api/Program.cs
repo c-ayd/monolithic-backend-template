@@ -8,8 +8,8 @@ using Template.Api.Configurations;
 using Template.Api.Filters;
 using Template.Api.Logging.Sinks;
 using Template.Api.Middlewares;
-using Template.Api.Policies;
 using Template.Application;
+using Template.Application.Policies;
 using Template.Infrastructure;
 using Template.Persistence;
 using Template.Persistence.SeedData;
@@ -29,7 +29,7 @@ builder.Services.AddFlexLog(builder.Configuration, config =>
 
 var app = builder.Build();
 
-//await app.SeedDataAppDbContext();
+await app.Services.SeedDataAppDbContext(app.Configuration);
 
 app.AddMiddlewares();
 

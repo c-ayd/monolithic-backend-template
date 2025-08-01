@@ -1,4 +1,4 @@
-﻿namespace Template.Api.Policies
+﻿namespace Template.Application.Policies
 {
     public static class AdminPolicy
     {
