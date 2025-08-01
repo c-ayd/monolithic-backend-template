@@ -19,6 +19,9 @@ namespace Template.Domain.Repositories.UserManagement
         Task<List<Role>?> GetRolesByEmailAsync(string email, CancellationToken cancellationToken = default);
         Task<(List<User>, int)> GetAllAsync(int page, int pageSize, int maxCountCheck, CancellationToken cancellationToken = default);
 
+        Task<User?> GetWithFullContextByIdAsync(Guid id, CancellationToken cancellationToken = default);
+        Task<User?> GetWithFullContextByEmailAsync(string email, CancellationToken cancellationToken = default);
+
         void Delete(User user);
     }
 }

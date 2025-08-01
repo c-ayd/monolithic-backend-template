@@ -520,5 +520,98 @@ namespace Template.Test.Integration.Persistence.Repositories.UserManagement
             Assert.Equal(pageSize, users.Count);
             Assert.True(numberOfNextPages > 0, "The number of next pages is zero.");
         }
+
+        [Fact]
+        public async Task GetWithFullContextById_WhenUserDoesNotExist_ShouldReturnNull()
+        {
+            // Act
+            var result = await _userRepository.GetWithFullContextByIdAsync(Guid.NewGuid());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetWithFullContextById_WhenUserExists_ShouldReturnUser()
+        {
+            // Arrange
+            var user = new User()
+            {
+                SecurityState = new SecurityState(),
+                Roles = new List<Role>()
+                {
+                    new Role() { Name = StringGenerator.GenerateUsingAsciiChars(10) }
+                },
+                Logins = new List<Login>()
+                {
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) }
+                }
+            };
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            _appDbContext.UntrackEntities(user.Roles.ToArray());
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user.SecurityState);
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetWithFullContextByIdAsync(userId);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.SecurityState);
+            Assert.NotEmpty(result.Roles);
+            Assert.NotEmpty(result.Logins);
+        }
+
+        [Fact]
+        public async Task GetWithFullContextByEmail_WhenUserDoesNotExist_ShouldReturnNull()
+        {
+            // Act
+            var result = await _userRepository.GetWithFullContextByEmailAsync(EmailGenerator.Generate());
+
+            // Assert
+            Assert.Null(result);
+        }
+
+        [Fact]
+        public async Task GetWithFullContextByEmail_WhenUserExists_ShouldReturnUser()
+        {
+            // Arrange
+            var email = EmailGenerator.Generate();
+            var user = new User()
+            {
+                Email = email,
+                SecurityState = new SecurityState(),
+                Roles = new List<Role>()
+                {
+                    new Role() { Name = StringGenerator.GenerateUsingAsciiChars(10) }
+                },
+                Logins = new List<Login>()
+                {
+                    new Login() { RefreshTokenHashed = StringGenerator.GenerateUsingAsciiChars(10) }
+                }
+            };
+
+            await _userRepository.AddAsync(user);
+            await _appDbContext.SaveChangesAsync();
+
+            _appDbContext.UntrackEntities(user.Roles.ToArray());
+            _appDbContext.UntrackEntities(user.Logins.ToArray());
+            _appDbContext.UntrackEntity(user.SecurityState);
+            _appDbContext.UntrackEntity(user);
+
+            // Act
+            var result = await _userRepository.GetWithFullContextByEmailAsync(email);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.NotNull(result.SecurityState);
+            Assert.NotEmpty(result.Roles);
+            Assert.NotEmpty(result.Logins);
+        }
     }
 }

@@ -104,5 +104,23 @@ namespace Template.Persistence.Repositories.UserManagement
             var numberOfNextPages = (count + pageSize - 1) / pageSize;
             return (users, numberOfNextPages);
         }
+
+        public async Task<User?> GetWithFullContextByIdAsync(Guid id, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
+                .AsNoTracking()
+                .Where(u => u.Id.Equals(id))
+                .Include(u => u.SecurityState)
+                .Include(u => u.Roles)
+                .Include(u => u.Logins)
+                .FirstOrDefaultAsync();
+
+        public async Task<User?> GetWithFullContextByEmailAsync(string email, CancellationToken cancellationToken = default)
+            => await _appDbContext.Users
+                .AsNoTracking()
+                .Where(u => u.Email == email)
+                .Include(u => u.SecurityState)
+                .Include(u => u.Roles)
+                .Include(u => u.Logins)
+                .FirstOrDefaultAsync();
     }
 }
