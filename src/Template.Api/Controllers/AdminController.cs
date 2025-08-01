@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Template.Api.Policies;
 using Template.Api.Utilities;
+using Template.Application.Features.Commands.Admin.DeleteUser;
 using Template.Application.Features.Queries.Admin.GetUser;
 using Template.Application.Features.Queries.Admin.GetUsers;
 using Template.Application.Mappings.Controllers.Admin;
@@ -46,6 +47,16 @@ namespace Template.Api.Controllers
 
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, AdminMappings.Map(response), metadata),
+                (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
+            );
+        }
+
+        [HttpPost("user/soft-delete")]
+        public async Task<IActionResult> DeleteUser(DeleteUserRequest request)
+        {
+            var result = await _sender.Send(request);
+            return result.Match(
+                (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
         }
