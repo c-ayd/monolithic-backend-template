@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using Template.Application.Localization;
+using Template.Application.Validations.Extensions;
 
 namespace Template.Application.Features.Commands.Authentication.DeleteLogin
 {
@@ -9,12 +9,7 @@ namespace Template.Application.Features.Commands.Authentication.DeleteLogin
         {
             RuleFor(_ => _.Id)
                 .Cascade(CascadeMode.Stop)
-                .NotNull()
-                    .WithMessage("ID cannot be null")
-                    .WithErrorCode(CommonLocalizationKeys.InvalidId)
-                .NotEqual(Guid.Empty)
-                    .WithMessage("ID cannot be empty")
-                    .WithErrorCode(CommonLocalizationKeys.InvalidId);
+                .GuidValidation();
         }
     }
 }

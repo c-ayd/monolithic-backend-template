@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using Template.Application.Localization;
-using Template.Application.Validations.Constants;
+using Template.Application.Validations.Extensions;
 
 namespace Template.Application.Features.Queries.Admin.GetUsers
 {
@@ -9,14 +8,12 @@ namespace Template.Application.Features.Queries.Admin.GetUsers
         public GetUsersValidation()
         {
             RuleFor(_ => _.Page)
-                .GreaterThan(0)
-                    .WithMessage("The page number must be positive")
-                    .WithErrorCode(CommonLocalizationKeys.PaginationPositiveNumber);
+                .Cascade(CascadeMode.Stop)
+                .PageValidation();
 
             RuleFor(_ => _.PageSize)
-                .LessThanOrEqualTo(PaginationConstants.MaxPageSize)
-                    .WithMessage("The page size is too large")
-                    .WithErrorCode(CommonLocalizationKeys.PaginationSizeLimit);
+                .Cascade(CascadeMode.Stop)
+                .PageSizeValidation();
         }
     }
 }

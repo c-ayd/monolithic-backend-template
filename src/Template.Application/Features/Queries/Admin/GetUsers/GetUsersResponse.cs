@@ -4,6 +4,6 @@ namespace Template.Application.Features.Queries.Admin.GetUsers
 {
     public class GetUsersResponse
     {
-        public required ICollection<User> Users { get; set; }
+        public required List<User> Users { get; set; }
     }
 }
