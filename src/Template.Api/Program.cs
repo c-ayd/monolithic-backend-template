@@ -27,11 +27,15 @@ builder.Services.AddFlexLog(builder.Configuration, config =>
         .AddFallbackSink(new FileSink());
 });
 
+builder.Services.ConfigureRateLimiter(builder.Configuration);
+
 var app = builder.Build();
 
 await app.Services.SeedDataAppDbContext(app.Configuration);
 
 app.AddMiddlewares();
+
+app.UseRateLimiter();
 
 app.MapControllers();
 
