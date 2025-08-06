@@ -1,9 +1,8 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
-using Cayd.AspNetCore.ExecutionResult.Success;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Microsoft.Extensions.Options;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Http;
@@ -11,11 +10,10 @@ using Template.Application.Abstractions.UOW;
 using Template.Application.Dtos.Crypto.Enums;
 using Template.Application.Localization;
 using Template.Application.Settings;
-using Template.Domain.Entities.UserManagement;
 
 namespace Template.Application.Features.Queries.Authentication.GetLogins
 {
-    public class GetLoginsHandler : IRequestHandler<GetLoginsRequest, ExecResult<GetLoginsResponse>>
+    public class GetLoginsHandler : IAsyncHandler<GetLoginsRequest, ExecResult<GetLoginsResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestContext _requestContext;
@@ -36,7 +34,7 @@ namespace Template.Application.Features.Queries.Authentication.GetLogins
             _flexLogger = flexLogger;
         }
         
-        public async Task<ExecResult<GetLoginsResponse>> Handle(GetLoginsRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<GetLoginsResponse>> HandleAsync(GetLoginsRequest request, CancellationToken cancellationToken)
         {
             var securityState = await _unitOfWork.Users.GetSecurityStateByIdAsync(_requestContext.UserId!.Value);
             if (securityState == null)

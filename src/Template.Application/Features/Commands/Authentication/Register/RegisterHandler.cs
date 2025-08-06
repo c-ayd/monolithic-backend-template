@@ -2,7 +2,7 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.Success;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Microsoft.Extensions.Options;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Messaging;
@@ -15,7 +15,7 @@ using Template.Domain.Entities.UserManagement.Enums;
 
 namespace Template.Application.Features.Commands.Authentication.Register
 {
-    public class RegisterHandler : IRequestHandler<RegisterRequest, ExecResult<RegisterResponse>>
+    public class RegisterHandler : IAsyncHandler<RegisterRequest, ExecResult<RegisterResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHashing _hashing;
@@ -42,7 +42,7 @@ namespace Template.Application.Features.Commands.Authentication.Register
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<RegisterResponse>> Handle(RegisterRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<RegisterResponse>> HandleAsync(RegisterRequest request, CancellationToken cancellationToken)
         {
             // Check if the user exists
             var user = await _unitOfWork.Users.GetByEmailAsync(request.Email!);

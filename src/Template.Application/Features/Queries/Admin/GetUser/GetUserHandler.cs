@@ -1,11 +1,11 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.Success;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.UOW;
 
 namespace Template.Application.Features.Queries.Admin.GetUser
 {
-    public class GetUserHandler : IRequestHandler<GetUserRequest, ExecResult<GetUserResponse>>
+    public class GetUserHandler : IAsyncHandler<GetUserRequest, ExecResult<GetUserResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -14,7 +14,7 @@ namespace Template.Application.Features.Queries.Admin.GetUser
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ExecResult<GetUserResponse>> Handle(GetUserRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<GetUserResponse>> HandleAsync(GetUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.Users.GetWithFullContextByIdAsync(request.Id!.Value, cancellationToken);
             if (user == null)

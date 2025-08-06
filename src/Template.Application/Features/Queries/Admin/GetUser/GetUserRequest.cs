@@ -1,9 +1,9 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 
 namespace Template.Application.Features.Queries.Admin.GetUser
 {
-    public class GetUserRequest : IRequest<ExecResult<GetUserResponse>>
+    public class GetUserRequest : IAsyncRequest<ExecResult<GetUserResponse>>
     {
         public Guid? Id { get; set; }
     }

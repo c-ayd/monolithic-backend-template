@@ -1,4 +1,5 @@
-﻿using FluentValidation;
+﻿using Cayd.AspNetCore.Mediator.DependencyInjection;
+using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 using Template.Application.Validations;
@@ -11,10 +12,11 @@ namespace Template.Application
         {
             var currentAssembly = Assembly.GetExecutingAssembly()!;
 
-            services.AddMediatR(config =>
+            services.AddMediator(config =>
             {
-                config.RegisterServicesFromAssembly(currentAssembly);
-                config.AddOpenBehavior(typeof(ValidationBehavior<,>));
+                config.AddHandlersFromAssembly(currentAssembly);
+
+                config.AddTransientFlow(typeof(MediatorValidationFlow<,>));
             });
 
             services.AddValidatorsFromAssembly(currentAssembly);

@@ -2,13 +2,13 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Localization;
 
 namespace Template.Application.Features.Commands.Admin.DeleteUser
 {
-    public class DeleteUserHandler : IRequestHandler<DeleteUserRequest, ExecResult<DeleteUserResponse>>
+    public class DeleteUserHandler : IAsyncHandler<DeleteUserRequest, ExecResult<DeleteUserResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IFlexLogger<DeleteUserHandler> _flexLogger;
@@ -20,7 +20,7 @@ namespace Template.Application.Features.Commands.Admin.DeleteUser
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<DeleteUserResponse>> Handle(DeleteUserRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<DeleteUserResponse>> HandleAsync(DeleteUserRequest request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.Users.GetByIdWithSecurityStateAsync(request.Id!.Value);
             if (user == null)

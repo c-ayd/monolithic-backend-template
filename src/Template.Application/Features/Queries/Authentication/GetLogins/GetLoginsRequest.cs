@@ -1,9 +1,9 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 
 namespace Template.Application.Features.Queries.Authentication.GetLogins
 {
-    public class GetLoginsRequest : IRequest<ExecResult<GetLoginsResponse>>
+    public class GetLoginsRequest : IAsyncRequest<ExecResult<GetLoginsResponse>>
     {
         public string? Password { get; set; }
     }

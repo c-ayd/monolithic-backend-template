@@ -1,6 +1,6 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.ClientError;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using System.Security.Claims;
 using Template.Application.Abstractions.Authentication;
 using Template.Application.Abstractions.Crypto;
@@ -11,7 +11,7 @@ using Template.Application.Policies;
 
 namespace Template.Application.Features.Commands.Authentication.RefreshToken
 {
-    public class RefreshTokenHandler : IRequestHandler<RefreshTokenRequest, ExecResult<RefreshTokenResponse>>
+    public class RefreshTokenHandler : IAsyncHandler<RefreshTokenRequest, ExecResult<RefreshTokenResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestContext _requestContext;
@@ -29,7 +29,7 @@ namespace Template.Application.Features.Commands.Authentication.RefreshToken
             _jwt = jwt;
         }
 
-        public async Task<ExecResult<RefreshTokenResponse>> Handle(RefreshTokenRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<RefreshTokenResponse>> HandleAsync(RefreshTokenRequest request, CancellationToken cancellationToken)
         {
             if (_requestContext.UserId == null || 
                 _requestContext.IsEmailVerified == null || 

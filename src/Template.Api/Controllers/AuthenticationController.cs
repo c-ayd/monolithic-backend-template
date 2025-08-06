@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Cayd.AspNetCore.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Template.Api.Utilities;
@@ -21,17 +21,17 @@ namespace Template.Api.Controllers
     [Route("auth")]
     public class AuthenticationController : ControllerBase
     {
-        private readonly ISender _sender;
+        private readonly IMediator _mediator;
 
-        public AuthenticationController(ISender sender)
+        public AuthenticationController(IMediator mediator)
         {
-            _sender = sender;
+            _mediator = mediator;
         }
 
         [HttpPost("register")]
         public async Task<IActionResult> Register(RegisterRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -41,7 +41,7 @@ namespace Template.Api.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) =>
                 {
@@ -56,7 +56,7 @@ namespace Template.Api.Controllers
         [HttpDelete("logout")]
         public async Task<IActionResult> Logout([FromQuery] bool? logoutAllDevices = false)
         {
-            var result = await _sender.Send(new LogoutRequest()
+            var result = await _mediator.SendAsync(new LogoutRequest()
             {
                 LogoutAllDevices = logoutAllDevices
             });
@@ -70,7 +70,7 @@ namespace Template.Api.Controllers
         [HttpPost("verify-email")]
         public async Task<IActionResult> VerifyEmail(VerifyEmailRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -81,7 +81,7 @@ namespace Template.Api.Controllers
         [HttpPost("update-email")]
         public async Task<IActionResult> UpdateEmail(UpdateEmailRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -91,7 +91,7 @@ namespace Template.Api.Controllers
         [HttpPost("reset-password")]
         public async Task<IActionResult> ResetPassword(ResetPasswordRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -102,7 +102,7 @@ namespace Template.Api.Controllers
         [HttpPatch("update-password")]
         public async Task<IActionResult> UpdatePassword(UpdatePasswordRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -112,7 +112,7 @@ namespace Template.Api.Controllers
         [HttpPost("send-email")]
         public async Task<IActionResult> SendEmail(SendEmailRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -122,7 +122,7 @@ namespace Template.Api.Controllers
         [HttpPost("refresh-token")]
         public async Task<IActionResult> RefreshToken()
         {
-            var result = await _sender.Send(new RefreshTokenRequest());
+            var result = await _mediator.SendAsync(new RefreshTokenRequest());
             return result.Match(
                 (code, response, metadata) =>
                 {
@@ -137,7 +137,7 @@ namespace Template.Api.Controllers
         [HttpPost("logins")]
         public async Task<IActionResult> GetLogins(GetLoginsRequest request, CancellationToken cancellationToken)
         {
-            var result = await _sender.Send(request, cancellationToken);
+            var result = await _mediator.SendAsync(request, cancellationToken);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, AuthenticationMappings.Map(response), metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
@@ -148,7 +148,7 @@ namespace Template.Api.Controllers
         [HttpDelete("logins/{id}")]
         public async Task<IActionResult> DeleteLogin(Guid? id)
         {
-            var result = await _sender.Send(new DeleteLoginRequest()
+            var result = await _mediator.SendAsync(new DeleteLoginRequest()
             {
                 Id = id
             });

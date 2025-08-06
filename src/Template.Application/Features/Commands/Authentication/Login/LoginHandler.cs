@@ -2,7 +2,7 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Microsoft.Extensions.Options;
 using System.Security.Claims;
 using Template.Application.Abstractions.Authentication;
@@ -16,7 +16,7 @@ using Template.Application.Settings;
 
 namespace Template.Application.Features.Commands.Authentication.Login
 {
-    public class LoginHandler : IRequestHandler<LoginRequest, ExecResult<LoginResponse>>
+    public class LoginHandler : IAsyncHandler<LoginRequest, ExecResult<LoginResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHashing _hashing;
@@ -40,7 +40,7 @@ namespace Template.Application.Features.Commands.Authentication.Login
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<LoginResponse>> Handle(LoginRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<LoginResponse>> HandleAsync(LoginRequest request, CancellationToken cancellationToken)
         {
             var securityState = await _unitOfWork.Users.GetSecurityStateByEmailAsync(request.Email!);
             if (securityState == null)

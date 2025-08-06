@@ -1,7 +1,7 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Localization;
@@ -9,7 +9,7 @@ using Template.Domain.Entities.UserManagement.Enums;
 
 namespace Template.Application.Features.Commands.Authentication.VerifyEmail
 {
-    public class VerifyEmailHandler : IRequestHandler<VerifyEmailRequest, ExecResult<VerifyEmailResponse>>
+    public class VerifyEmailHandler : IAsyncHandler<VerifyEmailRequest, ExecResult<VerifyEmailResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHashing _hashing;
@@ -21,7 +21,7 @@ namespace Template.Application.Features.Commands.Authentication.VerifyEmail
             _hashing = hashing;
         }
 
-        public async Task<ExecResult<VerifyEmailResponse>> Handle(VerifyEmailRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<VerifyEmailResponse>> HandleAsync(VerifyEmailRequest request, CancellationToken cancellationToken)
         {
             var hashedTokenValue = _hashing.HashSha256(request.Token!);
             var token = await _unitOfWork.Tokens.GetByHashedValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.EmailVerification);

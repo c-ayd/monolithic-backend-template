@@ -1,6 +1,6 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.ClientError;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Http;
 using Template.Application.Abstractions.UOW;
@@ -8,7 +8,7 @@ using Template.Application.Localization;
 
 namespace Template.Application.Features.Commands.Authentication.Logout
 {
-    public class LogoutHandler : IRequestHandler<LogoutRequest, ExecResult<LogoutResponse>>
+    public class LogoutHandler : IAsyncHandler<LogoutRequest, ExecResult<LogoutResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestContext _requestContext;
@@ -23,7 +23,7 @@ namespace Template.Application.Features.Commands.Authentication.Logout
             _hashing = hashing;
         }
 
-        public async Task<ExecResult<LogoutResponse>> Handle(LogoutRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<LogoutResponse>> HandleAsync(LogoutRequest request, CancellationToken cancellationToken)
         {
             if (_requestContext.UserId == null || _requestContext.RefreshToken == null)
                 return new ExecUnauthorized("Unauthorized", AuthenticationLocalizationKeys.LogoutUnauthorized);

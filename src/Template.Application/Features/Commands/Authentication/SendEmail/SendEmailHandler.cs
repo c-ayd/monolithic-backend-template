@@ -2,7 +2,7 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Microsoft.Extensions.Options;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Messaging;
@@ -16,7 +16,7 @@ using Template.Domain.Entities.UserManagement.Enums;
 
 namespace Template.Application.Features.Commands.Authentication.SendEmail
 {
-    public class SendEmailHandler : IRequestHandler<SendEmailRequest, ExecResult<SendEmailResponse>>
+    public class SendEmailHandler : IAsyncHandler<SendEmailRequest, ExecResult<SendEmailResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly ITokenGenerator _tokenGenerator;
@@ -43,7 +43,7 @@ namespace Template.Application.Features.Commands.Authentication.SendEmail
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<SendEmailResponse>> Handle(SendEmailRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<SendEmailResponse>> HandleAsync(SendEmailRequest request, CancellationToken cancellationToken)
         {
             var securityState = await _unitOfWork.Users.GetSecurityStateByEmailAsync(request.Email!);
             if (securityState == null)

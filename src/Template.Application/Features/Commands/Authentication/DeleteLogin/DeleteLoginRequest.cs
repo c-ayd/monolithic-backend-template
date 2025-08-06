@@ -1,9 +1,9 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 
 namespace Template.Application.Features.Commands.Authentication.DeleteLogin
 {
-    public class DeleteLoginRequest : IRequest<ExecResult<DeleteLoginResponse>>
+    public class DeleteLoginRequest : IAsyncRequest<ExecResult<DeleteLoginResponse>>
     {
         public Guid? Id { get; set; }
     }

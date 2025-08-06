@@ -2,7 +2,7 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Localization;
@@ -10,7 +10,7 @@ using Template.Domain.Entities.UserManagement.Enums;
 
 namespace Template.Application.Features.Commands.Authentication.ResetPassword
 {
-    public class ResetPasswordHandler : IRequestHandler<ResetPasswordRequest, ExecResult<ResetPasswordResponse>>
+    public class ResetPasswordHandler : IAsyncHandler<ResetPasswordRequest, ExecResult<ResetPasswordResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IHashing _hashing;
@@ -25,7 +25,7 @@ namespace Template.Application.Features.Commands.Authentication.ResetPassword
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<ResetPasswordResponse>> Handle(ResetPasswordRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<ResetPasswordResponse>> HandleAsync(ResetPasswordRequest request, CancellationToken cancellationToken)
         {
             var hashedTokenValue = _hashing.HashSha256(request.Token!);
             var token = await _unitOfWork.Tokens.GetByHashedValueAndPurposeAsync(hashedTokenValue, ETokenPurpose.ResetPassword);

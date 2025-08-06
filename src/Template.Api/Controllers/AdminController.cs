@@ -1,4 +1,4 @@
-﻿using MediatR;
+﻿using Cayd.AspNetCore.Mediator;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Template.Api.Utilities;
@@ -15,17 +15,17 @@ namespace Template.Api.Controllers
     [Route("admin")]
     public class AdminController : ControllerBase
     {
-        private readonly ISender _sender;
+        private readonly IMediator _mediator;
 
-        public AdminController(ISender sender)
+        public AdminController(IMediator mediator)
         {
-            _sender = sender;
+            _mediator = mediator;
         }
 
         [HttpGet("users")]
         public async Task<IActionResult> GetUsers([FromQuery] int? page, [FromQuery] int? pageSize, CancellationToken cancellationToken)
         {
-            var result = await _sender.Send(new GetUsersRequest()
+            var result = await _mediator.SendAsync(new GetUsersRequest()
             {
                 Page = page,
                 PageSize = pageSize
@@ -40,7 +40,7 @@ namespace Template.Api.Controllers
         [HttpGet("user/{id}")]
         public async Task<IActionResult> GetUser(Guid? id, CancellationToken cancellationToken)
         {
-            var result = await _sender.Send(new GetUserRequest()
+            var result = await _mediator.SendAsync(new GetUserRequest()
             {
                 Id = id
             }, cancellationToken);
@@ -54,7 +54,7 @@ namespace Template.Api.Controllers
         [HttpPost("user/soft-delete")]
         public async Task<IActionResult> DeleteUser(DeleteUserRequest request)
         {
-            var result = await _sender.Send(request);
+            var result = await _mediator.SendAsync(request);
             return result.Match(
                 (code, response, metadata) => JsonUtility.Success(code, metadata),
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)

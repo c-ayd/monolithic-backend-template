@@ -1,13 +1,12 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
 using Cayd.AspNetCore.ExecutionResult.Success;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Validations.Constants;
-using Template.Domain.Entities.UserManagement;
 
 namespace Template.Application.Features.Queries.Admin.GetUsers
 {
-    public class GetUsersHandler : IRequestHandler<GetUsersRequest, ExecResult<GetUsersResponse>>
+    public class GetUsersHandler : IAsyncHandler<GetUsersRequest, ExecResult<GetUsersResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
 
@@ -16,7 +15,7 @@ namespace Template.Application.Features.Queries.Admin.GetUsers
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<ExecResult<GetUsersResponse>> Handle(GetUsersRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<GetUsersResponse>> HandleAsync(GetUsersRequest request, CancellationToken cancellationToken)
         {
             int page = request.Page ?? 1;
             int pageSize = request.PageSize ?? 20;

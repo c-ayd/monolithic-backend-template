@@ -2,7 +2,6 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
 using Microsoft.Extensions.Options;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Http;
@@ -14,10 +13,11 @@ using Template.Domain.Entities.UserManagement.Enums;
 using Template.Domain.Entities.UserManagement;
 using Template.Application.Abstractions.Messaging.Templates;
 using Template.Application.Abstractions.Messaging;
+using Cayd.AspNetCore.Mediator.Abstractions;
 
 namespace Template.Application.Features.Commands.Authentication.UpdateEmail
 {
-    public class UpdateEmailHandler : IRequestHandler<UpdateEmailRequest, ExecResult<UpdateEmailResponse>>
+    public class UpdateEmailHandler : IAsyncHandler<UpdateEmailRequest, ExecResult<UpdateEmailResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestContext _requestContext;
@@ -50,7 +50,7 @@ namespace Template.Application.Features.Commands.Authentication.UpdateEmail
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<UpdateEmailResponse>> Handle(UpdateEmailRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<UpdateEmailResponse>> HandleAsync(UpdateEmailRequest request, CancellationToken cancellationToken)
         {
             var user = await _unitOfWork.Users.GetByIdWithSecurityStateAsync(_requestContext.UserId!.Value);
             if (user == null || user.SecurityState == null)

@@ -2,7 +2,7 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Microsoft.Extensions.Options;
 using Template.Application.Abstractions.Crypto;
 using Template.Application.Abstractions.Http;
@@ -13,7 +13,7 @@ using Template.Application.Settings;
 
 namespace Template.Application.Features.Commands.Authentication.UpdatePassword
 {
-    public class UpdatePasswordHandler : IRequestHandler<UpdatePasswordRequest, ExecResult<UpdatePasswordResponse>>
+    public class UpdatePasswordHandler : IAsyncHandler<UpdatePasswordRequest, ExecResult<UpdatePasswordResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestContext _requestContext;
@@ -34,7 +34,7 @@ namespace Template.Application.Features.Commands.Authentication.UpdatePassword
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<UpdatePasswordResponse>> Handle(UpdatePasswordRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<UpdatePasswordResponse>> HandleAsync(UpdatePasswordRequest request, CancellationToken cancellationToken)
         {
             var securityState = await _unitOfWork.Users.GetSecurityStateByIdAsync(_requestContext.UserId!.Value);
             if (securityState == null)

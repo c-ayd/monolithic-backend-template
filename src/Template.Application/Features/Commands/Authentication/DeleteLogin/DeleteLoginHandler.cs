@@ -2,14 +2,14 @@
 using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.ExecutionResult.ServerError;
 using Cayd.AspNetCore.FlexLog;
-using MediatR;
+using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.Http;
 using Template.Application.Abstractions.UOW;
 using Template.Application.Localization;
 
 namespace Template.Application.Features.Commands.Authentication.DeleteLogin
 {
-    public class DeleteLoginHandler : IRequestHandler<DeleteLoginRequest, ExecResult<DeleteLoginResponse>>
+    public class DeleteLoginHandler : IAsyncHandler<DeleteLoginRequest, ExecResult<DeleteLoginResponse>>
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IRequestContext _requestContext;
@@ -24,7 +24,7 @@ namespace Template.Application.Features.Commands.Authentication.DeleteLogin
             _flexLogger = flexLogger;
         }
 
-        public async Task<ExecResult<DeleteLoginResponse>> Handle(DeleteLoginRequest request, CancellationToken cancellationToken)
+        public async Task<ExecResult<DeleteLoginResponse>> HandleAsync(DeleteLoginRequest request, CancellationToken cancellationToken)
         {
             var affectedRows = await _unitOfWork.Logins.DeleteByIdAndUserIdAsync(request.Id!.Value, _requestContext.UserId!.Value);
             if (affectedRows == 0)
