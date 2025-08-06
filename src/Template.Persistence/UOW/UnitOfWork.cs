@@ -2,7 +2,6 @@
 using Template.Application.Abstractions.UOW;
 using Template.Domain.Repositories.UserManagement;
 using Template.Persistence.DbContexts;
-using Template.Persistence.Exceptions;
 using Template.Persistence.Repositories.UserManagement;
 
 namespace Template.Persistence.UOW
@@ -28,32 +27,27 @@ namespace Template.Persistence.UOW
         public async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
             => await _appDbContext.SaveChangesAsync(cancellationToken);
 
-        private TInterface GetRepository<TInterface, TImplementation>(TInterface? repository)
+        private TInterface GetRepository<TInterface, TImplementation>(TInterface? repository, Func<AppDbContext, TImplementation> ctor)
             where TImplementation : TInterface
         {
             if (repository == null)
             {
-                var repositoryType = typeof(TImplementation);
-                var ctor = repositoryType.GetConstructor(new Type[] { typeof(AppDbContext) });
-                if (ctor == null)
-                    throw new RepositoryConstructorNotFoundException(repositoryType.Name);
-
-                repository = (TImplementation)ctor.Invoke(new object[] { _appDbContext });
+                repository = ctor(_appDbContext);
             }
 
             return repository;
         }
 
         private IUserRepository? users = null;
-        public IUserRepository Users => GetRepository<IUserRepository, UserRepository>(users);
+        public IUserRepository Users => GetRepository(users, (appDbContext) => new UserRepository(appDbContext));
 
         private IRoleRepository? roles = null;
-        public IRoleRepository Roles => GetRepository<IRoleRepository, RoleRepository>(roles);
+        public IRoleRepository Roles => GetRepository(roles, (appDbContext) => new RoleRepository(appDbContext));
 
         private ILoginRepository? logins = null;
-        public ILoginRepository Logins => GetRepository<ILoginRepository, LoginRepository>(logins);
+        public ILoginRepository Logins => GetRepository(logins, (appDbContext) => new LoginRepository(appDbContext));
 
         private ITokenRepository? tokens = null;
-        public ITokenRepository Tokens => GetRepository<ITokenRepository, TokenRepository>(tokens);
+        public ITokenRepository Tokens => GetRepository(tokens, (appDbContext) => new TokenRepository(appDbContext));
     }
 }
