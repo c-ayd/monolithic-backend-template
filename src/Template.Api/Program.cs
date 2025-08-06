@@ -85,6 +85,8 @@ public static partial class Program
 
         services.AddProblemDetails();
         services.AddExceptionHandler<GlobalExceptionHandler>();
+
+        services.ConfigureCors(configuration);
     }
 
     public static void AddMiddlewares(this IApplicationBuilder app)
@@ -94,6 +96,8 @@ public static partial class Program
         app.UseFlexLog();
 
         app.UseHttpsRedirection();
+
+        app.UseCors();
 
         app.UseAuthentication();
         app.UseAuthorization();
