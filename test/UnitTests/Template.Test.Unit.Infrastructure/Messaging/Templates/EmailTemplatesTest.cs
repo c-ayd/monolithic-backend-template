@@ -13,17 +13,18 @@ namespace Template.Test.Unit.Infrastructure.Messaging.Templates
     public class EmailTemplatesTest
     {
         private readonly EmailTemplates _emailTemplates;
+        private readonly TemplateLinksSettings _templateLinksSettings;
 
         public EmailTemplatesTest()
         {
             var config = ConfigurationHelper.CreateConfiguration();
-            var templateLinksSettings = config.GetSection(TemplateLinksSettings.SettingsKey).Get<TemplateLinksSettings>()!;
+            _templateLinksSettings = config.GetSection(TemplateLinksSettings.SettingsKey).Get<TemplateLinksSettings>()!;
 
             var localizationOptions = Options.Create(new LocalizationOptions { ResourcesPath = "Resources" });
             var resourceFactory = new ResourceManagerStringLocalizerFactory(localizationOptions, NullLoggerFactory.Instance);
             var localizer = new StringLocalizer<EmailTemplates>(resourceFactory);
 
-            _emailTemplates = new EmailTemplates(localizer, Options.Create(templateLinksSettings));
+            _emailTemplates = new EmailTemplates(localizer, Options.Create(_templateLinksSettings));
         }
 
         [Fact]
@@ -45,7 +46,7 @@ namespace Template.Test.Unit.Infrastructure.Messaging.Templates
             Assert.NotNull(result.Body);
 
             var body = $"Bitte klicken Sie auf den unten stehenden Link, um Ihre E-Mail zu bestätigen.\n\n" +
-                $"Email Verification. Token={token}\n\n" +
+                $"{_templateLinksSettings.EmailVerification}{token}\n\n" +
                 $"Der Link ist für {expirationTimeInHours} Stunden gültig.";
             Assert.Equal(body, result.Body.Replace("\r\n", "\n"));
         }
@@ -69,7 +70,7 @@ namespace Template.Test.Unit.Infrastructure.Messaging.Templates
             Assert.NotNull(result.Body);
 
             var body = $"Please click the link below to verify your email.\n\n" +
-                $"Email Verification. Token={token}\n\n" +
+                $"{_templateLinksSettings.EmailVerification}{token}\n\n" +
                 $"The link is valid for {expirationTimeInHours} hours.";
             Assert.Equal(body, result.Body.Replace("\r\n", "\n"));
         }
