@@ -30,9 +30,11 @@ services:
       - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
     volumes:
       - ${CERT_PATH}:/https/aspnetapp.pfx:ro
+      - data-protection:${DataProtection__FilePath}
     env_file:
       - .env            # NOTE: For this example, the secrets are loaded from a '.env' file.
     entrypoint: ["dotnet", "Template.Api.dll"]
 
 volumes:
   postgres-data:
+  data-protection:  

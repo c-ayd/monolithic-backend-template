@@ -28,6 +28,7 @@ builder.Services.AddFlexLog(builder.Configuration, config =>
 });
 
 builder.Services.ConfigureRateLimiter(builder.Configuration);
+builder.Services.ConfigureDataProtection(builder.Configuration);
 
 var app = builder.Build();
 
