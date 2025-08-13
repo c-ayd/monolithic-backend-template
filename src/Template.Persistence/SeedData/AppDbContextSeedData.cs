@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Template.Application.Policies;
 using Template.Domain.Entities.UserManagement;
@@ -19,6 +20,8 @@ namespace Template.Persistence.SeedData
             await using var scope = services.CreateAsyncScope();
             var appDbContext = scope.ServiceProvider.GetRequiredService<AppDbContext>();
             var seedDataSettings = configuration.GetSection(SeedDataAppDbContextSettings.SettingsKey).Get<SeedDataAppDbContextSettings>()!;
+
+            await appDbContext.Database.EnsureCreatedAsync();
 
             await using var transaction = await appDbContext.Database.BeginTransactionAsync();
             try
