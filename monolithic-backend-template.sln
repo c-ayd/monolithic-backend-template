@@ -9,7 +9,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{A1A35AFB-E
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{C07CE8AA-1EE7-4A83-8C96-1F6D4E7B61E8}"
 	ProjectSection(SolutionItems) = preProject
+		.dockerignore = .dockerignore
+		.env = .env
 		.gitignore = .gitignore
+		docker-compose.yml = docker-compose.yml
+		Dockerfile = Dockerfile
 		LICENSE = LICENSE
 		README.md = README.md
 	EndProjectSection
@@ -38,7 +42,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Test.Integration.A
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Test.Unit.Application", "test\UnitTests\Template.Test.Unit.Application\Template.Test.Unit.Application.csproj", "{F00DDC9D-8D0A-44D0-8981-9B65B4165E94}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Template.Test.Unit.Persistence", "test\UnitTests\Template.Test.Unit.Persistence\Template.Test.Unit.Persistence.csproj", "{5446EC87-E7D2-4AAA-903E-D51CD1DC8F22}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Template.Test.Unit.Persistence", "test\UnitTests\Template.Test.Unit.Persistence\Template.Test.Unit.Persistence.csproj", "{5446EC87-E7D2-4AAA-903E-D51CD1DC8F22}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16.4
+    container_name: db
+    restart: always
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"     # NOTE: Change the ports depending on your need
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+
+  api:
+    image: monolithic-backend-template      # NOTE: Name your own docker image file
+    container_name: api
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "8443:8443"     # NOTE: Change the ports depending on your need and the port in ASPNETCORE_URLS
+    environment:
+      - ASPNETCORE_URLS=https://0.0.0.0:8443
+      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/aspnetapp.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=${CERT_PASSWORD}
+    volumes:
+      - ${CERT_PATH}:/https/aspnetapp.pfx:ro
+    env_file:
+      - .env            # NOTE: For this example, the secrets are loaded from a '.env' file.
+    entrypoint: ["dotnet", "Template.Api.dll"]
+
+volumes:
+  postgres-data:
