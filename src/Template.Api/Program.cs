@@ -95,8 +95,6 @@ public static partial class Program
 
         app.UseFlexLog();
 
-        app.UseHttpsRedirection();
-
         app.UseCors();
 
         app.UseAuthentication();
