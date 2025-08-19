@@ -1,5 +1,6 @@
 ﻿using Cayd.AspNetCore.FlexLog.Logging;
 using Cayd.AspNetCore.FlexLog.Sinks;
+using Cayd.Uuid;
 using Npgsql;
 using System.Text;
 using System.Text.Json;
@@ -190,7 +191,7 @@ namespace Template.Api.Logging.Sinks
                     cmdBuilder.Append(',');
                 }
 
-                command.Parameters.AddWithValue($"Id{i}", buffer[i].Id);
+                command.Parameters.AddWithValue($"Id{i}", Uuid.V7.Generate());
                 command.Parameters.AddWithValue($"TraceId{i}", buffer[i].TraceId ?? (object)DBNull.Value);
                 command.Parameters.AddWithValue($"Timestamp{i}", buffer[i].Timestamp);
                 command.Parameters.AddWithValue($"ElapsedTimeInMs{i}", buffer[i].ElapsedTimeInMilliseconds);

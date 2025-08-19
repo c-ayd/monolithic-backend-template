@@ -1,5 +1,6 @@
 ﻿using Cayd.AspNetCore.FlexLog.Logging;
 using Cayd.AspNetCore.FlexLog.Sinks;
+using Cayd.Uuid;
 using System.Text;
 using System.Text.Json;
 
@@ -36,7 +37,7 @@ namespace Template.Api.Logging.Sinks
             foreach (var log in buffer)
             {
                 strBuilder.Clear();
-                strBuilder.Append("ID: ").Append(log.Id).Append(" - ")
+                strBuilder.Append("ID: ").Append(Uuid.V7.Generate()).Append(" - ")
                     .Append("Trace ID: ").Append(log.TraceId).Append(" - ")
                     .Append("Timestamp: ").Append(log.Timestamp).Append(" - ")
                     .Append("Elapsed Time: ").Append(log.ElapsedTimeInMilliseconds).Append(" ms - ")
