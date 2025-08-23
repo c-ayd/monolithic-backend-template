@@ -23,8 +23,7 @@ builder.Services.AddFlexLog(builder.Configuration, config =>
 {
     var connStrings = builder.Configuration.GetSection(ConnectionStringsSettings.SettingsKey).Get<ConnectionStringsSettings>()!;
 
-    config.AddSink(new DatabaseSink(connStrings.Log))
-        .AddFallbackSink(new FileSink());
+    config.AddSink(new DatabaseSink(connStrings.Log));
 });
 
 builder.Services.ConfigureRateLimiter(builder.Configuration);
