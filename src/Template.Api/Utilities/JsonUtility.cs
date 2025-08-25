@@ -4,11 +4,11 @@ namespace Template.Api.Utilities
 {
     public static class JsonUtility
     {
-        public const string StatusCodeKey = "StatusCode";
-        public const string IsSuccessKey = "IsSuccess";
-        public const string DataKey = "Data";
-        public const string ErrorsKey = "Errors";
-        public const string MetadataKey = "Metadata";
+        public const string StatusCodeKey = "statusCode";
+        public const string IsSuccessKey = "isSuccess";
+        public const string DataKey = "data";
+        public const string ErrorsKey = "errors";
+        public const string MetadataKey = "metadata";
 
         public static ObjectResult Success(int statusCode, object? metadata = null)
         {
@@ -54,7 +54,7 @@ namespace Template.Api.Utilities
             var response = new Dictionary<string, object?>()
             {
                 { StatusCodeKey, statusCode },
-                { IsSuccessKey, true }
+                { IsSuccessKey, false }
             };
 
             if (metadata != null)
@@ -73,7 +73,7 @@ namespace Template.Api.Utilities
             var response = new Dictionary<string, object?>()
             {
                 { StatusCodeKey, statusCode },
-                { IsSuccessKey, true },
+                { IsSuccessKey, false },
                 { ErrorsKey, errors }
             };
 
