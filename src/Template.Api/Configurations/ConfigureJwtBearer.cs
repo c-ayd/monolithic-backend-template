@@ -73,7 +73,7 @@ namespace Template.Api.Configurations
             {
                 response.StatusCode = statusCode;
                 response.ContentType = MediaTypeNames.Application.Json;
-                await response.WriteAsJsonAsync(JsonUtility.Fail(statusCode));
+                await response.WriteAsJsonAsync(JsonUtility.Fail(statusCode).Value);
             }
         }
     }

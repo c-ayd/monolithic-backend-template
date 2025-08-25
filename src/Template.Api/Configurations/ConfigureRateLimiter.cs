@@ -34,7 +34,7 @@ namespace Template.Api.Configurations
                     await context.HttpContext.Response.WriteAsJsonAsync(JsonUtility.Fail(statusCode, new
                     {
                         WaitForSeconds = rateLimiterSettings.TokenBucket.ReplenishmentPeriodInSeconds
-                    }));
+                    }).Value);
                 };
             });
         }
