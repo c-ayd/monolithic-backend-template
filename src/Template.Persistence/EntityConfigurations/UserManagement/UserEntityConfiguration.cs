@@ -20,6 +20,10 @@ namespace Template.Persistence.EntityConfigurations.UserManagement
                 .HasMaxLength(UserConstants.EmailMaxLength)
                 .HasConversion<ToLowerConverter>();
 
+            builder.Property(u => u.NewEmail)
+                .HasMaxLength(UserConstants.EmailMaxLength)
+                .HasConversion<ToLowerConverter>();
+
             // Relationships
             builder.HasOne(u => u.SecurityState)
                 .WithOne()

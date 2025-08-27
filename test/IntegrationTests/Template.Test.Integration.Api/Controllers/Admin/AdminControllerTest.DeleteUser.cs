@@ -159,6 +159,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
                 .FirstOrDefaultAsync();
             Assert.NotNull(softDeletedUser);
             Assert.Null(softDeletedUser.Email);
+            Assert.Null(softDeletedUser.NewEmail);
             Assert.True(softDeletedUser.IsDeleted, "The user is not marked as deleted.");
             Assert.NotNull(softDeletedUser.DeletedDate);
             Assert.Null(softDeletedUser.SecurityState);

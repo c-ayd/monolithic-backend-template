@@ -364,7 +364,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
         }
 
         [Fact]
-        public async Task UpdateEmail_WhenPasswordIsCorrect_ShouldReturnOkAndUpdateEmailAndResetFailedAttempsAndCreateTokenAndSendEmail()
+        public async Task UpdateEmail_WhenPasswordIsCorrect_ShouldReturnOkAndSaveNewEmailAndResetFailedAttempsAndCreateTokenAndSendEmail()
         {
             // Arrange
             var email = EmailGenerator.Generate();
@@ -390,6 +390,11 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
                     {
                         ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
                         Purpose = ETokenPurpose.ResetPassword 
+                    },
+                    new Token()
+                    {
+                        ValueHashed = _hashing.HashSha256(StringGenerator.GenerateUsingAsciiChars(10)),
+                        Purpose = ETokenPurpose.EmailVerification
                     }
                 }
             };
@@ -426,20 +431,19 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
                 .Where(u => u.Id.Equals(userId))
                 .FirstOrDefaultAsync();
             Assert.NotNull(userResult);
-            Assert.Equal(newEmail.ToLower(), userResult.Email);
+            Assert.Equal(email.ToLower(), userResult.Email);
+            Assert.Equal(newEmail.ToLower(), userResult.NewEmail);
 
             var securityState = await _testHostFixture.AppDbContext.SecurityStates
                 .Where(ss => ss.UserId.Equals(userId))
                 .FirstOrDefaultAsync();
             Assert.NotNull(securityState);
-            Assert.False(securityState.IsEmailVerified, "The new email is in the verified state.");
             Assert.Equal(0, securityState.FailedAttempts);
 
             var tokens = await _testHostFixture.AppDbContext.Tokens
-                .Where(t => t.UserId.Equals(userId))
+                .Where(t => t.UserId.Equals(userId) && t.Purpose == ETokenPurpose.EmailVerification)
                 .ToListAsync();
             Assert.Single(tokens);
-            Assert.Equal(ETokenPurpose.EmailVerification, tokens[0].Purpose);
 
             var sentEmail = await EmailHelper.GetLatestTempEmailFileAsync();
             Assert.NotNull(sentEmail);

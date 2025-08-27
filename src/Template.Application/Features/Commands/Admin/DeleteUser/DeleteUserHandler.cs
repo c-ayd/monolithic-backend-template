@@ -37,6 +37,7 @@ namespace Template.Application.Features.Commands.Admin.DeleteUser
                 await _unitOfWork.Logins.DeleteAllByUserIdAsync(user.Id);
 
                 user.Email = null;
+                user.NewEmail = null;
                 user.SecurityState!.PasswordHashed = null;
 
                 _unitOfWork.Users.Delete(user);

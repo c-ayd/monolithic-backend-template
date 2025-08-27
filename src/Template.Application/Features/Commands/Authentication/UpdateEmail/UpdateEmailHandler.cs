@@ -128,11 +128,10 @@ namespace Template.Application.Features.Commands.Authentication.UpdateEmail
             try
             {
                 // Set new email address
-                user.Email = request.NewEmail;
-                user.SecurityState.IsEmailVerified = false;
+                user.NewEmail = request.NewEmail;
 
                 // Revoke all tokens related to user
-                await _unitOfWork.Tokens.DeleteAllByUserIdAsync(user.Id);
+                await _unitOfWork.Tokens.DeleteAllByUserIdAndPurposeAsync(user.Id, ETokenPurpose.EmailVerification);
 
                 // Generate a new email verification token
                 var emailVerificationTokenValue = _tokenGenerator.GenerateBase64UrlSafe();

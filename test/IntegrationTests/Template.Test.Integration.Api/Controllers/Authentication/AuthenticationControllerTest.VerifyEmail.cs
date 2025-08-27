@@ -176,7 +176,7 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
         }
 
         [Fact]
-        public async Task VerifyEmail_WhenTokenIsValid_ShouldReturnOkAndVerifyEmailOfUserAndDeleteToken()
+        public async Task VerifyEmail_WhenTokenIsValidForFirstVerification_ShouldReturnOkAndVerifyEmailOfUserAndDeleteToken()
         {
             // Arrange
             var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
@@ -215,6 +215,73 @@ namespace Template.Test.Integration.Api.Controllers.Authentication
 
             // Assert
             Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+
+            var securityState = await _testHostFixture.AppDbContext.SecurityStates
+                .Where(ss => ss.UserId.Equals(userId))
+                .FirstOrDefaultAsync();
+            Assert.NotNull(securityState);
+            Assert.True(securityState.IsEmailVerified, "The email is not verified.");
+
+            var token = await _testHostFixture.AppDbContext.Tokens
+                .Where(t => t.Id.Equals(tokenId))
+                .FirstOrDefaultAsync();
+            Assert.Null(token);
+        }
+
+        [Fact]
+        public async Task VerifyEmail_WhenTokenIsValidForNewEmail_ShouldReturnOkAndUpdateEmailOfUserAndDeleteToken()
+        {
+            // Arrange
+            var tokenValue = StringGenerator.GenerateUsingAsciiChars(10);
+            var email = EmailGenerator.Generate();
+            var newEmail = EmailGenerator.Generate();
+            if (email == newEmail)
+                Assert.Fail("The email and new email are the same.");
+
+            var user = new User()
+            {
+                Email = email,
+                NewEmail = newEmail,
+                SecurityState = new SecurityState()
+                {
+                    IsEmailVerified = false
+                },
+                Tokens = new List<Token>()
+                {
+                    new Token()
+                    {
+                        ValueHashed = _hashing.HashSha256(tokenValue),
+                        Purpose = ETokenPurpose.EmailVerification,
+                        ExpirationDate = DateTime.UtcNow.AddDays(1)
+                    }
+                }
+            };
+
+            await _testHostFixture.AppDbContext.Users.AddAsync(user);
+            await _testHostFixture.AppDbContext.SaveChangesAsync();
+
+            var userId = user.Id;
+            var tokenId = user.Tokens[0].Id;
+            _testHostFixture.AppDbContext.UntrackEntity(user.SecurityState);
+            _testHostFixture.AppDbContext.UntrackEntity(user);
+
+            var request = new VerifyEmailRequest()
+            {
+                Token = tokenValue
+            };
+
+            // Act
+            var result = await _testHostFixture.Client.PostAsJsonAsync(_verifyEmailEndpoint, request);
+
+            // Assert
+            Assert.Equal(HttpStatusCode.OK, result.StatusCode);
+
+            var userResult = await _testHostFixture.AppDbContext.Users
+                .Where(u => u.Id.Equals(userId))
+                .FirstOrDefaultAsync();
+            Assert.NotNull(userResult);
+            Assert.Equal(newEmail.ToLower(), userResult.Email);
+            Assert.Null(userResult.NewEmail);
 
             var securityState = await _testHostFixture.AppDbContext.SecurityStates
                 .Where(ss => ss.UserId.Equals(userId))

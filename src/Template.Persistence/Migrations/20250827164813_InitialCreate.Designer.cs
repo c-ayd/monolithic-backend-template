@@ -13,7 +13,7 @@ using Template.Persistence.DbContexts;
 namespace Template.Persistence.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20250731113142_InitialCreate")]
+    [Migration("20250827164813_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -198,6 +198,10 @@ namespace Template.Persistence.Migrations
 
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
+
+                    b.Property<string>("NewEmail")
+                        .HasMaxLength(256)
+                        .HasColumnType("character varying(256)");
 
                     b.Property<DateTime?>("UpdatedDate")
                         .HasColumnType("timestamp with time zone");
