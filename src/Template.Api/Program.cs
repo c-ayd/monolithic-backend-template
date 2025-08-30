@@ -70,7 +70,7 @@ public static partial class Program
             options.ConfigureInvalidModelStateResponse();
         });
 
-        services.AddPresentationServices();
+        services.AddApiServices();
         services.AddPersistenceServices(configuration);
         services.AddInfrastructureServices();
         services.AddApplicationServices();

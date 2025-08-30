@@ -5,7 +5,7 @@ namespace Template.Api
 {
     public static class ServiceRegistrations
     {
-        public static void AddPresentationServices(this IServiceCollection services)
+        public static void AddApiServices(this IServiceCollection services)
         {
             services.AddScoped<IRequestContext, RequestContext>();
         }
