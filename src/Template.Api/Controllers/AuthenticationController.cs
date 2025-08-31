@@ -62,7 +62,11 @@ namespace Template.Api.Controllers
             });
 
             return result.Match(
-                (code, response, metadata) => JsonUtility.Success(code, metadata),
+                (code, response, metadata) =>
+                {
+                    HttpContext.Response.Cookies.RemoveRefreshToken();
+                    return JsonUtility.Success(code, metadata);
+                },
                 (code, errors, metadata) => JsonUtility.Fail(code, errors, metadata)
             );
         }
