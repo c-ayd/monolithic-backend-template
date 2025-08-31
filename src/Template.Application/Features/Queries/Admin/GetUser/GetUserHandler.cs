@@ -1,5 +1,5 @@
 ﻿using Cayd.AspNetCore.ExecutionResult;
-using Cayd.AspNetCore.ExecutionResult.Success;
+using Cayd.AspNetCore.ExecutionResult.ClientError;
 using Cayd.AspNetCore.Mediator.Abstractions;
 using Template.Application.Abstractions.UOW;
 
@@ -18,7 +18,7 @@ namespace Template.Application.Features.Queries.Admin.GetUser
         {
             var user = await _unitOfWork.Users.GetWithFullContextByIdAsync(request.Id!.Value, cancellationToken);
             if (user == null)
-                return new ExecNoContent<GetUserResponse>();
+                return new ExecNotFound();
 
             return new GetUserResponse()
             {

@@ -65,7 +65,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
         }
 
         [Fact]
-        public async Task GetUser_WhenUserDoesNotExist_ShouldReturnNoContentAndReturnNullForData()
+        public async Task GetUser_WhenUserDoesNotExist_ShouldReturnNotFound()
         {
             // Arrange
             var token = _jwt.GenerateJwtToken(new List<Claim>()
@@ -80,16 +80,7 @@ namespace Template.Test.Integration.Api.Controllers.Admin
             var result = await _testHostFixture.Client.GetAsync(_getUserEndpoint + Guid.NewGuid());
 
             // Assert
-            Assert.Equal(HttpStatusCode.NoContent, result.StatusCode);
-
-            var json = await result.Content.ReadAsStringAsync();
-            using var jsonDocument = JsonDocument.Parse(json);
-            var dataElement = jsonDocument.RootElement.GetProperty(JsonUtility.DataKey);
-            var responseData = JsonSerializer.Deserialize<GetUserDto>(dataElement.GetRawText(), new JsonSerializerOptions()
-            {
-                PropertyNameCaseInsensitive = true
-            });
-            Assert.Null(responseData);
+            Assert.Equal(HttpStatusCode.NotFound, result.StatusCode);
         }
 
         [Fact]
