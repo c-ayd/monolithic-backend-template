@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Cayd.AspNetCore.ExecutionResult" Version="1.0.1" />
+    <PackageReference Include="Cayd.AspNetCore.ExecutionResult" Version="1.0.2" />
     <PackageReference Include="Cayd.AspNetCore.FlexLog" Version="3.1.1" />
     <PackageReference Include="Cayd.AspNetCore.Mediator" Version="1.0.2" />
     <PackageReference Include="Cayd.AspNetCore.Settings" Version="2.0.1" />
