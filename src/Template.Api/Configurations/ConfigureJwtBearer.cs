@@ -11,6 +11,8 @@ namespace Template.Api.Configurations
 {
     public static partial class Configurations
     {
+        private static readonly string JwtEventResponseHasStartedKey = "JwtEventResponseHasStarted";
+
         public static void ConfigureJwtBearer(this JwtBearerOptions options, IConfiguration configuration)
         {
             var jwtSettings = configuration.GetSection(JwtSettings.SettingsKey).Get<JwtSettings>()!;
@@ -49,32 +51,45 @@ namespace Template.Api.Configurations
 
         private static async Task JwtChallenge(JwtBearerChallengeContext context)
         {
-            context.HandleResponse();
+            var responseHasStarted = (bool?)context.HttpContext.Items[JwtEventResponseHasStartedKey];
+            if (responseHasStarted.HasValue && responseHasStarted.Value)
+                return;
 
-            await JwtEventFailed(context.Response, StatusCodes.Status401Unauthorized);
+            context.HandleResponse();
+            await JwtEventFailed(context.HttpContext, StatusCodes.Status401Unauthorized);
         }
 
         private static async Task JwtAuthenticationFailed(AuthenticationFailedContext context)
         {
+            var responseHasStarted = (bool?)context.HttpContext.Items[JwtEventResponseHasStartedKey];
+            if (responseHasStarted.HasValue && responseHasStarted.Value)
+                return;
+
             if (context.HttpContext.GetEndpoint()?.Metadata?.OfType<AuthorizeAttribute>().Any() ?? false)
             {
-                await JwtEventFailed(context.Response, StatusCodes.Status401Unauthorized);
+                await JwtEventFailed(context.HttpContext, StatusCodes.Status401Unauthorized);
             }
         }
 
         private static async Task JwtForbidden(ForbiddenContext context)
         {
-            await JwtEventFailed(context.Response, StatusCodes.Status403Forbidden);
+            var responseHasStarted = (bool?)context.HttpContext.Items[JwtEventResponseHasStartedKey];
+            if (responseHasStarted.HasValue && responseHasStarted.Value)
+                return;
+
+            await JwtEventFailed(context.HttpContext, StatusCodes.Status403Forbidden);
         }
 
-        private static async Task JwtEventFailed(HttpResponse response, int statusCode)
+        private static async Task JwtEventFailed(HttpContext context, int statusCode)
         {
-            if (!response.HasStarted)
-            {
-                response.StatusCode = statusCode;
-                response.ContentType = MediaTypeNames.Application.Json;
-                await response.WriteAsJsonAsync(JsonUtility.Fail(statusCode).Value);
-            }
+            if (context.Response.HasStarted)
+                return;
+
+            context.Response.StatusCode = statusCode;
+            context.Response.ContentType = MediaTypeNames.Application.Json;
+            await context.Response.WriteAsJsonAsync(JsonUtility.Fail(statusCode).Value);
+
+            context.Items[JwtEventResponseHasStartedKey] = true;
         }
     }
 }
