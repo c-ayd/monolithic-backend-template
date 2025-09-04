@@ -5,7 +5,17 @@ This template provides infrastructure to develop a monolithic backend quickly.
 ## How to Start
 In order to start the application, you need to set some secret values that the application uses. The general strucure of the secrests (without any values) can be found in `appsettings.json`. For development, you can use user secrets to configure these secrets without revealing the values in your repository. In general, it is also highly recommended not to put any secrets in your code.
 
-Afterwards, you can search for the keyword `NOTE:` in the entire project to find the customizable and required parts of the code.
+There are also some environment variables that are needed to configure the database and the certificate for HTTPS. The expected variable names are as follows and they can also be found and changed in the `docker-compose.yaml` file.
+```
+POSTGRES_USER=...
+POSTGRES_PASSWORD=...
+POSTGRES_DB=...
+
+CERT_PATH=...
+CERT_PASSWORD=...
+```
+
+Afterward settings the configurations, you can search for the keyword `NOTE:` in the entire project to find the customizable and required parts of the code.
 
 After setting up everything, you can either run the backend locally or use the docker compose in the project. To run the application on Docker, you can use the following command while you are on the root path of the project:
 ```
