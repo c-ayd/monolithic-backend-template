@@ -15,7 +15,7 @@ CERT_PATH=...
 CERT_PASSWORD=...
 ```
 
-Afterward settings the configurations, you can search for the keyword `NOTE:` in the entire project to find the customizable and required parts of the code.
+Afterwards, you can search for the keyword `NOTE:` in the entire project to find the customizable and required parts of the code.
 
 After setting up everything, you can either run the backend locally or use the docker compose in the project. To run the application on Docker, you can use the following command while you are on the root path of the project:
 ```
